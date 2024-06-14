@@ -282,5 +282,13 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-oauth-webflow"
     implementation "org.apereo.cas:cas-server-support-jmx"
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow"
+    // Compilation modifs redis
+    compileOnly "org.apereo.cas:cas-server-core-util-api"
+    compileOnly "org.apereo.cas:cas-server-support-redis-core"
+    compileOnly "org.apereo.cas:cas-server-core-authentication-api"
+    compileOnly "org.apereo.cas:cas-server-core-tickets-api"
+    compileOnly "org.springframework.data:spring-data-redis"
+    compileOnly "org.springframework.integration:spring-integration-redis"
+    compileOnly "com.redis:lettucemod"
 
 }
