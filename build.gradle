@@ -275,8 +275,12 @@ dependencies {
      * since versions are all resolved and controlled by the dependency management
      * plugin via the CAS bom.
      **/
-
-    
     testImplementation "org.springframework.boot:spring-boot-starter-test"
-}
+    implementation "org.apereo.cas:cas-server-support-ldap"
+    implementation "org.apereo.cas:cas-server-support-redis-ticket-registry"
+    implementation "org.apereo.cas:cas-server-support-git-service-registry"
+    implementation "org.apereo.cas:cas-server-support-oauth-webflow"
+    implementation "org.apereo.cas:cas-server-support-jmx"
+    implementation "org.apereo.cas:cas-server-support-pac4j-webflow"
 
+}
