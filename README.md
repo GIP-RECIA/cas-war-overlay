@@ -246,7 +246,7 @@ design your own test scenarios that verify functionality specific to your CAS de
 To execute Puppeteer scenarios, run:
 
 ```bash
-./puppeteer/run.sh
+CAS_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=test" ./puppeteer/run.sh
 ```
 
 This will first attempt to build your CAS deployment, will install Puppeteer and all other needed libraries. It will then launch the CAS server,
