@@ -1,0 +1,7 @@
+services:
+  redis:
+    image: redis/redis-stack-server
+    container_name: redis-server3
+    environment:
+      - REDIS_ARGS= --port 6381 --slaveof localhost 6379
+    network_mode: "host"

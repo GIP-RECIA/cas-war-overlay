@@ -1,0 +1,48 @@
+version: 1
+
+dn: ENTStructureSIREN=19290009000015,ou=structures,dc=esco-centre,dc=fr
+objectClass: organizationalUnit
+objectClass: ENTStructure
+objectClass: ENTEtablissement
+ENTEtablissementContrat: PU
+ENTEtablissementMinistereTutelle: MINISTERE DE L'EDUCATION NATIONALE
+ENTStructureJointure: AC-RENNES$2828
+ENTStructureNomCourant: LG-DE L'IROISE-ac-RENNES
+ENTStructureSIREN: 19290009000015
+ou: LG-DE L'IROISE-ac-RENNES
+ENTEtablissementStructRattachFctl: ENTStructureSIREN=19290009000015,ou=struc
+ tures,dc=esco-centre,dc=fr
+ENTStructureTypeStruct: LYCEE D ENSEIGNEMENT GENERAL
+ENTStructureUAI: 0290009C
+ESCODomaines: lycees.netocentre.fr
+ESCOStructureNomCourt:: TFlDw4lFIERFIEwnSVJPSVNF
+facsimileTelephoneNumber: +33 2 98 41 09 01
+l: BREST CEDEX 2
+postalCode: 29223
+postOfficeBox: BP92349
+street: 7 PLACE DE STRASBOURG
+telephoneNumber: +33 2 98 41 09 00
+
+dn: ENTStructureSIREN=19291595700018,ou=structures,dc=esco-centre,dc=fr
+objectClass: organizationalUnit
+objectClass: ENTStructure
+objectClass: ENTEtablissement
+ENTEtablissementContrat: PU
+ENTEtablissementMinistereTutelle: MINISTERE DE L'EDUCATION NATIONALE
+ENTStructureJointure: AC-RENNES$3019
+ENTStructureNomCourant: CLG-DE L'IROISE-ac-RENNES
+ENTStructureSIREN: 19291595700018
+ou: CLG-DE L'IROISE-ac-RENNES
+ENTEtablissementStructRattachFctl: ENTStructureSIREN=19290009000015,ou=struc
+ tures,dc=esco-centre,dc=fr
+ENTStructureTypeStruct: COLLEGE
+ENTStructureUAI: 0291595B
+ESCODomaines: lycees.netocentre.fr
+ESCOStructureNomCourt:: Q09MTMOIR0UgREUgTCdJUk9JU0U=
+facsimileTelephoneNumber: +33 2 98 41 09 01
+l: BREST CEDEX 2
+postalCode: 29223
+postOfficeBox: BP92349
+street: 7 PLACE DE STRASBOURG
+telephoneNumber: +33 2 98 41 09 00
+

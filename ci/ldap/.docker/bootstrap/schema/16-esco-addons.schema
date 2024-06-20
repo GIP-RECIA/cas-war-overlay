@@ -1,0 +1,323 @@
+#------------------------------------------------------------------------#
+# Referentiel ENT du secondaire                                          #
+# Banche pour les Personnes                                              #
+#------------------------------------------------------------------------#
+# Classe auxiliaire ESCO                                                 #
+#                                                                        #
+# Objet:                                                                 #
+#        - gestion du profile pour les skins du portail                  #
+#                                                                        #
+# Remarques : plages d'OIDs reservees pour ce schema                     #
+#             attributs 1 a 20                                           #
+#             classes   1 a 5                                            #
+#------------------------------------------------------------------------#
+# GIP RECIA - A. Deman - 10/2008                                         #
+# GIP RECIA - J. Gribonvald - 10/2010                                    #
+#------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ESCOAddons                  #
+#------------------------------------------------------------------------#
+
+#-------------------------------------------#
+# Attributes used by Samba 3.0 schema       #
+#-------------------------------------------#
+
+##
+## Password hashes
+##
+attributetype ( 1.3.6.1.4.1.7165.2.1.24 NAME 'sambaLMPassword'
+	DESC 'LanManager Password'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{32} SINGLE-VALUE )
+
+attributetype ( 1.3.6.1.4.1.7165.2.1.25 NAME 'sambaNTPassword'
+	DESC 'MD4 hash of the unicode password'
+	EQUALITY caseIgnoreIA5Match
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{32} SINGLE-VALUE )
+
+
+#------------------------------------------#
+# ESCODefaultUserProfile                   #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:1 NAME 'ESCODefaultUserProfile'
+	DESC 'Profile par defaut pour le portail'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOUAI                                  #
+#------------------------------------------#
+# String UTF8 multi-value                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:2 NAME 'ESCOUAI'
+	DESC 'UAI des etablissements dans lesquels un individu intervient'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOUAIRattachement                      #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:3 NAME 'ESCOUAIRattachement'
+	DESC 'UAI de l etablissement de rattachement d un individu'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOUAICourant                           #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:4 NAME 'ESCOUAICourant'
+	DESC 'UAI de l etablissement de travail courant suite au choix de l individu'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCODomaines                              #
+#------------------------------------------#
+# String UTF8 multi-value                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:7 NAME 'ESCODomaines'
+	DESC 'Domaine(s) de validite du compte de l utilisateur'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOPersonProfils                        #
+#------------------------------------------#
+# String UTF8 multi-value                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:8 NAME 'ESCOPersonProfils'
+	DESC 'Definition de profils specifique (cahier de texte)'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOPersonEtatCompte                     #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:9 NAME 'ESCOPersonEtatCompte'
+	DESC 'Etat du compte de la personne : INVALIDE/VALIDE/DELETE/BLOQUE'
+	EQUALITY caseIgnoreMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOPersonListeRouge                     #
+#------------------------------------------#
+# Boolean mono-value                       #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:10 NAME 'ESCOPersonListeRouge'
+	DESC 'Determine si la personne est sur liste rouge'
+	EQUALITY booleanMatch
+	SINGLE-VALUE
+	SYNTAX ENT_BOOLEAN)
+
+#------------------------------------------#
+# ESCOPersonEtabCompteReplique             #
+#------------------------------------------#
+# String UTF8 multi-value                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:11 NAME 'ESCOPersonEtabCompteReplique'
+	DESC 'Liste des etablissements ou le compte est replique localement'
+	EQUALITY caseIgnoreMatch
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOAuxEnsCodeMatiereEnseignEtab         #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:12 NAME 'ESCOAuxEnsCodeMatiereEnseignEtab'
+        DESC 'Etablissement et matieres enseignees : dn d un etablissement suivi des codes et des libelles matieres enseignees Separateur : $'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ESCOEleveCodeEnseignements               #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:13 NAME 'ESCOEleveCodeEnseignements'
+        DESC 'Enseignements Code et Libelles matieres Separateur : $'
+        EQUALITY caseIgnoreMatch
+        SUBSTR caseIgnoreSubstringsMatch
+        SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ESCOPersonPhoto                          #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:14 NAME 'ESCOPersonPhoto'
+	DESC 'URL ou URI de la photo de l utilisateur'
+	EQUALITY caseIgnoreMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOSIREN                                #
+#------------------------------------------#
+# String UTF8 multi-value                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:17 NAME 'ESCOSIREN'
+	DESC 'SIREN des etablissements dans lesquels un individu intervient'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOSIRENCourant                      #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:18 NAME 'ESCOSIRENCourant'
+	DESC 'SIREN de l etablissement de travail courant suite au choix de l individu'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOPersonExternalIds                    #
+#------------------------------------------#
+# String UTF8 multi-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:25 NAME 'ESCOPersonExternalIds'
+	DESC 'Liste des ids generes pour les differents services externe'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String)
+#------------------------------------------#
+# ESCOPersonValidationCharte               #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:26 NAME 'ESCOPersonValidationCharte'
+	DESC 'Timestamp LDAP de validation de la charte par l utilisateur'
+	EQUALITY generalizedTimeMatch
+  ORDERING generalizedTimeOrderingMatch
+	SINGLE-VALUE
+	SYNTAX 1.3.6.1.4.1.1466.115.121.1.24)
+
+#------------------------------------------#
+# ESCOAddons                               #
+#------------------------------------------#
+# Classe auxiliaire pour les attributs     #
+# complementaires pour ESCO-Portail.       #
+#------------------------------------------#
+objectclass (ENT_locClassPrefixe:1 NAME 'ESCOAddons'
+        DESC 'Attributs complementaires pour ESCO-Portail.'
+        SUP top AUXILIARY
+        MAY ( ESCODefaultUserProfile $ ESCOUAI $ ESCOUAIRattachement $ ESCOUAICourant $ ESCODomaines $
+            sambaLMPassword $ sambaNTPassword $ ESCOPersonProfils $ ESCOPersonEtatCompte $
+            ESCOPersonListeRouge $ ESCOPersonEtabCompteReplique $ ESCOAuxEnsCodeMatiereEnseignEtab $
+            ESCOEleveCodeEnseignements $ ESCOPersonPhoto $ ESCOSIREN $ ESCOSIRENCourant $ ESCOPersonExternalIds $
+            ESCOPersonValidationCharte ))
+
+#------------------------------------------#
+# ESCOEleveVecteurIdentite                 #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:5 NAME 'ESCOEleveVecteurIdentite'
+	DESC 'Vecteur d identite d un eleve pour les TS'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOEleveAddons                          #
+#------------------------------------------#
+# Classe auxiliaire pour les attributs     #
+# complementaires pour ESCO-Portail.       #
+#------------------------------------------#
+objectclass (ENT_locClassPrefixe:2 NAME 'ESCOEleveAddons'
+        DESC 'Attributs complementaires a ENTEleve pour ESCO-Portail.'
+        SUP top AUXILIARY
+        MAY ( ESCOEleveVecteurIdentite ))
+
+
+#------------------------------------------#
+# ESCOPersRelEleveVecteursIdentites        #
+#------------------------------------------#
+# String UTF8 multi-value                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:6 NAME 'ESCOPersRelEleveVecteursIdentites'
+	DESC 'Liste des Vecteurs d identites des eleves du parent pour les TS'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String)
+
+#------------------------------------------#
+# ESCOPersRelEleveAddons                   #
+#------------------------------------------#
+# Classe auxiliaire pour les attributs     #
+# complementaires pour ESCO-Portail.       #
+#------------------------------------------#
+objectclass (ENT_locClassPrefixe:3 NAME 'ESCOPersRelEleveAddons'
+        DESC 'Attributs complementaires a ENTAuxPersRelEleve pour ESCO-Portail.'
+        SUP ENTAuxPersRelEleve AUXILIARY
+        MAY ( ESCOPersRelEleveVecteursIdentites ))
+
+#------------------------------------------#
+# ESCOStructureNomCourt                    #
+#------------------------------------------#
+# Nom court d'une structure                #
+# utilise dans esco-structure.schema       #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:15 NAME 'ESCOStructureNomCourt'
+	DESC 'Nom court d une structure'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ESCOStructureLogo                        #
+#------------------------------------------#
+# Nom court d'une structure                #
+# utilise dans esco-structure.schema       #
+# String UTF8 mono-valuee                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:16 NAME 'ESCOStructureLogo'
+	DESC 'Logo d une structure'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ESCOStructureServices                    #
+#------------------------------------------#
+# Defini l'usage des services ENT - autres #
+# utilise dans esco-structure.schema       #
+# String UTF8 mono-valuee                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:20 NAME 'ESCOStructureServices'
+	DESC 'Etat d usage des services ENT ou autres, utilise pour le filtrage'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )

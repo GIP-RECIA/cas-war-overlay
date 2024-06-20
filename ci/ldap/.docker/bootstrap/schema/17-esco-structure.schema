@@ -1,0 +1,353 @@
+#------------------------------------------------------------------------#
+# Refeentiel ENT du secondaire                                           #
+# Banche pour les Structures                                             #
+#------------------------------------------------------------------------#
+# Document de reference : Cahier des charges du MENESR                   #
+# -----------------------                                                #
+#                                                                        #
+# Structure :     organizationalUnit                                     #
+# -----------          |                                                 #
+#                 ENTStructure                                           #
+#                      |                                                 #
+#        +-------------+---------+------------+                          #
+#        |             |         |            |                          #
+#   ENTEtablissement ENTServAc ENTCollLoc ENTEntreprise                  #
+#                                                                        #
+# Dependances : core.schema, esco-constantes.schema                      #
+# -------------                                                          #
+#------------------------------------------------------------------------#
+# GIP RECIA - A. Deman - 10/2007                                         #
+#------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTStructure                #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTStructureJointure                     #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:319 NAME 'ENTStructureJointure'
+	DESC 'Cle de jointure: identifiant de la source suivi de la cle de jointure transmise par cette source Separateur : $. Identifiants des sources autoritaires : ENT pour une saisie manuelle, MENESR pour l alimentation MENESR, libre pour les autres sources'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureTypeStruct                   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:320 NAME 'ENTStructureTypeStruct'
+	DESC 'Type de structure'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureNomCourant                   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:301 NAME 'ENTStructureNomCourant'
+	DESC 'Nom courant / Raison sociale'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureResponsable                  #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:302 NAME 'ENTStructureResponsable'
+	DESC 'Responsable'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTStructureSIREN                        #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:303 NAME 'ENTStructureSIREN'
+	DESC 'Numero de SIREN / SIRET'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureEmail                        #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:304 NAME 'ENTStructureEmail'
+	DESC 'Adresse e-mail'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureMailSI                        #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:325 NAME 'ENTStructureMailSI'
+	DESC 'Adresse e-mail dans le SI non modifiable'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureSiteWeb                      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:305 NAME 'ENTStructureSiteWeb'
+	DESC 'Site web'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureContactENT                   #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:321 NAME 'ENTStructureContactENT'
+	DESC 'Contact ENT'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTStructureUAI                          #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:306 NAME 'ENTStructureUAI'
+	DESC 'Numero UAI'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructure                             #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:21 NAME 'ENTStructure'
+        DESC 'CDC MENESR : complete la classe organizationalUnit avec les attributs communs a toutes les structures de l ENT.'
+        SUP organizationalUnit STRUCTURAL
+        MUST ( ENTStructureJointure $ ENTStructureNomCourant $
+               ENTStructureSIREN )
+        MAY ( ENTStructureTypeStruct $ ENTStructureResponsable $
+              ENTStructureEmail $ ENTStructureMailSI $ ENTStructureSiteWeb $
+              ENTStructureContactENT $ ENTStructureUAI $
+              ESCODefaultUserProfile $ ESCODomaines $ ESCOStructureNomCourt $
+              ESCOStructureLogo $ ESCOStructureServices ) )
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTEtablissement            #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTEtablissementMinistereTutelle         #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:308 NAME 'ENTEtablissementMinistereTutelle'
+	DESC 'Ministere de tutelle'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEtablissementContrat                  #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:309 NAME 'ENTEtablissementContrat'
+	DESC 'Contrat'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEtablissementStructRattachAdmin       #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:310 NAME 'ENTEtablissementStructRattachAdmin'
+	DESC 'Structures de rattachement administratif : dn d une structure'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEtablissementStructRattachFctl        #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:311 NAME 'ENTEtablissementStructRattachFctl'
+	DESC 'Structures de rattachement fonctionnel : dn d une structure ou d un groupement d etablissements'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEtablissementBassin                   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:312 NAME 'ENTEtablissementBassin'
+	DESC 'Bassin de formation'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureClasses                      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:323 NAME 'ENTStructureClasses'
+	DESC 'Liste des divisions (code et libelle) et Mef associes Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTStructureGroupes                      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:324 NAME 'ENTStructureGroupes'
+	DESC 'Liste des groupes (code et libelle) et divisions d appartenance Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEtablissement                         #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:22 NAME 'ENTEtablissement'
+        DESC 'CDC MENESR : Complete la classe ENTStructure avec les attributs relatifs a la categorie de structures Etablissements d enseignement.'
+        SUP ENTStructure STRUCTURAL
+        MUST ( ENTEtablissementMinistereTutelle $ ENTEtablissementContrat )
+        MAY  ( ENTEtablissementStructRattachAdmin $ ENTEtablissementStructRattachFctl $
+               ENTEtablissementBassin $ ENTStructureClasses $
+               ENTStructureGroupes ) )
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTServAc                   #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTServAcAcademie                        #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:316 NAME 'ENTServAcAcademie'
+	DESC 'Academie'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTServAc                                #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:24 NAME 'ENTServAc'
+        DESC 'CDC MENESR : Complete la classe ENTStructure avec les attributs relatifs a la categorie de structures Services Academiques.'
+        SUP ENTStructure STRUCTURAL
+        MUST ( ENTServAcAcademie) )
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTCollLoc                  #
+#------------------------------------------------------------------------#
+
+
+#------------------------------------------#
+# ENTCollLocLieuGeographique               #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:318 NAME 'ENTCollLocLieuGeographique'
+	DESC 'Region ou departement'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTCollLoc                               #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:25 NAME 'ENTCollLoc'
+        DESC 'CDC MENESR : Complete la classe ENTStructure avec les attributs relatifs a la categorie de structures Collectivite Locale.'
+        SUP ENTStructure STRUCTURAL
+        MUST ( ENTCollLocLieuGeographique) )
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTEntreprise               #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTEntrepriseEtabs                       #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:322 NAME 'ENTEntrepriseEtabs'
+	DESC 'Etablissements partenaires'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEntreprise                            #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:26 NAME 'ENTEntreprise'
+        DESC 'CDC MENESR : Complete la classe ENTStructure avec les attributs relatifs a la categorie de structures Entreprises partenaires.'
+        SUP ENTStructure STRUCTURAL
+        MUST ( ENTEntrepriseEtabs) )

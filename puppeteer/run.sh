@@ -1,5 +1,6 @@
 #!/bin/bash
 
+ROOT_DIRECTORY="${PWD}"
 CAS_ARGS="${CAS_ARGS:-}"
 
 RED="\e[31m"
@@ -22,7 +23,7 @@ echo "Cleaning last deployment..."
 ./gradlew clean
 
 # Remplacer appServer= par appServer=-tomcat
-casGradlePropertiesFile="${PWD}/gradle.properties"
+casGradlePropertiesFile="${ROOT_DIRECTORY}/gradle.properties"
 if grep -q 'appServer=' "$casGradlePropertiesFile"; then
     echo "Replacing 'appServer=' with 'appServer=-tomcat' in $casGradlePropertiesFile"
     sed -i 's/appServer=/appServer=-tomcat/' "$casGradlePropertiesFile"
@@ -31,7 +32,7 @@ else
 fi
 
 # Build le war du CAS
-casWebApplicationFile="${PWD}/build/libs/cas.war"
+casWebApplicationFile="${ROOT_DIRECTORY}/build/libs/cas.war"
 if [[ ! -f "$casWebApplicationFile" ]]; then
     echo "Building CAS"
     ./gradlew clean build -x test -x javadoc --no-configuration-cache
@@ -50,15 +51,22 @@ else
 fi
 
 # Installation de puppeteer s'il n'est pas enore installé
-if [[ ! -d "${PWD}/puppeteer/node_modules/puppeteer" ]]; then
+if [[ ! -d "${ROOT_DIRECTORY}/puppeteer/node_modules/puppeteer" ]]; then
     echo "Installing Puppeteer"
-    (cd "${PWD}/puppeteer" && npm install puppeteer)
+    (cd "${ROOT_DIRECTORY}/puppeteer" && npm install puppeteer)
 else
     echo "Using existing Puppeteer modules..."
 fi
 
 echo -n "NPM version: " && npm --version
 echo -n "Node version: " && node --version
+
+# Démarrage des dockers redis et ldap
+cd "${ROOT_DIRECTORY}/ci/ldap"
+./run-ldap.sh
+cd "${ROOT_DIRECTORY}/ci/redis"
+./start-all.sh
+cd "${ROOT_DIRECTORY}"
 
 # Lancement du serveur CAS grâce au war qu'on a construit plus haut
 echo "Launching CAS at $casWebApplicationFile with options $CAS_ARGS"

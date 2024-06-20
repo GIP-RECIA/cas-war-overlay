@@ -1,0 +1,5 @@
+services:
+  redis:
+    container_name: redis-server1
+    image: redis/redis-stack-server
+    network_mode: "host"

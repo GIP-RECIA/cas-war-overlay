@@ -1,0 +1,8 @@
+services:
+  sentinel:
+    image: redis
+    container_name: sentinel2
+    command: ["redis-sentinel", "/etc/redis/sentinel.conf", "--sentinel", "--port 26380"]
+    volumes:
+      - ./config:/etc/redis
+    network_mode: "host"

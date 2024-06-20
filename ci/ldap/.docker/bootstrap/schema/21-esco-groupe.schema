@@ -1,0 +1,112 @@
+#------------------------------------------------------------------------#
+# Referentiel ENT du secondaire                                          #
+# Banche pour les groupes                                                #
+#------------------------------------------------------------------------#
+# Document de reference : Cahier des charges du MENESR                   #
+# -----------------------                                                #
+#                                                                        #
+# Structure :     groupOfNames                                           #
+# -----------          |                                                 #
+#                      |                                                 #
+#        +-------------+---------+--------------------+-----------+      #
+#        |        |              |             |      |           |      #
+#   ENTClasse ENTGroups ENTGroupementEtabs ENTProfil  |           |      #
+#                                                  ENTRoleAppli   |      #
+#                                                            ENTRelEleve #
+#                                                                        #
+#                                                                        #
+# Dependances : core.schema, escco-constantes.schema                     #
+# -------------                                                          #
+#------------------------------------------------------------------------#
+# GIP RECIA - A. Deman - 10/2007                                         #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTClasse                                #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:41 NAME 'ENTClasse'
+              DESC 'CDC MENESR : classe d eleves'
+              SUP groupOfNames STRUCTURAL )
+
+#------------------------------------------#
+# ENTGroupe                                #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass (ENT_globClassPrefixe:42 NAME 'ENTGroupe'
+             DESC 'CDC MENESR : groupe d eleves'
+             SUP groupOfNames STRUCTURAL )
+
+#------------------------------------------#
+# ENTGroupementEtabs                       #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass (ENT_globClassPrefixe:43 NAME 'ENTGroupementEtabs'
+             DESC 'CDC MENESR : groupement d etablissements'
+             SUP groupOfNames STRUCTURAL )
+
+#------------------------------------------#
+# ENTRelEleve                              #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:46 NAME 'ENTRelEleve'
+              DESC 'CDC MENESR : Relation entre un eleve et une personne'
+              SUP groupOfNames STRUCTURAL )
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTProfil                   #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTProfilPeuplement                      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype ( ENT_globAttPrefixe:501 NAME 'ENTProfilPeuplement'
+	        DESC 'Regle de peuplement'
+	        EQUALITY caseIgnoreMatch
+	        SUBSTR caseIgnoreSubstringsMatch
+	        SINGLE-VALUE
+	        SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTProfil                                #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass (ENT_globClassPrefixe:44 NAME 'ENTProfil'
+        DESC 'CDC MENESR : profils decrits dans le modele de securite'
+        SUP groupOfNames STRUCTURAL
+	MAY ( ENTProfilPeuplement ))
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTRoleAppli                #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTRoleAppliProfils                      #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype ( ENT_globAttPrefixe:502 NAME 'ENTRoleAppliProfils'
+	DESC 'Profils associes'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTRoleAppli                             #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass (ENT_globClassPrefixe:45 NAME 'ENTRoleAppli'
+        DESC 'CDC MENESR : roles applicatifs du modele de securite'
+        SUP groupOfNames STRUCTURAL )

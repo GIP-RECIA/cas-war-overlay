@@ -1,0 +1,35 @@
+dn: ou=groups,dc=esco-centre,dc=fr
+changetype: add
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+
+dn: ou=structures,dc=esco-centre,dc=fr
+changetype: add
+objectClass: organizationalUnit
+objectClass: top
+ou: structures
+
+dn: ou=people,dc=esco-centre,dc=fr
+changetype: add
+objectClass: organizationalUnit
+objectClass: top
+ou: people
+
+dn: ou=administrateurs,dc=esco-centre,dc=fr
+changetype: add
+objectClass: organizationalUnit
+objectClass: top
+ou: administrateurs
+
+dn: ou=applications,dc=esco-centre,dc=fr
+changetype: add
+objectClass: organizationalUnit
+objectClass: top
+ou: applications
+
+dn: ou=mail,dc=esco-centre,dc=fr
+changetype: add
+objectClass: organizationalUnit
+objectClass: top
+ou: mail

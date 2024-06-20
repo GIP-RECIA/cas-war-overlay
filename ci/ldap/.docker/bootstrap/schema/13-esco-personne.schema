@@ -1,0 +1,1288 @@
+#------------------------------------------------------------------------#
+# Referentiel ENT du secondaire                                          #
+# Banche pour les Personnes                                              #
+#------------------------------------------------------------------------#
+# Document de reference : Cahier des charges du MENESR                   #
+# -----------------------                                                #
+#                                                                        #
+# Structure :     person                                                 #
+# -----------       |                                                    #
+#                 organizationalPerson                                   #
+#                   |                                                    #
+#                 inetOrgPerson                                          #
+#                   |                                                    #
+#                 ENTPerson                                              #
+#                   |                                                    #
+#                 ENTEleve                                               #
+#                                                                        #
+# Classes auxiliaires : ENTAuxPersRelEleve, ENTAuxEnseignant,            #
+# --------------------- ENTAuxNonEnsServAc, ENTAuxNonEnsCollLoc,         #
+#                       ENTAuxNonEnsEtab,   ENTAuxPersExt,               #
+#                       ENTAuxTuteurStage,  ENTAuxRespEntrp,             #
+#						ENTPersonRelation				                 #
+#                                                                        #
+# Dependances : core.schema, inetOrgPerson, esco-constantes.schema       #
+# ------------- cosine.schema (pour attr. personalTitle).                #
+#------------------------------------------------------------------------#
+# GIP RECIA - A. Deman - 10/2007                                         #
+#------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTPerson                   #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTPersonAutresPrenoms                   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:101 NAME 'ENTPersonAutresPrenoms'
+	DESC 'Autres prenoms que le prenom usuel'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonNomPatro                        #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:102 NAME 'ENTPersonNomPatro'
+	DESC 'Nom de famille ou de naissance'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonSexe                            #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+# Longueur 1                               #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:103 NAME 'ENTPersonSexe'
+	DESC 'Sexe : M/F'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String{1} )
+
+#------------------------------------------#
+# ENTPersonCentresInteret                  #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:104 NAME 'ENTPersonCentresInteret'
+	DESC 'Centres d interets par etablissement. Format : dn d un etablissement suivi des centres d interet. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonAdresse                         #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:105 NAME 'ENTPersonAdresse'
+	DESC 'Adresse personnelle - champ libre'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonCodePostal                      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:106 NAME 'ENTPersonCodePostal'
+	DESC 'Adresse personnelle - code postal'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonVille                           #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:107 NAME 'ENTPersonVille'
+	DESC 'Adresse personnelle - ville'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonPays                            #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:108 NAME 'ENTPersonPays'
+	DESC 'Adresse personnelle - pays'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonAdresseDiffusion                #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+# Longeur 1                                #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:187 NAME 'ENTPersonAdresseDiffusion'
+	DESC 'Diffusion de l adresse personnelle aux associations de parents d eleves O/N'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String{1} )
+
+#------------------------------------------#
+# ENTPersonLogin                           #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:109 NAME 'ENTPersonLogin'
+	DESC 'Login (identifiant de connexion a l ENT)'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonAlias                           #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:110 NAME 'ENTPersonAlias'
+	DESC 'Alias'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonJointure                        #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+# Identifiant de la source de donnees :    #
+# ENT pour les saisies manuelles, MENESR   #
+# pour  MNESR, libre pour les autres       #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:111 NAME 'ENTPersonJointure'
+	DESC 'Cles de jointure. Format : identifiant de la source$cle de jointure fournie'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonStructRattach                   #
+#------------------------------------------#
+# Secondaire                               #
+# DN String  monovaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:112 NAME 'ENTPersonStructRattach'
+	DESC 'Structure de rattachement: dn d une structure'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTPersonFonctions                       #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+# Format :                                 #
+#    dn d'un etablissement suivi du code   #
+#    de la fonction, du libelle de la      #
+#    fonction, du code de la discipline    #
+#    et du libelle de la discipline.       #
+# Separateur : "$"                         #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:169 NAME 'ENTPersonFonctions'
+	DESC 'Fonctions (et disciplines de poste associees) dans des structures'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonDateNaissance                   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:113 NAME 'ENTPersonDateNaissance'
+	DESC 'Date de naissance'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTPersonAutresMails                     #
+#------------------------------------------#
+# Secondaire                               #
+# Ref mail core.schema multivaluee         #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:175 NAME 'ENTPersonAutresMails'
+	DESC 'Autres adresses mail en self service'
+	SUP mail )
+
+#------------------------------------------#
+# ENTPersonAutresMobiles                   #
+#------------------------------------------#
+# Secondaire                               #
+# Ref mobile cosine.schema multivaluee     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:176 NAME 'ENTPersonAutresMobiles'
+	DESC 'Autres numeros mobile en self service'
+	SUP mobile )
+
+#------------------------------------------#
+# ENTPersonMailDiffusion                   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:188 NAME 'ENTPersonMailDiffusion'
+	DESC 'Mail autorise a la diffusion pour les associations de parents d eleves'
+	SUP mail
+	SINGLE-VALUE )
+
+#------------------------------------------#
+# ENTPersonMobileSMS                       #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:189 NAME 'ENTPersonMobileSMS'
+	DESC 'Numero de telephone mobile autorise pour l envoie de SMS'
+	SUP mobile
+	SINGLE-VALUE )
+
+#------------------------------------------#
+# ENTPersonProfils                         #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+# Modification du 01/02/2009 J. Gribonvald #
+# String UTF8 multivalue                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:114 NAME 'ENTPersonProfils'
+	DESC 'Liste des noms des profils de l utilisateur'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String ) )
+
+#------------------------------------------#
+# ENTPersonGARIdentifiant                  #
+#------------------------------------------#
+# Secondaire                               #
+# binary monovalue (type UUID)             #
+# temporairement facultatif car vide       #
+#------------------------------------------#
+attributetype ( ENT_globAttPrefixe:192 NAME 'ENTPersonGARIdentifiant'
+           DESC 'UUID of the entry'
+           EQUALITY uuidMatch
+           ORDERING uuidOrderingMatch
+           SYNTAX 1.3.6.1.1.16.1
+           SINGLE-VALUE )
+
+#------------------------------------------#
+# ENTPerson                                #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:1 NAME 'ENTPerson'
+		DESC 'CDC MENESR : Attributs communs a toutes les personnes de l ENT'
+		SUP inetOrgPerson STRUCTURAL
+		MUST ( ENTPersonLogin $ ENTPersonJointure )
+		MAY ( personalTitle $ ENTPersonAutresPrenoms $ ENTPersonNomPatro $ ENTPersonSexe $
+			  ENTPersonCentresInteret $ ENTPersonAdresse $
+			  ENTPersonCodePostal $ ENTPersonVille $ ENTPersonPays $
+			  ENTPersonAdresseDiffusion $ ENTPersonAlias $ ENTPersonStructRattach $
+			  ENTPersonFonctions $ ENTPersonDateNaissance $
+			  ENTPersonAutresMails $ ENTPersonAutresMobiles $
+			  ENTPersonMailDiffusion $ ENTPersonMobileSMS $
+			  ENTPersonProfils $ ENTPersonGARIdentifiant ) )
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTEleve                    #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTEleveVilleNaissance - DEPRECATED      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:115 NAME 'ENTEleveVilleNaissance'
+	DESC 'Ville de naissance'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveDeptNaissance - DEPRECATED       #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:116 NAME 'ENTEleveDeptNaissance'
+	DESC 'Departement de naissance'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+
+#------------------------------------------#
+# ENTElevePaysNaissance - DEPRECATED       #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:117 NAME 'ENTElevePaysNaissance'
+	DESC 'Pays de naissance'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveParents - DEPRECATED             #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:172 NAME 'ENTEleveParents'
+	DESC 'Parents'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEleveAutoriteParentale - DEPRECATED   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:120 NAME 'ENTEleveAutoriteParentale'
+	DESC 'Personnes exercant l autorite parentale'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTElevePersRelEleve1 - DEPRECATED       #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:121 NAME 'ENTElevePersRelEleve1'
+	DESC 'Autre personne en relation avec l eleve - 1'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEleveQualitePersRelEleve1 - DEPRECATED#
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:122 NAME 'ENTEleveQualitePersRelEleve1'
+	DESC 'Qualite autre personne en relation avec l eleve 1 : FINANCIER/CONTACT/PAIEMENT'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+
+#------------------------------------------#
+# ENTElevePersRelEleve2 - DEPRECATED       #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:123 NAME 'ENTElevePersRelEleve2'
+	DESC 'Autre personne en relation avec l eleve - 2'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEleveQualitePersRelEleve2 - DEPRECATED#
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:124 NAME 'ENTEleveQualitePersRelEleve2'
+	DESC 'Qualite autre personne en relation avec l eleve 2 : FINANCIER/CONTACT/PAIEMENT'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTElevePersRelEleve                     #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:185 NAME 'ENTElevePersRelEleve'
+	DESC 'Personnes en relation avec l eleve avec les informations code type relation, code resp financier, code resp legal, code contact, code paiement Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveBoursier                         #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+# Longeur 1                                #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:125 NAME 'ENTEleveBoursier'
+	DESC 'Boursier O/N'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String{1} )
+
+#------------------------------------------#
+# ENTEleveRegime                           #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:126 NAME 'ENTEleveRegime'
+	DESC 'Regime etablissement de rattachement : INTERNE/EXTERNE/1/2 PENSION/N_REGIME_ELEVE/N_REGIME_ELEVE2'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveTransport                        #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+# Longeur 1                                #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:127 NAME 'ENTEleveTransport'
+	DESC 'Transport scolaire : O/N'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String{1} )
+
+#------------------------------------------#
+# ENTEleveAdresseRel                       #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:193 NAME 'ENTEleveAdresseRel'
+	DESC 'Adresse de residence chez un representant legal ou en charge'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEleveStatutEleve                      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:128 NAME 'ENTEleveStatutEleve'
+	DESC 'Statut de l eleve'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveMEF                              #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:129 NAME 'ENTEleveMEF'
+	DESC 'MEF'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveLibelleMEF                       #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:130 NAME 'ENTEleveLibelleMEF'
+	DESC 'Libelle MEF'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveMEFRattach - DEPRECATED          #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:170 NAME 'ENTEleveMEFRattach'
+	DESC 'MEF de rattachement'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveNivFormation                     #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:131 NAME 'ENTEleveNivFormation'
+	DESC 'Niveau de formation'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveFiliere                          #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:132 NAME 'ENTEleveFiliere'
+	DESC 'Filiere'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveNivFormationDiplome              #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:171 NAME 'ENTEleveNivFormationDiplome'
+	DESC 'Niveau de formation du diplome'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveSpecialite                       #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:133 NAME 'ENTEleveSpecialite'
+	DESC 'Specialite'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveEnseignements                    #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:134 NAME 'ENTEleveEnseignements'
+	DESC 'Enseignements'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveCodeEnseignements                #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:186 NAME 'ENTEleveCodeEnseignements'
+	DESC 'Code des Enseignements'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveClasses                          #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:135 NAME 'ENTEleveClasses'
+	DESC 'Etablissements et classe associee : dn etablissement suivi de la classe associee (une seule) separateur $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveGroupes                          #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:136 NAME 'ENTEleveGroupes'
+	DESC 'Etablissements et groupes associes:dn d un etablissement suivi des groupes associes. Separateur $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveEnsRespStage                     #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:137 NAME 'ENTEleveEnsRespStage'
+	DESC 'Enseignant responsable de stage'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEleveEnsTutStage                      #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:138 NAME 'ENTEleveEnsTutStage'
+	DESC 'Enseignants tuteurs de stage'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEleveEntrTutStage                     #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:139 NAME 'ENTEleveEntrTutStage'
+	DESC 'Tuteur de stage / Maitre d apprentissage'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEleveEntrAutres                       #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:140 NAME 'ENTEleveEntrAutres'
+	DESC 'Autres personnes de l entreprise suivant l eleve en stage'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTEleveDelegClasse                      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+# Longeur 1                                #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:141 NAME 'ENTEleveDelegClasse'
+	DESC 'Eleve delegue de classe : O/N'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String{1} )
+
+#------------------------------------------#
+# ENTEleveDelegAutres                      #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:142 NAME 'ENTEleveDelegAutres'
+	DESC 'Eleve delegue autres'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveMajeur                           #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+# Longeur 1                                #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:143 NAME 'ENTEleveMajeur'
+	DESC 'Majeur O/N'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String{1} )
+
+#------------------------------------------#
+# ENTEleveMajeurAnticipe                   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+# Longueur 1                               #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:174 NAME 'ENTEleveMajeurAnticipe'
+	DESC 'Majeur anticipe O/N'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String{1} )
+
+#------------------------------------------#
+# ENTEleveStructRattachId                  #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:178 NAME 'ENTEleveStructRattachId'
+	DESC 'Identifiant SCONET'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleveINE                              #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovalue                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:190 NAME 'ENTEleveINE'
+	DESC 'Identifiant National de l Eleve : INE'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTEleve                                 #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:2 NAME 'ENTEleve'
+		DESC 'CDC MENESR : ajoute a la classe ENTPerson les attributs relatifs a la categorie de personne Eleves.'
+		SUP ENTPerson STRUCTURAL
+		MUST ( ENTEleveStatutEleve $ ENTEleveMEF $ ENTEleveLibelleMEF $
+		   ENTEleveNivFormation $ ENTEleveFiliere $
+			   ENTEleveClasses $ ENTEleveMajeur )
+		MAY ( ENTEleveVilleNaissance $ ENTEleveDeptNaissance $ ENTElevePaysNaissance $
+			  ENTEleveParents $ ENTEleveAutoriteParentale $ ENTElevePersRelEleve1 $
+			  ENTEleveQualitePersRelEleve1 $ ENTElevePersRelEleve2 $
+			  ENTEleveQualitePersRelEleve2 $ ENTElevePersRelEleve $
+			  ENTEleveBoursier $ ENTEleveRegime $
+			  ENTEleveTransport $ ENTEleveMEFRattach $ ENTEleveNivFormationDiplome $
+			  ENTEleveSpecialite $ ENTEleveEnseignements $ ENTEleveCodeEnseignements $
+			  ENTEleveGroupes $ ENTEleveEnsRespStage $ ENTEleveEnsTutStage $
+			  ENTEleveEntrTutStage $ ENTEleveEntrAutres $ ENTEleveDelegClasse $
+			  ENTEleveDelegAutres $ ENTEleveMajeurAnticipe $ ENTEleveStructRattachId $
+			  ENTEleveINE $ ENTEleveAdresseRel ) )
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTAuxPersRelEleve          #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTAuxPersRelEleveEleve                  #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:144 NAME 'ENTAuxPersRelEleveEleve'
+	DESC 'Eleves concernes'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+
+#------------------------------------------#
+# ENTAuxPersRelEleveRepresentant           #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:145 NAME 'ENTAuxPersRelEleveRepresentant'
+	DESC 'Representant des parents d eleves'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTAuxPersRelEleve                       #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:3 NAME 'ENTAuxPersRelEleve'
+		DESC 'CDC MENESR : classe auxiliaire completant la classe ENTPerson avec les attributs relatifs a la categorie de personnes en relation avec les eleves.'
+		SUP top AUXILIARY
+		MUST ( ENTAuxPersRelEleveEleve )
+		MAY ( ENTAuxPersRelEleveRepresentant ) )
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTAuxEnseignant            #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTAuxEnsCategoDiscipline                #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:173 NAME 'ENTAuxEnsCategoDiscipline'
+	DESC 'Categories de disciplines de poste : code de la categorie de discipline suivi du libelle correspondant. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxEnsMEF                             #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:168 NAME 'ENTAuxEnsMEF'
+	DESC 'Codes MEF et libelle associe pour chaque etablissement : dn d un etablissement suivi du code MEF et du libelle MEF Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ESCOAuxEnsMEFsResponsable                #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:19 NAME 'ESCOAuxEnsMEFsResponsable'
+	DESC 'Codes MEF et libelles en responsabilite pour chaque etablissement : dn d un etablissement suivi du code MEF et du libelle MEF Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxEnsMatiereEnseignEtab              #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:147 NAME 'ENTAuxEnsMatiereEnseignEtab'
+	DESC 'Etablissement et matieres enseignees : dn d un etablissement suivi des matieres enseignees Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxEnsClasses                         #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:148 NAME 'ENTAuxEnsClasses'
+	DESC 'Etablissement et classes associees : dn d un etablissement suivi des classes associees. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxEnsGroupes                         #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:149 NAME 'ENTAuxEnsGroupes'
+	DESC 'Etablissement et groupes associes : dn d un etablissement suivi des groupes associes. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxEnsClassesMatieres                  #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:179 NAME 'ENTAuxEnsClassesMatieres'
+	DESC 'Associations Etablissement, classe et matiere : dn d un etablissement suivi d une classe et d un code matiere. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxEnsGroupesMatieres                  #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:180 NAME 'ENTAuxEnsGroupesMatieres'
+	DESC 'Associations Etablissement, groupe et matiere : dn d un etablissement suivi d un groupe et d un code matiere. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxEnsClassesPrincipal                #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:150 NAME 'ENTAuxEnsClassesPrincipal'
+	DESC 'Etablissement et classes associees dont la personne est professeur principal : dn d un etablissement suivi des classes associees. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxEnsRespStage                       #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:151 NAME 'ENTAuxEnsRespStage'
+	DESC 'Eleves stagiaires en responsabilite'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTAuxEnsTutStage                        #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:152 NAME 'ENTAuxEnsTutStage'
+	DESC 'Eleves stagiaires suivis'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTAuxEnseignant                         #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:4 NAME 'ENTAuxEnseignant'
+		DESC 'CDC MENESR : classe auxiliaire completant la classe ENTPerson avec les attributs relatifs a la categorie de personnes Enseignant.'
+		SUP top AUXILIARY
+		MAY ( ENTAuxEnsCategoDiscipline $ ENTAuxEnsMEF $ ENTAuxEnsMatiereEnseignEtab $
+			  ENTAuxEnsClasses $ ENTAuxEnsGroupes $ ENTAuxEnsClassesMatieres $
+			  ENTAuxEnsGroupesMatieres $ ENTAuxEnsClassesPrincipal $
+			  ENTAuxEnsRespStage $ ENTAuxEnsTutStage $ ESCOAuxEnsMEFsResponsable ) )
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTAuxNonEnsServAc          #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTAuxNonEnsServAc                       #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:153 NAME 'ENTAuxNonEnsServAcService'
+	DESC 'Service'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxNonEnsServAcDomaineEtab            #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:155 NAME 'ENTAuxNonEnsServAcDomaineEtab'
+	DESC 'Etablissements d exercice et domaines associes : dn d un etablissement suivi des domaines. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxNonEnsServAcDomaineRegroupEtabs    #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:156 NAME 'ENTAuxNonEnsServAcDomaineRegroupEtabs'
+	DESC 'Regroupement d etablissements d exercice et domaines associes : dn d un regroupement d etablissement suivi des domaines Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxNonEnsServAc                       #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:5 NAME 'ENTAuxNonEnsServAc'
+		DESC 'CDC MENESR : classe auxiliaire completant la classe ENTPerson avec les attributs relatifs a la categorie de personnes Non enseignants rattaches administrativement aux services academiques.'
+		SUP top AUXILIARY
+		MAY ( ENTAuxNonEnsServAcService $ ENTAuxNonEnsServAcDomaineEtab $
+			  ENTAuxNonEnsServAcDomaineRegroupEtabs ) )
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTAuxNonEnsCollLoc         #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTAuxNonEnsCollLocService              #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:157 NAME 'ENTAuxNonEnsCollLocService'
+	DESC 'Service'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxNonEnsCollLocDomaineEtab           #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:159 NAME 'ENTAuxNonEnsCollLocDomaineEtab'
+	DESC 'Etablissements d exercice et domaines associes : dn d un etablissement suivi des domaines. Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxNonEnsCollLocDomaineRegroupEtabs   #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:160 NAME 'ENTAuxNonEnsCollLocDomaineRegroupEtabs'
+	DESC 'Regroupement d etablissements d exercice et domaines associes : dn d un regroupement d etablissement suivi des domaines Separateur : $'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxNonEnsCollLoc                      #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:6 NAME 'ENTAuxNonEnsCollLoc'
+		DESC 'CDC MENESR : classe auxiliaire completant la classe ENTPerson avec les attributs relatifs a la categorie de personnes Non enseignants rattaches administrativement a une collectivite locale.'
+		SUP top AUXILIARY
+		MAY ( ENTAuxNonEnsCollLocService $ ENTAuxNonEnsCollLocDomaineEtab $
+		  ENTAuxNonEnsCollLocDomaineRegroupEtabs ) )
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTAuxNonEnsEtab            #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTAuxNonEnsEtabService                  #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:161 NAME 'ENTAuxNonEnsEtabService'
+	DESC 'Service'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxNonEnsEtab                         #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:7 NAME 'ENTAuxNonEnsEtab'
+				DESC 'CDC MENESR : classe auxiliaire completant la classe ENTPerson avec les attributs relatifs a la categorie de personnes Non enseignants rattaches administrativement a un etablissement d enseignement.'
+		SUP top AUXILIARY
+		MAY ( ENTAuxNonEnsEtabService ) )
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTAuxPersExt               #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTAuxPersExt                            #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:163 NAME 'ENTAuxPersExt'
+	DESC 'Service'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTAuxPersExt                            #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:8 NAME 'ENTAuxPersExt'
+				DESC 'CDC MENESR : classe auxiliaire completant la classe ENTPerson avec les attributs relatifs a la categorie de personnes Personnels exterieur.'
+		SUP top AUXILIARY
+		MAY ( ENTAuxPersExt ) )
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTAuxTuteurStage           #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTAuxTuteurStageSociete                 #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:165 NAME 'ENTAuxTuteurStageSociete'
+	DESC 'Societe'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+
+#------------------------------------------#
+# ENTAuxTuteurStageEleves                  #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:166 NAME 'ENTAuxTuteurStageEleves'
+	DESC 'Eleves suivis en stage ou en apprentissage'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTAuxTuteurStage                        #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:9 NAME 'ENTAuxTuteurStage'
+		DESC 'CDC MENESR : complete la classe ENTPerson avec les attributs relatifs a la categorie de personnes Tuteurs de stages.'
+		SUP top AUXILIARY
+		MUST ( ENTAuxTuteurStageSociete $ ENTAuxTuteurStageEleves ) )
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTAuxRespEntrp             #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTAuxRespEntrpSociete                   #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:167 NAME 'ENTAuxRespEntrpSociete'
+	DESC 'Societe'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTAuxRespEntrp                          #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:10 NAME 'ENTAuxRespEntrp'
+		DESC 'CDC MENESR : complete la classe ENTPerson avec les attributs relatifs a la categorie de personnes Responsables des entreprises partenaires.'
+		SUP top AUXILIARY
+		MUST ( ENTAuxRespEntrpSociete ) )
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTPersonRelation           #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTPersRelRapprochPrincipal              #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:181 NAME 'ENTPersRelRapprochPrincipal'
+	DESC 'Compte principal rattache'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTPersRelRapprochSecondaire             #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivalue                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:182 NAME 'ENTPersRelRapprochSecondaire'
+	DESC 'Compte secondaire rattache'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTPersRelFusionPrincipal                #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:183 NAME 'ENTPersRelFusionPrincipal'
+	DESC 'Compte principal fusionne'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTPersRelFusionSecondaire               #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivalue                     #
+#------------------------------------------#
+attributetype (ENT_globAttPrefixe:184 NAME 'ENTPersRelFusionSecondaire'
+	DESC 'Compte secondaire fusionne'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTPersonRelation                        #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#
+objectclass ( ENT_globClassPrefixe:11 NAME 'ENTPersonRelation'
+		DESC 'CDC MENESR : complete la classe ENTPerson avec les attributs relatifs a la definition des operations de reconciliation entre comptes utilisateurs.'
+		SUP top AUXILIARY
+		MAY ( ENTPersRelRapprochPrincipal $ ENTPersRelRapprochSecondaire $
+			ENTPersRelFusionPrincipal $ ENTPersRelFusionSecondaire ) )

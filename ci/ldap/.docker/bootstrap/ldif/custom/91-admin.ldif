@@ -1,0 +1,13 @@
+version: 1
+
+dn: cn=admin,dc=esco-centre,dc=fr
+changetype: modify
+add: ou
+ou: administrateurs
+
+dn: cn=admin,dc=esco-centre,dc=fr
+changetype: modrdn
+newrdn: cn=admin
+deleteoldrdn: 1
+newsuperior: ou=administrateurs,dc=esco-centre,dc=fr
+

@@ -1,0 +1,54 @@
+#------------------------------------------------------------------------#
+# Referentiel ENT du secondaire                                          #
+# Raccourcis pour les OID d'attribut, classe et syntaxe utilises dans le #
+# schema de l'annuaire.                                                  #
+#                                                                        #
+# Document de reference : Cahier des charges du MENESR                   #
+# -----------------------                                                #
+#                                                                        #
+# Format des OID (cf. ? 4.1) :                                           #
+# ----------------------------                                           #
+#<OID Porteur><Projet><Type usage><Portee>  <Type Element><Increment>    #
+#                1      1          1 Global  1 Attribut                  #
+#                                  2 Local   2 Classe                    #
+#                                                                        #
+# Prefixe attributs globaux  : 1.1.1.1.                                  #
+# Prefixe classes   globales : 1.1.1.2.                                  #
+# Prefixe attributs locaux   : 1.1.2.1.                                  #
+# Prefixe classes   locales  : 1.1.2.2.                                  #
+#------------------------------------------------------------------------#
+# GIP RECIA - A. Deman - 10/2007                                         #
+# GIP RECIA - J. Gribonvald - 07/2012                                    #
+#------------------------------------------------------------------------#
+
+
+# Prefixe commun a tous les identifiants de syntaxe
+objectIdentifier LDAP_SyntPrefixe 1.3.6.1.4.1.1466.115.121.1
+
+# Prefixe pour les attributs locaux
+objectIdentifier ENT_locAttPrefixe 1.1.2.1
+
+# Prefixe pour les attributs globaux
+objectIdentifier ENT_globAttPrefixe 1.1.1.1
+
+# Prefixe pour les classes locales
+objectIdentifier ENT_locClassPrefixe 1.1.2.2
+
+# Prefixe pour les classes globales
+objectIdentifier ENT_globClassPrefixe 1.1.1.2
+
+# Chaine standard en UTF 8 (DirectoryString)
+objectIdentifier ENT_UTF8String LDAP_SyntPrefixe:15
+
+# Chaine correspondant a l'alphabet internationnal numero 5 (mail)
+objectIdentifier ENT_IA5String LDAP_SyntPrefixe:26
+
+# Chaine correspondant a un DN
+objectIdentifier ENT_DNString LDAP_SyntPrefixe:12
+
+# Chaine correspondant a un Booleen
+objectIdentifier ENT_BOOLEAN LDAP_SyntPrefixe:7
+
+
+
+

@@ -1,0 +1,83 @@
+
+#------------------------------------------------------------------------# 
+# Referentiel ENT du secondaire                                          #
+# Banche pour la gestion du mail                                         #
+#------------------------------------------------------------------------# 
+# Reference : Schema defini par le CRI de l'Universite d'Orleans.        #
+# Remarques : plages d'OIDs reservees pour ce schema                     #
+#             attributs 21 a 40                                          #
+#             classes   6 a  10                                          #           
+#------------------------------------------------------------------------#
+# GIP RECIA - A. Deman - 02/2009                                         #
+#------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ESCOMail                    #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# maildrop                                 #
+#------------------------------------------#
+# String IA5 multi-value                   #
+#------------------------------------------#
+# Attribut fourni par un schéma de l'image docker
+attributetype ( ENT_locAttPrefixe:21 NAME 'mailDrop'
+        DESC 'RFC822 Mailbox - mail alias'
+        EQUALITY caseIgnoreIA5Match
+        SUBSTR caseIgnoreIA5SubstringsMatch
+        SYNTAX ENT_IA5String{256} )
+
+#------------------------------------------#
+# mailAlias                                #
+#------------------------------------------#
+# String IA5 mono-value                    #
+#------------------------------------------#   
+attributetype ( ENT_locAttPrefixe:23 NAME 'mailAlias'
+        DESC 'mail'
+        EQUALITY caseIgnoreIA5Match
+        SUBSTR caseIgnoreIA5SubstringsMatch
+        SYNTAX ENT_IA5String SINGLE-VALUE)
+
+#------------------------------------------#
+# ESCOMail                                 #
+#------------------------------------------#
+objectclass ( ENT_locClassPrefixe:6 NAME 'ESCOMail' SUP top STRUCTURAL
+	DESC 'Mail Postfix Imap'     
+	MUST ( mailAlias $ mailDrop ) )	   
+    
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ESCODomain                  #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# virtualdomain                            #
+#------------------------------------------#
+# String IA5 mono-value                    #
+#------------------------------------------#   
+attributetype ( ENT_locAttPrefixe:22 NAME 'virtualDomain'
+        DESC 'A mail domain that is mapped to a single mail account'
+        EQUALITY caseIgnoreIA5Match
+        SUBSTR caseIgnoreIA5SubstringsMatch
+        SYNTAX ENT_IA5String SINGLE-VALUE)
+
+#------------------------------------------#
+# ESCODomain                               #
+#------------------------------------------#
+objectclass ( ENT_locClassPrefixe:7 NAME 'ESCODomain' STRUCTURAL
+	DESC 'Domaine Postfix Imap'     
+	MUST ( virtualDomain ) 
+	MAY ( description ) )
+	
+
+#----------------------------------------------#
+#	ESCOFunctionEmail 												   #
+# Pour la gestion des mails de fonction 		   #
+# pas necessairement dans la branche mail 		 #
+# peut etre dans la branche structure ou autre #
+#----------------------------------------------#
+objectclass ( ENT_locClassPrefixe:10 NAME 'ESCOFunctionEmail'
+	DESC 'Functional email address'
+	SUP top STRUCTURAL
+	MUST ( cn $ mail )
+	MAY ( ENTStructureSIREN $ description ) )
+

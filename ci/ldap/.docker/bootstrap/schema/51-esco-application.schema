@@ -1,0 +1,120 @@
+#------------------------------------------------------------------------# 
+# Referentiel ENT du secondaire                                          #
+# Banche pour les applications                                           #
+#------------------------------------------------------------------------# 
+# Document de reference : Cahier des charges du MENESR                   #
+# -----------------------                                                #
+#                                                                        #
+# Structure :     top                                                    #
+# -----------      |                                                     #
+#                 ENTApplication                                         #
+#                                                                        #
+# Dependances : core.schema, esco-constantes.schema                      #
+# -------------                                                          # 
+#------------------------------------------------------------------------#
+# GIP RECIA - A. Deman - 10/2007                                         #
+#------------------------------------------------------------------------#
+
+
+
+#------------------------------------------------------------------------#
+#                   Attributs et classe pour ENTApplication              #
+#------------------------------------------------------------------------#
+
+#------------------------------------------#
+# ENTApplicationId                         #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#   
+attributetype ( 1.1.1.1.707 NAME 'ENTApplicationId'
+	DESC 'Identifiant'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTApplicationNom                        #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#   
+attributetype (ENT_globAttPrefixe:701 NAME 'ENTApplicationNom'
+	DESC 'Nom de l application'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTApplicationDesc                       #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 monovaluee                   #
+#------------------------------------------#   
+attributetype (ENT_globAttPrefixe:702 NAME 'ENTApplicationDesc'
+	DESC 'Description'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SINGLE-VALUE
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTApplicationCatego                     #
+#------------------------------------------#
+# Secondaire                               #
+# String UTF8 multivaluee                  #
+#------------------------------------------#   
+attributetype (ENT_globAttPrefixe:703 NAME 'ENTApplicationCatego'
+	DESC 'Categorie : Outils, Communication, Personnels, Vie scolaire, Ressources, Divers'
+	EQUALITY caseIgnoreMatch
+	SUBSTR caseIgnoreSubstringsMatch
+	SYNTAX ENT_UTF8String )
+
+#------------------------------------------#
+# ENTApplicationProprietaire               #
+#------------------------------------------#
+# Secondaire                               #
+# String DN monovaluee                     #
+#------------------------------------------#   
+attributetype (ENT_globAttPrefixe:704 NAME 'ENTApplicationProprietaire'
+	DESC 'Proprietaire de l application'
+	EQUALITY distinguishedNameMatch
+	SINGLE-VALUE
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTApplicationProfils                    #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#   
+attributetype (ENT_globAttPrefixe:705 NAME 'ENTApplicationProfils'
+	DESC 'Profils utilises par l application'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTApplicationRolesAppli                 #
+#------------------------------------------#
+# Secondaire                               #
+# String DN multivaluee                    #
+#------------------------------------------#   
+attributetype (ENT_globAttPrefixe:706 NAME 'ENTApplicationRolesAppli'
+	DESC 'Roles applicatifs utilises par l application'
+	EQUALITY distinguishedNameMatch
+	SYNTAX ENT_DNString )
+
+#------------------------------------------#
+# ENTApplication                           #
+#------------------------------------------#
+# Secondaire                               #
+#------------------------------------------#   
+objectclass ( ENT_globClassPrefixe:60 NAME 'ENTApplication'
+        DESC 'CDC MENESR : applications utilisant l annuaire ENT. Ces applications peuvent reposer ou non sur le socle ENT.'
+        SUP top STRUCTURAL
+        MUST ( ENTApplicationId $ userPassword $ ENTApplicationNom $
+		ENTApplicationCatego )
+        MAY  ( ENTApplicationDesc $ ENTApplicationProprietaire $
+              ENTApplicationProfils $ ENTApplicationRolesAppli ) )
