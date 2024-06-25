@@ -26,11 +26,11 @@ const logger = pino({
 
         await page.waitForSelector("#username", {visible: true});
         await page.$eval("#username", el => el.value = '');
-        await page.type("#username", "casuser");
+        await page.type("#username", "test1");
 
         await page.waitForSelector("#password", {visible: true});
         await page.$eval("#password", el => el.value = '');
-        await page.type("#password", "Mellon");
+        await page.type("#password", "test");
 
         await page.keyboard.press('Enter');
         await page.waitForNavigation();

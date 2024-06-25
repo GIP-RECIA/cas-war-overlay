@@ -1,23 +1,35 @@
 # Ce fichier contient les properties utilisées pour les tests avec puppeteer
-cas.server.name: https://localhost:8443
-cas.server.prefix: https://localhost:8443/cas
 server.port: 8443
 spring.main.lazy-initialization: false
+
+cas.server.name: https://localhost:8443
+cas.server.prefix: https://localhost:8443/cas
+
+# Monitoring endpoints
 management.endpoints.web.discovery.enabled: true
-cas.audit.engine.enabled: true
-cas.audit.slf4j.use-single-line: true
 cas.monitor.endpoints.endpoint.defaults.access: ANONYMOUS
 management.health.redis.enabled: true
 management.health.redisHealthIndicator.enabled: true
 management.endpoints.web.exposure.include: health,ssoSessions,ticketRegistry
 management.endpoint.health.show-details: always
 management.endpoints.enabled-by-default: true
-cas.service-registry.redis.host: localhost
-cas.service-registry.redis.port: 6379
-cas.ticket.registry.redis.host: cas2
-cas.ticket.registry.redis.port: 6379
+
+# Audit
+cas.audit.engine.enabled: true
+cas.audit.slf4j.use-single-line: true
 cas.audit.redis.host: cas2
 cas.audit.redis.port: 6379
+
+# Service ticket registry
+cas.authn.accept.enabled: false
+cas.ticket.registry.redis.host: localhost
+cas.ticket.registry.redis.port: 6379
+cas.ticket.registry.redis.sentinel.master: mymaster
+cas.ticket.registry.redis.sentinel.node[0]: localhost:26379
+cas.ticket.registry.redis.sentinel.node[1]: localhost:26380
+cas.ticket.registry.redis.sentinel.node[2]: localhost:26381
+
+# Service registry
 cas.service-registry.core.init-from-json: false
 cas.service-registry.git.repository-url: https://github.com/nathancailbourdin/cas-git-service-registry-test.git
 cas.service-registry.git.active-branch: main
@@ -26,3 +38,16 @@ cas.service-registry.git.clone-directory.location: file:/tmp/cas-service-registr
 cas.service-registry.schedule.start-delay: 10000
 cas.service-registry.schedule.repeat-interval: 120000
 cas.service-registry.cache.duration: 900000
+
+# LDAP
+cas.authn.ldap[0].base-dn: ou=people,dc=esco-centre,dc=fr
+cas.authn.ldap[0].bind-credential: admin
+cas.authn.ldap[0].bind-dn: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
+cas.authn.ldap[0].ldap-url: ldap://localhost:389
+cas.authn.ldap[0].search-filter: (|(ENTPersonLogin={user})(ENTPersonAlias={user}))
+cas.authn.ldap[0].type: AUTHENTICATED
+cas.authn.ldap[0].principal-attribute-id: uid
+cas.authn.ldap[0].principal-attribute-list: uid,isMemberOf,cn,sn,givenName,displayName,mail,ENTPersonLogin,\
+  ESCODomaines,ESCOUAICourant,ESCOSIRENCourant,ENTPersonFonctions,ENTPersonProfils,ESCOPersonProfiles,ENTEleveClasses,\
+  ENTAuxEnsClassesMatieres,ENTEleveGroupes,ENTAuxEnsGroupesMatieres,ENTEleveNivFormation,ESCOUAI,ESCOSIREN,\
+  ESCOUAIRattachement,ENTPersonDateNaissance,ENTPersonCodePostal,ENTPersonJointure,ENTPersonStructRattach,ESCOPersonEtatCompte
