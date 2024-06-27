@@ -47,3 +47,9 @@ apache-tomcat.zip
 config-metadata.properties
 node-modules
 package-lock.json
+
+### OTHER ###
+puppeteer/node_modules
+ci/redis/docker-sentinel1/config
+ci/redis/docker-sentinel2/config
+ci/redis/docker-sentinel3/config
