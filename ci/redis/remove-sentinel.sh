@@ -1,7 +1,7 @@
 #!/bin/bash
-sudo rm docker-sentinel1/config/*
-sudo rm docker-sentinel2/config/*
-sudo rm docker-sentinel3/config/*
+sudo rm -rf docker-sentinel1/config
+sudo rm -rf docker-sentinel2/config
+sudo rm -rf docker-sentinel3/config
 
 cd docker-sentinel1
 docker compose down

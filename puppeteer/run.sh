@@ -104,6 +104,12 @@ for scenario in "${PWD}"/puppeteer/scenarios/*; do
     sleep 1
 done;
 
-# On kill le serveur CAS avant de terminer le script
+# On kill le serveur CAS et les docker avant de terminer le script
 kill -9 "$pid"
+cd "${ROOT_DIRECTORY}/ci/ldap"
+./stop-ldap.sh
+cd "${ROOT_DIRECTORY}/ci/redis"
+./stop-all.sh
+cd "${ROOT_DIRECTORY}"
+
 exit 0
