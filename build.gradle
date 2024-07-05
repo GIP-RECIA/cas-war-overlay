@@ -282,7 +282,11 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-oauth-webflow"
     implementation "org.apereo.cas:cas-server-support-jmx"
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow"
-    // Compilation modifs redis
+    implementation "org.apereo.cas:cas-server-support-interrupt-webflow"
+    // Custom interrupt
+    compileOnly "org.apereo.cas:cas-server-support-interrupt-core"
+    compileOnly "org.apereo.cas:cas-server-support-interrupt-api"
+    // Custom redis ticket registry
     compileOnly "org.apereo.cas:cas-server-core-util-api"
     compileOnly "org.apereo.cas:cas-server-support-redis-core"
     compileOnly "org.apereo.cas:cas-server-core-authentication-api"

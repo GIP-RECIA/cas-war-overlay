@@ -51,3 +51,13 @@ cas.authn.ldap[0].principal-attribute-list: uid,isMemberOf,cn,sn,givenName,displ
   ESCODomaines,ESCOUAICourant,ESCOSIRENCourant,ENTPersonFonctions,ENTPersonProfils,ESCOPersonProfiles,ENTEleveClasses,\
   ENTAuxEnsClassesMatieres,ENTEleveGroupes,ENTAuxEnsGroupesMatieres,ENTEleveNivFormation,ESCOUAI,ESCOSIREN,\
   ESCOUAIRattachement,ENTPersonDateNaissance,ENTPersonCodePostal,ENTPersonJointure,ENTPersonStructRattach,ESCOPersonEtatCompte
+
+# Login Flow Interrupt
+cas.interrupt.core.force-execution: true
+cas.interrupt.core.trigger-mode: AFTER_SSO
+
+# Custom Properties
+# Interrupt
+cas.custom.properties.interrupt.structs-base-api-url: https://fakeurl.com
+cas.custom.properties.interrupt.structs-api-path: /fakepath/
+cas.custom.properties.interrupt.replace-domain-regex: (\\?service=https://)[^/]+(/)
