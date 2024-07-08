@@ -10,26 +10,26 @@ import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.services.RegisteredService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.webflow.execution.RequestContext;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+
+@EnableScheduling
 public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
 
     /**
      * Logger instance.
      */
     Logger LOGGER = LoggerFactory.getLogger(DomainChangeInterruptInquirer.class);
-
-    /**
-     * Configuration properties.
-     */
-    private final CasConfigurationProperties casProperties;
 
     /**
      * HTTPClient to make requests to structs info api
@@ -52,15 +52,21 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
     private final String baseAPIPath;
 
     /**
+     * Map used to cache the domains corresponding to a certain siren
+     * It looks like {siren1: domain1, siren2: domain2, ...}
+     */
+    private Map<String, String> domainBySirenCache;
+
+    /**
      * Constructor
      * @param casProperties configuration properties
      */
     public DomainChangeInterruptInquirer(CasConfigurationProperties casProperties){
-        this.casProperties = casProperties;
         this.httpClient = HttpClient.newHttpClient();
         this.structsBaseAPIUrl = casProperties.getCustom().getProperties().get("interrupt.structs-base-api-url");
         this.baseAPIPath = casProperties.getCustom().getProperties().get("interrupt.structs-api-path");
         this.replaceDomainRegex = casProperties.getCustom().getProperties().get("interrupt.replace-domain-regex");
+        this.domainBySirenCache = new HashMap<>();
     }
 
     /**
@@ -83,18 +89,18 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
             final String sirenCourant = (String) authentication.getPrincipal().getAttributes().get("ESCOSIRENCourant").getFirst();
             if(sirenCourant != null){
                 final String domain = getUserDomain(sirenCourant);
-                LOGGER.trace("The current domain for [{}] is [{}]", authentication.getPrincipal(), domain);
+                LOGGER.trace("The current domain for [{}] is [{}]", authentication.getPrincipal().getId(), domain);
                 // If there is an error trying to retrieve the domain just skip and don't change the domain
                 if(domain != null){
                     final HttpServletRequest nativeRequest = (HttpServletRequest) requestContext.getExternalContext().getNativeRequest();
                     final String requestURL = nativeRequest.getRequestURL().toString();
                     final String requestParams = nativeRequest.getQueryString();
-                    // If the service.getId() does not contain the domain of the user, that means we need to redirect the user
+                    // If service.getId() does not contain the user domain, that means we need to redirect the user
                     if (!service.getId().contains(domain)) {
                         final String oldURL = requestURL + "?" + requestParams;
-                        LOGGER.debug("Redirecting user : Old URL is [{}]", oldURL);
+                        LOGGER.debug("Redirecting user [{}]: Old URL is [{}]", authentication.getPrincipal().getId(), oldURL);
                         final String newURL = replaceServiceDomain(domain, oldURL);
-                        LOGGER.debug("Redirecting user : New URL is [{}]", newURL);
+                        LOGGER.debug("Redirecting user [{}]: New URL is [{}]", authentication.getPrincipal().getId(), newURL);
                         // Building the interrupt response : it will automatically redirect the user to the link provided
                         InterruptResponse interrupt = new InterruptResponse("Changement de domaine", Map.of("Continuer", newURL), false, true);
                         interrupt.setAutoRedirect(true);
@@ -103,7 +109,7 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
                     }
                 }
             } else {
-                LOGGER.error("ESCOSIRENCourant is null for [{}]", authentication.getPrincipal());
+                LOGGER.error("ESCOSIRENCourant is null for [{}]", authentication.getPrincipal().getId());
             }
         }
         // Return null if there is no need to interrupt the flow
@@ -117,8 +123,15 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
      * @return The user domain
      */
     private String getUserDomain(String siren) {
+        // If domain is already in cache, just return it
+        if(this.domainBySirenCache.containsKey(siren)){
+            final String domain = this.domainBySirenCache.get(siren);
+            LOGGER.trace("Domain [{}] found in cache for siren [{}]", domain, siren);
+            return domain;
+        }
+        // Otherwise we need to get it from the API
         final String apiUrl = this.structsBaseAPIUrl + this.baseAPIPath + "?ids=" + siren;
-        LOGGER.trace("Finding if user needs to be redirected: API URL is [{}]", apiUrl);
+        LOGGER.trace("Finding user domain: API URL is [{}]", apiUrl);
         try {
             // Construct the HTTP request
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(apiUrl)).build();
@@ -134,7 +147,9 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
             if (otherAttributes.isArray()) {
                 Iterator<JsonNode> elements = otherAttributes.elements();
                 if (elements.hasNext()) {
-                    return elements.next().asText();
+                    final String domain = elements.next().asText();
+                    this.domainBySirenCache.put(siren, domain);
+                    return domain;
                 }
             }
         } catch (Exception e) {
@@ -152,6 +167,14 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
      */
     private String replaceServiceDomain(String domain, String originalUrl) {
         return originalUrl.replaceAll(this.replaceDomainRegex, "$1" + domain + "$2");
+    }
+
+    /**
+     * Reload the cache at specific interval by resetting the map containing the domains associated with the sirens
+     */
+    @Scheduled(fixedDelayString = "${cas.custom.properties.interrupt.refresh-cache-interval:PT6H}")
+    public void resetDomainBySirenCache(){
+        this.domainBySirenCache.clear();
     }
 
 }
