@@ -1,54 +1,55 @@
-Apereo CAS WAR Overlay Template
+Apereo CAS WAR Overlay
 =====================================
 
-WAR Overlay Type: `cas-overlay`
+Deploy a CAS server using the WAR Overlay method without having to downoad all the source code from the CAS project.
 
-# Versions
-   
+This CAS server uses the following modules :
+- **cas-server-support-ldap** as an authentication method
+- **cas-server-support-redis-ticket-registry** as the ticket registry
+- **cas-server-support-git-service-registry** as the service registry
+- **cas-server-support-interrupt-webflow** to interrupt the webflow during the login phase
+- **cas-server-support-oauth-webflow** to enable the Oauth2.0 protocol
 
-- CAS Server `7.0.1`
-- JDK `21`
-                     
+
+And has a number of custom enhancements :
+- Bugfix for the redis ticket registry (metaspace leak, see this [commit](https://github.com/GIP-RECIA/cas-war-overlay/commit/3d5f61cdf4edcece7cf2c6ced70f1203f689b246))
+- CI pipeline with end-to-end tests using **puppeteer** and **docker**
+- Multidomain and dynamic redirection on a specific domain
+
+
 # Build
 
 To build the project, use:
 
 ```bash
-# Use --refresh-dependencies to force-update SNAPSHOT versions
-./gradlew[.bat] clean build
+./gradlew clean build
 ```
 
 To see what commands/tasks are available to the build script, run:
 
 ```bash
-./gradlew[.bat] tasks
+./gradlew tasks
 ```
 
 If you need to, on Linux/Unix systems, you can delete all the existing artifacts
 (artifacts and metadata) Gradle has downloaded using:
 
 ```bash
-# Only do this when absolutely necessary
 rm -rf $HOME/.gradle/caches/
 ```
 
-Same strategy applies to Windows too, provided you switch `$HOME` to its equivalent in the above command.
+## Keystore
 
-# Keystore
-
-For the server to run successfully, you might need to create a keystore file.
-This can either be done using the JDK's `keytool` utility or via the following command:
+For the server to run locally, you need to create a keystore file.
+This can be done via the following command:
 
 ```bash
 ./gradlew[.bat] createKeystore
 ```
 
-Use the password `changeit` for both the keystore and the key/certificate entries. 
-Ensure the keystore is loaded up with keys and certificates of the server.
-
 ## Extension Modules
 
-Extension modules may be specified under the `dependencies` block of the [Gradle build script](build.gradle):
+Extension modules are specified under the `dependencies` block of the [Gradle build script](build.gradle):
 
 ```gradle
 dependencies {
@@ -63,178 +64,101 @@ To collect the list of all project modules and dependencies in the overlay:
 ./gradlew[.bat] dependencies
 ```                                                                       
 
-# Deployment
+# Run
 
-On a successful deployment via the following methods, the server will be available at:
-
-
-* `https://localhost:8443/cas`
+Cas can be runned two ways : in an embedded container (tomcat) or directly in a tomcat server (building the project produces a war).
 
 
-## Executable WAR
+## Executable WAR (local deployment)
 
-Run the server web application as an executable WAR. Note that running an executable WAR requires CAS to use an embedded container such as Apache Tomcat, Jetty, etc.
-
-The current servlet container is specified as `-tomcat`.
-
-```bash
-java -jar build/libs/cas.war
-```
-
-Or via:
+Just run:
 
 ```bash
 ./gradlew[.bat] run
 ```
-
-It is often an advantage to explode the generated web application and run it in unpacked mode.
-One way to run an unpacked archive is by starting the appropriate launcher, as follows:
-
-```bash
-jar -xf build/libs/cas.war
-cd build/libs
-java org.springframework.boot.loader.launch.JarLauncher
-```
-
-This is slightly faster on startup (depending on the size of the WAR file) than
-running from an unexploded archive. After startup, you should not expect any differences.
 
 Debug the CAS web application as an executable WAR:
 
 ```bash
 ./gradlew[.bat] debug
 ```
-       
-Or via:
 
-```bash
-java -Xdebug -Xrunjdwp:transport=dt_socket,address=5000,server=y,suspend=y -jar build/libs/cas.war
-```
+## External (production deployment)
 
-Run the CAS web application as a *standalone* executable WAR:
-
-```bash
-./gradlew[.bat] clean executable
-```
-
-## External
-
-Deploy the binary web application file in `build/libs` after a successful build to a servlet container of choice.
-
-# Docker
-
-The following strategies outline how to build and deploy CAS Docker images.
-
-## Jib
-
-The overlay embraces the [Jib Gradle Plugin](https://github.com/GoogleContainerTools/jib) to provide easy-to-use out-of-the-box tooling for building CAS docker images. Jib is an open-source Java containerizer from Google that lets Java developers build containers using the tools they know. It is a container image builder that handles all the steps of packaging your application into a container image. It does not require you to write a Dockerfile or have Docker installed, and it is directly integrated into the overlay.
-
-```bash
-# Running this task requires that you have Docker installed and running.
-./gradlew build jibDockerBuild
-```
-
-## Dockerfile
-
-You can also use the Docker tooling and the provided `Dockerfile` to build and run.
-There are dedicated Gradle tasks available to build and push Docker images using the supplied `DockerFile`:
-
-```bash
-./gradlew build casBuildDockerImage
-```
-
-Once ready, you may also push the images:
-
-```bash
-./gradlew casPushDockerImage
-```
-
-If credentials (username+password) are required for pull and push operations, they may be specified
-using system properties via `-DdockerUsername=...` and `-DdockerPassword=...`.
-
-A `docker-compose.yml` is also provided to orchestrate the build:
-
-```bash  
-docker-compose build
-```
-
-# CAS Command-line Shell
-
-To launch into the CAS command-line shell:
-
-```bash
-./gradlew[.bat] downloadShell runShell
-```
-
-# Retrieve Overlay Resources
-
-To fetch and overlay a CAS resource or view, use:
-
-```bash
-./gradlew[.bat] getResource -PresourceName=[resource-name]
-```
-
-# Create User Interface Themes Structure
-
-You can use the overlay to construct the correct directory structure for custom user interface themes:
-
-```bash
-./gradlew[.bat] createTheme -Ptheme=redbeard
-```
-
-The generated directory structure should match the following:
-
-```
-├── redbeard.properties
-├── static
-│ └── themes
-│     └── redbeard
-│         ├── css
-│         │ └── cas.css
-│         └── js
-│             └── cas.js
-└── templates
-    └── redbeard
-        └── fragments
-```
-
-HTML templates and fragments can be moved into the above directory structure, 
-and the theme may be assigned to applications for use.
-
-# List Overlay Resources
- 
-To list all available CAS views and templates:
-
-```bash
-./gradlew[.bat] listTemplateViews
-```
-
-To unzip and explode the CAS web application file and the internal resources jar:
-
-```bash
-./gradlew[.bat] explodeWar
-```
+Deploy the binary web application file in `build/libs` after a successful build to the tomcat servlet container.
 
 # Configuration
 
-- The `etc` directory contains the configuration files and directories that need to be copied to `/etc/cas/config`.
+CAS is configured with an external directory containing the configuration files. The path of this directory is specified in `src/main/resources/application.yml`. 
 
-```bash
-./gradlew[.bat] copyCasConfiguration
-```
 
-- The specifics of the build are controlled using the `gradle.properties` file.
+Regarding the tests, the properties are written directly in `src/main/resources/application-test.yml`.
 
-## Configuration Metadata
+## CAS properties
 
-Configuration metadata allows you to export collection of CAS properties as a report into a file 
-that can later be examined. You will find a full list of CAS settings along with notes, types, default and accepted values:
+The following tables lists all the properties that are used in this CAS deployment:
 
-```bash
-./gradlew exportConfigMetadata
-```                           
+### CAS Server
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.server.name | CAS server URL | `https://localhost:8443` |
+| cas.server.prefix | CAS server URL (with path) | `https://localhost:8443/cas` |
 
-# Puppeteer
+### Ticket Registry
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.ticket.registry.redis.host | Redis master node host (necessary but unused) | localhost |
+| cas.ticket.registry.redis.port | Redis master node port (necessary but unused) | 6379 |
+| cas.ticket.registry.redis.sentinel.master | Name of sentinel master | mymaster |
+| cas.ticket.registry.redis.sentinel.node[i] | List of sentinel adress in the form of host:port | localhost:26379 |
+| cas.authn.accept.enabled | False to disable default authentication | false |
+
+### Service registry
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.service-registry.core.init-from-json | False to disable default service registry | false |
+| cas.service-registry.git.repository-url | URL of the git repository to clone | `https://github.com/GIP-RECIA/cas-git-service-registry-test.git` |
+| cas.service-registry.git.active-branch | Branch to checkout and activate | master |
+| cas.service-registry.git.branches-to-clone | Branches to clone | master |
+| cas.service-registry.git.clone-directory.location | Location where the git project will be copied | `file:/tmp/cas-service-registry-test` |
+| cas.service-registry.schedule.start-delay | Start delay of loading data | PT15S |
+| cas.service-registry.schedule.repeat-interval | Repeat interval of re-loading data (e.g fetching and merging) | PT2M |
+| cas.service-registry.cache.duration |  Fixed duration for an entry to be automatically removed from the cache after its creation | PT15M |
+
+### LDAP
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.authn.ldap[0].ldap-url | LDAP url to the server | ldap://localhost:389 |
+| cas.authn.ldap[0].base-dn | Base DN to use when connecting to LDAP | ou=people,dc=esco-centre,dc=fr |
+| cas.authn.ldap[0].bind-dn | Bind DN to use when connecting to LDAP | cn=admin,ou=administrateurs,dc=esco-centre,dc=fr |
+| cas.authn.ldap[0].bind-credential | Bind credential to use when connecting to LDAP | admin |
+| cas.authn.ldap[0].search-filter | User filter to use for searching ({user} will be replaced by the login entered in CAS) | `(ENTPersonLogin={user})` |
+| cas.authn.ldap[0].type | Authentication type | AUTHENTICATED |
+| cas.authn.ldap[0].principal-attribute-id | Principal attribute CAS will return after a successful authentication (as an identifier) | uid |
+| cas.authn.ldap[0].principal-attribute-list | List of attributes CAS will return after a successful authentication (separated by commas) | uid,isMemberOf,cn,sn,givenName |
+
+### Interrupt
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.interrupt.core.force-execution | Whether execution of the interrupt inquiry query should be always forced | true |
+| cas.interrupt.core.trigger-mode | How interrupt notifications should be triggered in the authentication flow | AFTER_SSO |
+
+## Custom properties
+
+There is also a number of custom properties that are defined for some custom enhancements:
+
+### Interrupt redirections
+| Property | Description | Default value |
+|----------|-------------|---------------|
+| cas.custom.properties.interrupt.structs-base-api-url | The base url for the structs info API |  |
+| cas.custom.properties.interrupt.structs-api-path | The path for the structs info API |  |
+| cas.custom.properties.interrupt.structs-replace-domain-regex | The regex used to replace the domain name in the URL | (\\?service=https://)[^/]+(/) |
+| cas.custom.properties.interrupt.structs-refresh-cache-interval | Description | PT6H |
+
+
+# CI pipeline with puppeteer and github actions
+
+## Puppeteer
 
 > [Puppeteer](https://pptr.dev/) is a Node.js library which provides a high-level API to control Chrome/Chromium over the DevTools Protocol.
 > Puppeteer runs in headless mode by default, but can be configured to run in full (non-headless) Chrome/Chromium.
@@ -249,91 +173,8 @@ To execute Puppeteer scenarios, run:
 CAS_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=test" ./puppeteer/run.sh
 ```
 
-This will first attempt to build your CAS deployment, will install Puppeteer and all other needed libraries. It will then launch the CAS server,
-and upon its availability, will iterate through defined scenarios and will execute them one at a time.
+This will first attempt to build your CAS deployment, will install Puppeteer and all other needed libraries. It will start needed docker containers, then launch the CAS server, and upon its availability, will iterate through defined scenarios and will execute them one at a time.
 
-The following defaults are assumed:
+ ## Github actions
 
-- CAS will be available at `https://localhost:8443/cas/login`.
-- The CAS overlay is prepped with an embedded server container, such as Apache Tomcat.
-
-You may of course need to make adjustments to account for your specific environment and deployment settings, URLs, etc.
-
-
-# Duct
-
-`duct` is a Gradle task to do quick smoke tests of multi-node CAS high-availability deployments. In particular, it tests correctness of ticket
-sharing between multiple individual CAS server nodes backed by distributed ticket registries such as Hazelcast, Redis, etc.
-
-This task requires CAS server nodes to **enable the CAS REST module**. It will **NOT** work without it.
-
-The task accepts the following properties:
-
-- Arbitrary number of CAS server nodes specified via the `duct.cas.X` properties.
-- URL of the service application registered with CAS specified via `duct.service`, for which tickets will be requested.
-- `duct.username` and `duct.password` to use for authentication, when requesting ticket-granting tickets.
-
-It automates the following scenario:
-
-- Authenticate and issue a service ticket on one CAS node
-- Validate this service ticket on the another node
-- Repeat (You may cancel and stop the task at any time with `Ctrl+C`)
-
-If the task succeeds, then we effectively have proven that the distributed ticket registry has been set up and deployed
-correctly and that there are no connectivity issues between CAS nodes.
-
-To run the task, you may use:
-
-```bash
-./gradlew duct
-    -Pduct.cas.1=https://node1.example.org/cas \
-    -Pduct.cas.2=https://node2.example.org/cas \
-    -Pduct.cas.3=https://node3.example.org/cas \
-    -Pduct.cas.4=https://node4.example.org/cas \
-    -Pduct.service=https://apereo.github.io \
-    -Pduct.username=casuser \
-    -Pduct.password=Mellon
-```
-
-You may also supply the following options:
-
-- `duct.debug`: Boolean flag to output debug and verbose logging.
-- `duct.duration`: Number of seconds, i.e. `30` to execute the scenario.
-- `duct.count`: Number of iterations, i.e. `5` to execute the scenario.
-
-
-# OpenRewrite
-
-[OpenRewrite](https://docs.openrewrite.org/) is a tool used by the CAS in form of a Gradle plugin
-that allows the project to upgrade in place. It works by making changes to the project structure representing
-your CAS build and printing the modified files back. Modifications are packaged together in form of upgrade
-scripts called `Recipes` that are automatically packaged and presented to the build and may be discovered via:
-
-```bash
-./gradlew --init-script openrewrite.gradle rewriteDiscover -PtargetVersion=X.Y.Z --no-configuration-cache | grep "org.apereo.cas"
-```
-
-**NOTE:** All CAS specific recipes begin with `org.apereo.cas`. The `targetVersion` must be the CAS version to which you want to upgrade.
-
-OpenRewrite recipes make minimally invasive changes to your CAS build allowing you to upgrade from one version
-to the next with minimal effort. The recipe contains *almost* everything that is required for a CAS build system to navigate
-from one version to other and automated tedious aspects of the upgrade such as finding the correct versions of CAS,
-relevant libraries and plugins as well as any possible structural changes to one's CAS build.
-
-To run, you will need to find and select the name of the recipe first. Then, you can dry-run the selected recipes and see which files would be changed in the build log.
-This does not alter your source files on disk at all. This goal can be used to preview the changes that would be made by the active recipes.
-
-```bash
-./gradlew --init-script openrewrite.gradle rewriteDryRun -PtargetVersion=X.Y.Z -DactiveRecipe=[recipe name] --no-configuration-cache
-```
-
-When you are ready, you can run the actual recipe:
-
-```bash
-./gradlew --init-script openrewrite.gradle rewriteRun -PtargetVersion=X.Y.Z -DactiveRecipe=[recipe name] --no-configuration-cache
-```
-
-This will run the selected recipes and apply the changes. This will write changes locally to your source files on disk.
-Afterward, review the changes, and when you are comfortable with the changes, commit them.
-The run goal generates warnings in the build log wherever it makes changes to source files.
-
+ A github workflow is executed at each push on the repository. See this [file](.github/workflows/build.yml)
