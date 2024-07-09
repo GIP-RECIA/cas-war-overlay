@@ -66,12 +66,16 @@ cd "${ROOT_DIRECTORY}/ci/ldap"
 ./run-ldap.sh
 cd "${ROOT_DIRECTORY}/ci/redis"
 ./start-all.sh
+# Démarrage du serveur python
+cd "${ROOT_DIRECTORY}/ci/python"
+python3 fake_service.py &
+pid_python=$!
 cd "${ROOT_DIRECTORY}"
 
 # Lancement du serveur CAS grâce au war qu'on a construit plus haut
 echo "Launching CAS at $casWebApplicationFile with options $CAS_ARGS"
 java -jar "$casWebApplicationFile" $CAS_ARGS &
-pid=$!
+pid_cas=$!
 echo "Waiting for CAS under process id ${pid}"
 sleep 45
 casLogin="${PUPPETEER_CAS_HOST:-https://localhost:8443}/cas/login"
@@ -105,7 +109,8 @@ for scenario in "${PWD}"/puppeteer/scenarios/*; do
 done;
 
 # On kill le serveur CAS et les docker avant de terminer le script
-kill -9 "$pid"
+kill -9 "$pid_cas"
+kill -9 "$pid_python"
 cd "${ROOT_DIRECTORY}/ci/ldap"
 ./stop-ldap.sh
 cd "${ROOT_DIRECTORY}/ci/redis"

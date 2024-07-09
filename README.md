@@ -156,7 +156,7 @@ There is also a number of custom properties that are defined for some custom enh
 | cas.custom.properties.interrupt.structs-refresh-cache-interval | Description | PT6H |
 
 
-# CI pipeline with puppeteer and github actions
+# CI Pipeline
 
 ## Puppeteer
 
