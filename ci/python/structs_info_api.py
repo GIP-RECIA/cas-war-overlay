@@ -9,7 +9,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 # Dictionnaire mémorisant les domaines spécifiques à renvoyer pour un siren donné
 # Si un siren n'est pas spécifié ici DEFAULT_DOMAIN sera renvoyé
 SIREN_TO_DOMAIN = {}
-DEFAULT_DOMAIN = "localhost:5678"
+DEFAULT_DOMAIN = "localhost:8002"
 
 class RequestHandler(BaseHTTPRequestHandler):
     """

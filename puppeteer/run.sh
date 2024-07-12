@@ -69,7 +69,9 @@ cd "${ROOT_DIRECTORY}/ci/redis"
 # Démarrage du serveur python
 cd "${ROOT_DIRECTORY}/ci/python"
 python3 fake_service.py &
-pid_python=$!
+pid_python_fake_service=$!
+python3 structs_info_api.py &
+pid_python_structs_info_api=$!
 cd "${ROOT_DIRECTORY}"
 
 # Lancement du serveur CAS grâce au war qu'on a construit plus haut
@@ -110,7 +112,8 @@ done;
 
 # On kill le serveur CAS et les docker avant de terminer le script
 kill -9 "$pid_cas"
-kill -9 "$pid_python"
+kill -9 "$pid_python_fake_service"
+kill -9 "$pid_python_structs_info_api"
 cd "${ROOT_DIRECTORY}/ci/ldap"
 ./stop-ldap.sh
 cd "${ROOT_DIRECTORY}/ci/redis"
