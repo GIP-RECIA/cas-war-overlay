@@ -1,1 +1,1 @@
-org.apereo.cas.config.CasOverlayOverrideConfiguration
+org.apereo.cas.config.CustomInterruptConfiguration
