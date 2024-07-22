@@ -1,7 +1,8 @@
 # Ce fichier contient les properties utilisées pour les tests avec puppeteer
+
+# Server
 server.port: 8443
 spring.main.lazy-initialization: false
-
 cas.server.name: https://localhost:8443
 cas.server.prefix: https://localhost:8443/cas
 
@@ -17,8 +18,35 @@ management.endpoints.enabled-by-default: true
 # Audit
 cas.audit.engine.enabled: true
 cas.audit.slf4j.use-single-line: true
-cas.audit.redis.host: cas2
+cas.audit.redis.host: localhost
 cas.audit.redis.port: 6379
+
+# Crypto
+# In-Memory
+cas.ticket.registry.in-memory.crypto.enabled: true
+cas.ticket.registry.in-memory.crypto.signing.key: KncZu0oilh3gi0rMh85Xf477cc8OeIpL-uQ7dS6342PKENv3kWXFz5yu85n7pZIgNn8XLEAajMBqduuDWArzJQ
+cas.ticket.registry.in-memory.crypto.encryption.key: 6Tcf5QqY9PmyZG7vY0PMiQ
+# Ticket Registry
+cas.tgc.crypto.enabled: true
+cas.tgc.crypto.encryption.key: cW0U96gfziZjes3Yqhk7hq5BUn_29CQKVv2UE1L_pKI
+cas.tgc.crypto.signing.key: BV-wvTQ4e5-f7vyKfw3K2OG6haonkVBVNsCgC8YEQHAcDj2nPcAvtS3_WaP4QVm8GP0Tdd-geuPa8tNE-IcOdw
+# Webflow
+cas.webflow.crypto.enabled: true
+cas.webflow.crypto.encryption.key: tEYwAdEdYSZGMA1gLqugKA
+cas.webflow.crypto.signing.key: chz7ZTpcBIFdkZ-DLxjOYD-2OFj2B9xdDsAw5IGDsdsRi7_dfzo_EHEP9MyrVuVmxSeo3VHZBQSNmc6sjStiQQ
+# Interrupt
+cas.interrupt.cookie.crypto.enabled: true
+cas.interrupt.cookie.crypto.encryption.key: Zw6N5Bs0vOQKxON6rb52hr5X6h9zi-BJeOs7oS1nQSk
+cas.interrupt.cookie.crypto.signing.key: Yf1GaNfRqKzezShY3Jr0SfP_UVxaIkegsLd9eOPBrFDzNaoJRurs-8d37dN_nEqqjrFsoEtNy_32RC74vRo0IA
+# OAuth
+cas.authn.oauth.crypto.encryption.key: UfXfteRBAROe_VlXtsnBw5kIwrqAZc7SfPtnTW7llN0
+cas.authn.oauth.crypto.signing.key: XJeUdyaPKz4GHNWmjlFeKlEkGlVPqFTJbOmX8ezbao9lpucrtk5IA9GX3yC6ibVe7Wa-ze4RNhD62Z2v3N8wyA
+cas.authn.oauth.access-token.crypto.encryption.key: mFcyXaH00ZIIXW0dI4Djat0NH7Cdvu-2UiinjiO5SFE
+cas.authn.oauth.access-token.crypto.signing.key: RfjL0ADLFzj4u5jhj6ysNk4G2P2-FIiPm04TYiENbktq-RO9zwQwsQzLg2496UlQiLNnpu1NJq7dcvsv5xDYjw
+cas.authn.oauth.session-replication.cookie.crypto.encryption.key: hzB0RZ1NISOI0OFswtzUvaksvGobVHPeMllt4src0Po
+cas.authn.oauth.session-replication.cookie.crypto.signing.key: q1U_Kp0qgl6uMKdVE_k4jvvE-zb3IxdtP5eIxLWbjOy74vYkfYSXspbLXR327F4D7qtuXI4DIVnvU5vEe8sH2Q
+cas.authn.pac4j.core.session-replication.cookie.crypto.encryption.key: Fam8ftR1s0HgGzEyJv1r7CS48a5vER8fKPsCIB7Mv7g
+cas.authn.pac4j.core.session-replication.cookie.crypto.signing.key: H9q5Z1Wog_iEzUbF021Z4d1ASDvUPHKeHekUUj4lX_Y5N57WLIyb1KxIUgtfQ6nXLoNRpejk84PDTyQO4fwXOA
 
 # Service ticket registry
 cas.authn.accept.enabled: false

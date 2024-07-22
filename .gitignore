@@ -53,3 +53,4 @@ puppeteer/node_modules
 ci/redis/docker-sentinel1/config
 ci/redis/docker-sentinel2/config
 ci/redis/docker-sentinel3/config
+ci/python/__pycache__
