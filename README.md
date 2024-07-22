@@ -173,7 +173,7 @@ To execute Puppeteer scenarios, run:
 ./start-ci.sh
 ```
 
-This will first attempt to build your CAS deployment, will install Puppeteer and all other needed libraries. It will start needed docker containers, then launch the CAS server, and upon its availability, will iterate through defined scenarios and will execute them one at a time.
+This will first attempt to build your CAS deployment, will install Puppeteer and all other needed libraries. It will then start needed docker containers, launch the CAS server, and upon its availability, will iterate through defined scenarios and will execute them one at a time.
 
  ## Github actions
 

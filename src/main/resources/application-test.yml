@@ -47,10 +47,7 @@ cas.authn.ldap[0].ldap-url: ldap://localhost:389
 cas.authn.ldap[0].search-filter: (|(ENTPersonLogin={user})(ENTPersonAlias={user}))
 cas.authn.ldap[0].type: AUTHENTICATED
 cas.authn.ldap[0].principal-attribute-id: uid
-cas.authn.ldap[0].principal-attribute-list: uid,isMemberOf,cn,sn,givenName,displayName,mail,ENTPersonLogin,\
-  ESCODomaines,ESCOUAICourant,ESCOSIRENCourant,ENTPersonFonctions,ENTPersonProfils,ESCOPersonProfiles,ENTEleveClasses,\
-  ENTAuxEnsClassesMatieres,ENTEleveGroupes,ENTAuxEnsGroupesMatieres,ENTEleveNivFormation,ESCOUAI,ESCOSIREN,\
-  ESCOUAIRattachement,ENTPersonDateNaissance,ENTPersonCodePostal,ENTPersonJointure,ENTPersonStructRattach,ESCOPersonEtatCompte
+cas.authn.ldap[0].principal-attribute-list: uid,isMemberOf,cn,sn,givenName,displayName,mail,ENTPersonLogin,ESCODomaines,ESCOUAICourant,ESCOSIRENCourant,ENTPersonProfils,ENTEleveClasses,ENTEleveNivFormation,ESCOUAI,ESCOSIREN,ESCOUAIRattachement,ENTPersonDateNaissance,ENTPersonJointure,ENTPersonStructRattach,ESCOPersonEtatCompte
 
 # Login Flow Interrupt
 cas.interrupt.core.force-execution: true
@@ -60,4 +57,4 @@ cas.interrupt.core.trigger-mode: AFTER_SSO
 # Interrupt
 cas.custom.properties.interrupt.structs-base-api-url: http://localhost:8001
 cas.custom.properties.interrupt.structs-api-path: /structsinfo/
-cas.custom.properties.interrupt.replace-domain-regex: (\\?service=https://)[^/]+(/)
+cas.custom.properties.interrupt.replace-domain-regex: (\?service=http:\/\/)[^\/]+(\/)

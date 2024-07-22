@@ -22,6 +22,7 @@ const logger = pino({
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
         const service = "http://localhost:8002/test"
+        const serviceToRedirect = "http://localhost:8003/test"
 
         // Go to login page
         await page.goto(`${casHost}/cas/login?service=${service}`);
@@ -51,7 +52,7 @@ const logger = pino({
 
         // Also verify that the ST was successfully validated (if it is the case then the service should reponse with a 200)
         const pageContent = await page.content();
-        assert(pageContent.includes("SUCCESS"))
+        assert(pageContent.includes("SUCCESS SERVICE="+serviceToRedirect))
 
         await process.exit(0)
 
