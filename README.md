@@ -17,6 +17,66 @@ And has a number of custom enhancements :
 - Multidomain and dynamic redirection on a specific domain
 
 
+# Project Structure
+
+All the important parts of the project are listed below:
+
+```
+.
+├── .github
+│   ├── workflows
+│   │   └── build.yml
+│   └── ...
+|
+├── ci
+│   ├── ldap
+│   |   └── ...
+│   ├── python
+│   |   └── ...
+│   └── redis
+│       └── ...
+|
+├── etc
+│   └── cas
+│       └── config
+│           └── log4j2.xml
+|
+├── puppeteer
+│   ├── scenarios
+|   |   ├── scenario1.js
+|   |   ├── scenario2.js
+|   |   └── ...
+│   ├── package.json
+│   └── run.sh
+|
+├── src
+│   └── main
+│       ├── java
+│       │   └── org
+│       │       └── apereo
+│       │           └── cas
+│       │               ├── config
+│       │               │   ├── CustomInterruptConfiguration.java
+│       │               │   └── RedisTicketRegistryConfiguration.java
+│       │               ├── interrupt
+│       │               │   └── DomainChangeInterruptInquirer.java
+│       │               └── ticket
+│       │                   └── RedisTicketRegistry.java
+|       └── resources
+|           ├── META-INF
+|               └── spring
+|                   └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+|           ├── application-test.yml
+|           └── application.yml
+|
+├── build.gradle
+├── README.md
+├── gradle.properties
+├── settings.gradle
+└── start-ci.sh
+```
+
+
 # Build
 
 To build the project, use:
