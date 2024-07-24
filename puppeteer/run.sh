@@ -92,6 +92,9 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+# Tableau pour stocker les résultats des scénarios
+results=()
+
 # Si on est sûr que le serveur CAS est lancé, alors on éxécute les scénarios puppeteer un par un
 export NODE_TLS_REJECT_UNAUTHORIZED=0
 echo "Executing puppeteer scenarios..."
@@ -109,8 +112,23 @@ for scenario in "${PWD}"/puppeteer/scenarios/*; do
         printgreen "✅ Scenario $scenarioName PASSED"
     fi
     echo -e "\n"
+    results+=("$scenarioName:$rc")
     sleep 1
 done;
+
+# Affichage du récapitulatif
+echo -e "\n=========================="
+echo "Scenarios summary:"
+echo "=========================="
+for result in "${results[@]}"; do
+    IFS=":" read -r scenarioName rc <<< "$result"
+    if [[ $rc -ne 0 ]]; then
+        printred "🔥 Scenario $scenarioName FAILED"
+    else
+        printgreen "✅ Scenario $scenarioName PASSED"
+    fi
+done
+echo -e "\n"
 
 # On kill le serveur CAS et les docker avant de terminer le script
 kill -9 "$pid_cas"
