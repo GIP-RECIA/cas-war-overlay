@@ -294,5 +294,7 @@ dependencies {
     compileOnly "org.springframework.data:spring-data-redis"
     compileOnly "org.springframework.integration:spring-integration-redis"
     compileOnly "com.redis:lettucemod"
+    // Custom TimeBasedRegisteredServiceAccessStrategy
+    compileOnly "org.apereo.cas:cas-server-core-services-api"
 
 }
