@@ -50,6 +50,7 @@ La logique du script est la suivante :
 - On regarde si le vrai domaine est contenu dans l'url par laquelle est arrivée l'utilisateur, si oui on le laisse passer, sinon on lève une `InterruptResponse` en redirigeant sur le bon domaine (on revient au début de la phase de login, mais avec le TGC cette fois-ci).
 
 **Gestion du cache**
+
 Pour éviter de refaire une requête à chaque fois, un cache est mis en place. Il s'agit en réalité d'un dictionnaire qui associe le siren aux domaines associés, et qui s'actualise tous les X minutes.
 ```java
 private Map<String, String> domainBySirenCache;
