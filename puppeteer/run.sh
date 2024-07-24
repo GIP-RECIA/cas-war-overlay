@@ -120,10 +120,12 @@ done;
 echo -e "\n=========================="
 echo "Scenarios summary:"
 echo "=========================="
+overall_status=0
 for result in "${results[@]}"; do
     IFS=":" read -r scenarioName rc <<< "$result"
     if [[ $rc -ne 0 ]]; then
         printred "🔥 Scenario $scenarioName FAILED"
+        overall_status=1
     else
         printgreen "✅ Scenario $scenarioName PASSED"
     fi
@@ -141,4 +143,11 @@ cd "${ROOT_DIRECTORY}/ci/redis"
 ./stop-all.sh
 cd "${ROOT_DIRECTORY}"
 
-exit 0
+# Terminer le script en erreur si un des scénarios a échoué
+if [[ $overall_status -ne 0 ]]; then
+    echo -e "\nSome scenarios failed. Exiting with error."
+    exit 1
+else
+    echo -e "\nAll scenarios passed successfully."
+    exit 0
+fi
