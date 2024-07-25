@@ -9,7 +9,8 @@ Exemple :
 	"@class" : "org.apereo.cas.services.TimeBasedRegisteredServiceAccessStrategy",
 	"startingDateTime" : "2024-07-23T09:52:00.132+02:00",
 	"endingDateTime" : "2024-07-23T10:05:00.132+02:00",
-	"zoneId" : "UTC+2"
+	"zoneId" : "UTC+2",
+	"authorize" : false
 }
 ```
 
@@ -22,6 +23,9 @@ Exemple :
 `zoneId` est le fuseau horaire qui sera pris pour récupérer l'heure actuelle lorsqu'on va la comparer aux startingDateTime et endingDateTime :
 - `UTC+X` ou X est +1 ou +2 en fonction de l'heure d'été/d'hiver
 
+`authorize` est un booléen qui vaut `true` par défaut :
+- Si il vaut `true` alors on autorise l'accès au service **pendant** les plages horaires données. On refuse donc l'accès au service avant `startingDateTime` ou après `endingDateTime`
+- Si il vaut `false` alors on autorise l'accès au service **hors** des plages horaire donées. On refuse donc l'accès au service entre `startingDateTime` et `endingDateTime`
 
 ## En fonction de la valeur des attributs LDAP
 [https://apereo.github.io/cas/7.0.x/services/Service-Access-Strategy-ABAC.html](https://apereo.github.io/cas/7.0.x/services/Service-Access-Strategy-ABAC.html)
