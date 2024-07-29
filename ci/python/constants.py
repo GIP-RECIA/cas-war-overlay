@@ -10,3 +10,6 @@ SERVICE_VALIDATE_ST_URL = "http://localhost:8002/test"
 
 # Url du service sur lequel on est redirigé quand on test le multidomaine
 SERVICE_REDIRECT_URL = "http://localhost:8003/test"
+
+# Url du service utilisé pour tester la release d'attributs (externalid)
+SERVICE_ATTRIBUTE_RELEASE_URL = "http://localhost:8011/test"

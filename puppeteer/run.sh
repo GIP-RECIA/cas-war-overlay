@@ -72,8 +72,12 @@ python3 service_test1.py &
 pid_python_service_test1=$!
 python3 service_test2.py &
 pid_python_service_test2=$!
+python3 service_test10.py &
+pid_python_service_test10=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
+python3 externalid_api.py &
+pid_python_externalid_api=$!
 cd "${ROOT_DIRECTORY}"
 
 # Lancement du serveur CAS grâce au war qu'on a construit plus haut
@@ -136,7 +140,9 @@ echo -e "\n"
 kill -9 "$pid_cas"
 kill -9 "$pid_python_service_test1"
 kill -9 "$pid_python_service_test2"
+kill -9 "$pid_python_service_test10"
 kill -9 "$pid_python_structs_info_api"
+kill -9 "$pid_python_externalid_api"
 cd "${ROOT_DIRECTORY}/ci/ldap"
 ./stop-ldap.sh
 cd "${ROOT_DIRECTORY}/ci/redis"

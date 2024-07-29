@@ -170,6 +170,7 @@ isMemberOf: esco:Etablissements:DE L IROISE_0290009C:Tous_DE L IROISE
 isMemberOf: esco:Etablissements:DE L IROISE_0290009C:Eleves
 isMemberOf: esco:admin:mediacentre:GAR:UTILISATEUR:DE L IROISE_0290009C
 isMemberOf: esco:Applications:mediacentre:GAR:DE L IROISE_0290009C
+ESCOPersonExternalIds: SERVICE1$00000000-0000-0000-0000-000000000002
 mail: test.test@test.com
 personalTitle: M
 uid: F2abc

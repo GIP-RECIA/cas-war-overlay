@@ -1,6 +1,6 @@
 """
 Serveur python simulant l'API donnant les infos d'une structure.
-Ppermet de renvoyer des faux domaines pour des tests sur des structures données.
+Permet de renvoyer des faux domaines pour des tests sur des structures données.
 """
 
 import json

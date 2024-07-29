@@ -75,14 +75,22 @@ cas.authn.ldap[0].ldap-url: ldap://localhost:389
 cas.authn.ldap[0].search-filter: (|(ENTPersonLogin={user})(ENTPersonAlias={user}))
 cas.authn.ldap[0].type: AUTHENTICATED
 cas.authn.ldap[0].principal-attribute-id: uid
-cas.authn.ldap[0].principal-attribute-list: uid,isMemberOf,cn,sn,givenName,displayName,mail,ENTPersonLogin,ESCODomaines,ESCOUAICourant,ESCOSIRENCourant,ENTPersonProfils,ENTEleveClasses,ENTEleveNivFormation,ESCOUAI,ESCOSIREN,ESCOUAIRattachement,ENTPersonDateNaissance,ENTPersonJointure,ENTPersonStructRattach,ESCOPersonEtatCompte
+cas.authn.ldap[0].principal-attribute-list: uid,isMemberOf,cn,sn,givenName,displayName,mail,ENTPersonLogin,ESCODomaines,ESCOUAICourant,ESCOSIRENCourant,ENTPersonProfils,ENTEleveClasses,ENTEleveNivFormation,ESCOUAI,ESCOSIREN,ESCOUAIRattachement,ENTPersonDateNaissance,ENTPersonJointure,ENTPersonStructRattach,ESCOPersonEtatCompte,ESCOPersonExternalIds
 
 # Login Flow Interrupt
 cas.interrupt.core.force-execution: true
 cas.interrupt.core.trigger-mode: AFTER_SSO
 
 # Custom Properties
+
 # Interrupt
 cas.custom.properties.interrupt.structs-base-api-url: http://localhost:8001
 cas.custom.properties.interrupt.structs-api-path: /structsinfo/
 cas.custom.properties.interrupt.replace-domain-regex: (\?service=http:\/\/)[^\/]+(\/)
+
+# Externalid
+cas.custom.properties.externalid.base-api-url: http://localhost:7002/externalid/api
+cas.custom.properties.externalid.api-path: /generateExternalId
+cas.custom.properties.externalid.attribute-name-response: externalId
+cas.custom.properties.externalid.attribute-name-ldap: ESCOPersonExternalIds
+cas.custom.properties.externalid.split-character: $
