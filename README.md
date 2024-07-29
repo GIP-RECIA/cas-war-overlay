@@ -15,6 +15,8 @@ And has a number of custom enhancements :
 - Bugfix for the redis ticket registry (metaspace leak, see this [commit](https://github.com/GIP-RECIA/cas-war-overlay/commit/3d5f61cdf4edcece7cf2c6ced70f1203f689b246))
 - CI pipeline with end-to-end tests using **puppeteer** and **docker**
 - Multidomain and dynamic redirection on a specific domain
+- Time and attribute service access strategy chaining
+- Dynamic API call during attribute release (externalid)
 
 
 # Project Structure
@@ -35,6 +37,9 @@ All the important parts of the project are listed below:
 │   |   └── ...
 │   └── redis
 │       └── ...
+|
+├── docs
+│   └── ...
 |
 ├── etc
 │   └── cas
@@ -60,6 +65,9 @@ All the important parts of the project are listed below:
 │       │               │   └── RedisTicketRegistryConfiguration.java
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
+│       │               ├── services
+│       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
+│       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               └── ticket
 │       │                   └── RedisTicketRegistry.java
 |       └── resources
@@ -214,6 +222,15 @@ There is also a number of custom properties that are defined for some custom enh
 | cas.custom.properties.interrupt.structs-api-path | The path for the structs info API |  |
 | cas.custom.properties.interrupt.structs-replace-domain-regex | The regex used to replace the domain name in the URL | (\\?service=https://)[^/]+(/) |
 | cas.custom.properties.interrupt.structs-refresh-cache-interval | Description | PT6H |
+
+### ExternalId Attribute Release
+| Property | Description | Default value |
+|----------|-------------|---------------|
+| cas.custom.properties.externalid.base-api-url | The base url for the externalid API |  |
+| cas.custom.properties.externalid.api-path | The path for the externalid API |  |
+| cas.custom.properties.externalid.attribute-name-response | The path for the externalid API | externalId |
+| cas.custom.properties.externalid.attribute-name-ldap | The name of the LDAP attribute that contains the list of external ids | ESCOPersonExternalIds |
+| cas.custom.properties.externalid.split-character | The character splitting the service name and the external id in LDAP | $ |
 
 
 # CI Pipeline
