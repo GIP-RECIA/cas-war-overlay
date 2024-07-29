@@ -9,7 +9,7 @@ const assert = require("assert");
         const page = await browser.newPage();
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8002/test"
+        const service = "http://localhost:8001/test"
 
         // Login to cas
         await cas.loginWith(page, casHost, service, "test2", "test")
@@ -21,11 +21,11 @@ const assert = require("assert");
         const pageContent = await page.content();
         assert(pageContent.includes("SUCCESS SERVICE=" + service))
 
-        await process.exit(0)
+        process.exit(0)
 
     } catch (e) {
         cas.loge(e);
-        await process.exit(1)
+        process.exit(1)
     } finally {
         await browser.close();
     }

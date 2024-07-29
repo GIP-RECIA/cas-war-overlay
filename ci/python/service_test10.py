@@ -15,7 +15,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         validate_ticket_to_cas_and_return_attributes(self, SERVICE_ATTRIBUTE_RELEASE_URL, CAS_BASE_URL)
 
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=8011):
+def run(server_class=HTTPServer, handler_class=RequestHandler, port=8010):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f'Starting server on port {port}...')

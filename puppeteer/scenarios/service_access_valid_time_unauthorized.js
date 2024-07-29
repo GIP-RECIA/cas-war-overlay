@@ -8,7 +8,7 @@ const assert = require("assert");
     try {
         const page = await browser.newPage();
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8009/test"
+        const service = "http://localhost:8008/test"
 
         // Go to login page
         const response = await page.goto(`${casHost}/cas/login?service=${service}`);

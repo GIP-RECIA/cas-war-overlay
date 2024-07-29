@@ -9,8 +9,8 @@ const assert = require("assert");
         const page = await browser.newPage();
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8002/test"
-        const serviceToRedirect = "http://localhost:8003/test"
+        const service = "http://localhost:8001/test"
+        const serviceToRedirect = "http://localhost:8002/test"
 
         // Login to cas
         await cas.loginWith(page, casHost, service, "test1", "test")

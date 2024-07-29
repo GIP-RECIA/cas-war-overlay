@@ -8,8 +8,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 # Dictionnaire mémorisant les domaines spécifiques à renvoyer pour un siren donné
 # Si un siren n'est pas spécifié ici DEFAULT_DOMAIN sera renvoyé
-SIREN_TO_DOMAIN = {"11111111111111":"localhost:8003"}
-DEFAULT_DOMAIN = "localhost:8002"
+SIREN_TO_DOMAIN = {"11111111111111":"localhost:8002"}
+DEFAULT_DOMAIN = "localhost:8001"
 
 class RequestHandler(BaseHTTPRequestHandler):
     """
@@ -46,7 +46,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(b'404 Not Found')
 
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=8001):
+def run(server_class=HTTPServer, handler_class=RequestHandler, port=7001):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f'Starting server on port {port}...')

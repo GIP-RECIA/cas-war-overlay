@@ -84,7 +84,7 @@ cas.interrupt.core.trigger-mode: AFTER_SSO
 # Custom Properties
 
 # Interrupt
-cas.custom.properties.interrupt.structs-base-api-url: http://localhost:8001
+cas.custom.properties.interrupt.structs-base-api-url: http://localhost:7001
 cas.custom.properties.interrupt.structs-api-path: /structsinfo/
 cas.custom.properties.interrupt.replace-domain-regex: (\?service=http:\/\/)[^\/]+(\/)
 

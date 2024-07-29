@@ -9,7 +9,7 @@ const assert = require("assert");
         const page = await browser.newPage();
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8011/test"
+        const service = "http://localhost:8010/test"
 
         // Login to cas
         await cas.loginWith(page, casHost, service, "test2", "test")
@@ -19,7 +19,6 @@ const assert = require("assert");
 
         // Assert that the released attributes correspond to expectations
         const pageContent = await page.content();
-        cas.loge(pageContent)
         assert(pageContent.includes("<cas:authenticationSuccess>"))
         assert(pageContent.includes("<cas:sn>"))
         assert(pageContent.includes("<cas:cn>"))

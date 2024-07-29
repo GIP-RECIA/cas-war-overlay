@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
         const page = await browser.newPage();
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8007/test"
+        const service = "http://localhost:8006/test"
 
         // Login to cas
         await cas.loginWith(page, casHost, service, "test2", "test")
