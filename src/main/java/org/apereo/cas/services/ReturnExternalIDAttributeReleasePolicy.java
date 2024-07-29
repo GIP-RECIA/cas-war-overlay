@@ -83,12 +83,14 @@ public class ReturnExternalIDAttributeReleasePolicy extends AbstractRegisteredSe
             LOGGER.debug("Trying to retrieve externalid for user [{}] and service [{}]", principalId, context.getRegisteredService().getName());
             String externalUserId = null;
             List<Object> externalIds = resolvedAttributes.get(externalIdAttributeNameLDAP);
-            for (Object externalId : externalIds) {
-                String stringExternalId = (String) externalId;
-                if (stringExternalId.startsWith(internalServiceId)) {
-                    externalUserId = stringExternalId;
-                    LOGGER.debug("Externalid [{}] found for user [{}] and service [{}]",
-                            externalUserId, principalId, context.getRegisteredService().getName());
+            if(externalIds != null){
+                for (Object externalId : externalIds) {
+                    String stringExternalId = (String) externalId;
+                    if (stringExternalId.startsWith(internalServiceId)) {
+                        externalUserId = stringExternalId;
+                        LOGGER.debug("Externalid [{}] found for user [{}] and service [{}]",
+                                externalUserId, principalId, context.getRegisteredService().getName());
+                    }
                 }
             }
 
