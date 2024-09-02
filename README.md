@@ -254,4 +254,4 @@ This will first attempt to build your CAS deployment, will install Puppeteer and
 
  ## Github actions
 
- A github workflow is executed at each push on the repository. See this [file](.github/workflows/build.yml)
+ A github workflow is executed at each push on the repository. See [this file](.github/workflows/build.yml)

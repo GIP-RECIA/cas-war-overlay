@@ -6,8 +6,8 @@ Permet de renvoyer des faux externalid pour des tests sur des services données.
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-# Dictionnaire mémorisant les domaines spécifiques à renvoyer pour un siren donné
-# Si un siren n'est pas spécifié ici DEFAULT_DOMAIN sera renvoyé
+# Dictionnaire mémorisant les externalids spécifiques à renvoyer pour un service donné
+# Si un service n'est pas spécifié ici DEFAULT_EXTERNALID sera renvoyé
 SERVICE_TO_EXTERNALID = {"SERVICE1":"SERVICE1$00000000-0000-0000-0000-000000000001"}
 DEFAULT_EXTERNALID = "SERVICE$00000000-0000-0000-0000-000000000000"
 
