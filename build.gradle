@@ -303,6 +303,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-jmx"
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow"
     implementation "org.apereo.cas:cas-server-support-interrupt-webflow"
+    implementation "org.apereo.cas:cas-server-support-saml-idp"
     // Custom interrupt
     compileOnly "org.apereo.cas:cas-server-support-interrupt-core"
     compileOnly "org.apereo.cas:cas-server-support-interrupt-api"
