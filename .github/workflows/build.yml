@@ -1,4 +1,4 @@
-name: Full login workflow with Redis and LDAP
+name: CAS Custom Workflow
 
 on:
   push:
