@@ -9,7 +9,8 @@ This CAS server uses the following modules :
 - **cas-server-support-git-service-registry** as the service registry
 - **cas-server-support-interrupt-webflow** to interrupt the webflow during the login phase
 - **cas-server-support-oauth-webflow** to enable the Oauth2.0 protocol
-
+- **cas-server-support-saml-idp** to act as an SAML2 identity provider
+- **cas-server-support-pac4j-webflow** to enable delegated authentication
 
 And has a number of custom enhancements :
 - Bugfix for the redis ticket registry (metaspace leak, see this [commit](https://github.com/GIP-RECIA/cas-war-overlay/commit/3d5f61cdf4edcece7cf2c6ced70f1203f689b246))
@@ -17,7 +18,9 @@ And has a number of custom enhancements :
 - Multidomain and dynamic redirection on a specific domain
 - Time and attribute service access strategy chaining
 - Dynamic API call during attribute release (externalid)
+- Soft/Hard timeout expiration policy **per service**
 
+Current CAS Base version : **7.0.7**
 
 # Project Structure
 
@@ -66,6 +69,7 @@ All the important parts of the project are listed below:
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
 │       │               ├── services
+│       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy
 │       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               └── ticket
@@ -159,78 +163,9 @@ Deploy the binary web application file in `build/libs` after a successful build 
 
 CAS is configured with an external directory containing the configuration files. The path of this directory is specified in `src/main/resources/application.yml`. 
 
-
 Regarding the tests, the properties are written directly in `src/main/resources/application-test.yml`.
 
-## CAS properties
-
-The following tables lists all the properties that are used in this CAS deployment:
-
-### CAS Server
-| Property | Description | Example value |
-|----------|-------------|---------------|
-| cas.server.name | CAS server URL | `https://localhost:8443` |
-| cas.server.prefix | CAS server URL (with path) | `https://localhost:8443/cas` |
-
-### Ticket Registry
-| Property | Description | Example value |
-|----------|-------------|---------------|
-| cas.ticket.registry.redis.host | Redis master node host (necessary but unused) | localhost |
-| cas.ticket.registry.redis.port | Redis master node port (necessary but unused) | 6379 |
-| cas.ticket.registry.redis.sentinel.master | Name of sentinel master | mymaster |
-| cas.ticket.registry.redis.sentinel.node[i] | List of sentinel adress in the form of host:port | localhost:26379 |
-| cas.authn.accept.enabled | False to disable default authentication | false |
-
-### Service registry
-| Property | Description | Example value |
-|----------|-------------|---------------|
-| cas.service-registry.core.init-from-json | False to disable default service registry | false |
-| cas.service-registry.git.repository-url | URL of the git repository to clone | `https://github.com/GIP-RECIA/cas-git-service-registry-test.git` |
-| cas.service-registry.git.active-branch | Branch to checkout and activate | master |
-| cas.service-registry.git.branches-to-clone | Branches to clone | master |
-| cas.service-registry.git.clone-directory.location | Location where the git project will be copied | `file:/tmp/cas-service-registry-test` |
-| cas.service-registry.schedule.start-delay | Start delay of loading data | PT15S |
-| cas.service-registry.schedule.repeat-interval | Repeat interval of re-loading data (e.g fetching and merging) | PT2M |
-| cas.service-registry.cache.duration |  Fixed duration for an entry to be automatically removed from the cache after its creation | PT15M |
-
-### LDAP
-| Property | Description | Example value |
-|----------|-------------|---------------|
-| cas.authn.ldap[0].ldap-url | LDAP url to the server | ldap://localhost:389 |
-| cas.authn.ldap[0].base-dn | Base DN to use when connecting to LDAP | ou=people,dc=esco-centre,dc=fr |
-| cas.authn.ldap[0].bind-dn | Bind DN to use when connecting to LDAP | cn=admin,ou=administrateurs,dc=esco-centre,dc=fr |
-| cas.authn.ldap[0].bind-credential | Bind credential to use when connecting to LDAP | admin |
-| cas.authn.ldap[0].search-filter | User filter to use for searching ({user} will be replaced by the login entered in CAS) | `(ENTPersonLogin={user})` |
-| cas.authn.ldap[0].type | Authentication type | AUTHENTICATED |
-| cas.authn.ldap[0].principal-attribute-id | Principal attribute CAS will return after a successful authentication (as an identifier) | uid |
-| cas.authn.ldap[0].principal-attribute-list | List of attributes CAS will return after a successful authentication (separated by commas) | uid,isMemberOf,cn,sn,givenName |
-
-### Interrupt
-| Property | Description | Example value |
-|----------|-------------|---------------|
-| cas.interrupt.core.force-execution | Whether execution of the interrupt inquiry query should be always forced | true |
-| cas.interrupt.core.trigger-mode | How interrupt notifications should be triggered in the authentication flow | AFTER_SSO |
-
-## Custom properties
-
-There is also a number of custom properties that are defined for some custom enhancements:
-
-### Interrupt redirections
-| Property | Description | Default value |
-|----------|-------------|---------------|
-| cas.custom.properties.interrupt.structs-base-api-url | The base url for the structs info API |  |
-| cas.custom.properties.interrupt.structs-api-path | The path for the structs info API |  |
-| cas.custom.properties.interrupt.structs-replace-domain-regex | The regex used to replace the domain name in the URL | (\\?service=https://)[^/]+(/) |
-| cas.custom.properties.interrupt.structs-refresh-cache-interval | Description | PT6H |
-
-### ExternalId Attribute Release
-| Property | Description | Default value |
-|----------|-------------|---------------|
-| cas.custom.properties.externalid.base-api-url | The base url for the externalid API |  |
-| cas.custom.properties.externalid.api-path | The path for the externalid API |  |
-| cas.custom.properties.externalid.attribute-name-response | The path for the externalid API | externalId |
-| cas.custom.properties.externalid.attribute-name-ldap | The name of the LDAP attribute that contains the list of external ids | ESCOPersonExternalIds |
-| cas.custom.properties.externalid.split-character | The character splitting the service name and the external id in LDAP | $ |
+All the properties used in this CAS deployment can be found in `docs/CONFIGURATION.md`.
 
 
 # CI Pipeline
