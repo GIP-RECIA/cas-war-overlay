@@ -38,7 +38,11 @@ exports.loge = async (text) => {
 exports.loginWith = async (page, casHost, service, username, password) => {
     // Go to login page
     await page.goto(`${casHost}/cas/login?service=${service}`);
+    await this.typeCredentialsAndEnter(page, username, password);
+    return page.waitForNavigation();
+};
 
+exports.typeCredentialsAndEnter = async (page, username, password) => {
     // Type credentials
     await page.waitForSelector("#username", {visible: true});
     await page.$eval("#username", el => el.value = '');
@@ -49,7 +53,6 @@ exports.loginWith = async (page, casHost, service, username, password) => {
 
     // Validate credentials and send request to CAs
     await page.keyboard.press('Enter');
-    return page.waitForNavigation();
 };
 
 exports.verifyTGC = async (client) => {

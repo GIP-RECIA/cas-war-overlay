@@ -81,6 +81,9 @@ cas.authn.ldap[0].principal-attribute-list: uid,isMemberOf,cn,sn,givenName,displ
 cas.interrupt.core.force-execution: true
 cas.interrupt.core.trigger-mode: AFTER_SSO
 
+# SAML
+cas.authn.saml-idp.core.entity-id: https://localhost:8443/cas/idp/metadata
+
 # Custom Properties
 
 # Interrupt

@@ -61,12 +61,17 @@ fi
 echo -n "NPM version: " && npm --version
 echo -n "Node version: " && node --version
 
+# Installation des dépendances python
+cd "${ROOT_DIRECTORY}"
+pip install -r ci/python/flask-saml-client/requirements.txt
+
 # Démarrage des dockers redis et ldap
 cd "${ROOT_DIRECTORY}/ci/ldap"
 ./run-ldap.sh
 cd "${ROOT_DIRECTORY}/ci/redis"
 ./start-all.sh
-# Démarrage du serveur python
+
+# Démarrage des serveurs python
 cd "${ROOT_DIRECTORY}/ci/python"
 python3 service_test1.py &
 pid_python_service_test1=$!
@@ -78,21 +83,24 @@ python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
 pid_python_externalid_api=$!
+cd "flask-saml-client"
+python3 index.py &
 cd "${ROOT_DIRECTORY}"
 
 # Lancement du serveur CAS grâce au war qu'on a construit plus haut
 echo "Launching CAS at $casWebApplicationFile with options $CAS_ARGS"
 java -jar "$casWebApplicationFile" $CAS_ARGS &
 pid_cas=$!
-echo "Waiting for CAS under process id ${pid}"
-sleep 45
+echo "Waiting for CAS under process id ${pid_cas}"
+# Attention à avoir un délai suffisant ici, il faut bien attendre que le serveur CAS soit démarré
+sleep 60
 casLogin="${PUPPETEER_CAS_HOST:-https://localhost:8443}/cas/login"
 echo "Checking CAS status at ${casLogin}"
 curl -k -L --output /dev/null --silent --fail "$casLogin"
 if [[ $? -ne 0 ]]; then
-    printred "Unable to launch CAS instance under process id ${pid}."
-    printred "Killing process id $pid and exiting"
-    kill -9 "$pid"
+    printred "Unable to launch CAS instance under process id ${pid_cas}."
+    printred "Killing process id $pid_cas and exiting"
+    kill -9 "$pid_cas"
     exit 1
 fi
 
@@ -143,6 +151,7 @@ kill -9 "$pid_python_service_test2"
 kill -9 "$pid_python_service_test10"
 kill -9 "$pid_python_structs_info_api"
 kill -9 "$pid_python_externalid_api"
+ps -aux | grep "python3 index.py" | head -n 2 | awk '{print $2}' | xargs kill -9
 cd "${ROOT_DIRECTORY}/ci/ldap"
 ./stop-ldap.sh
 cd "${ROOT_DIRECTORY}/ci/redis"
