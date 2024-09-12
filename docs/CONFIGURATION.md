@@ -42,6 +42,13 @@ The following tables lists all the properties that are used in this CAS deployme
 | cas.authn.ldap[0].principal-attribute-id | Principal attribute CAS will return after a successful authentication (as an identifier) | uid |
 | cas.authn.ldap[0].principal-attribute-list | List of attributes CAS will return after a successful authentication (separated by commas) | uid,isMemberOf,cn,sn,givenName |
 
+## SAML IDP
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.authn.saml-idp.core.entity-id | The SAML entityId for the CAS server | https://cas.example.org/idp |
+| cas.authn.saml-idp.metadata.file-system.location | Where the CAS server will store the metadata that he generated for himself | file:/path/to/directory |
+| cas.authn.saml-idp.logout.sign-logout-response | If logout reponses need to be signed for all SP | false |
+
 ## SLO
 | Property | Description | Example value |
 |----------|-------------|---------------|
