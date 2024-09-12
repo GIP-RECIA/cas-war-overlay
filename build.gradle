@@ -307,17 +307,11 @@ dependencies {
     // Custom interrupt
     compileOnly "org.apereo.cas:cas-server-support-interrupt-core"
     compileOnly "org.apereo.cas:cas-server-support-interrupt-api"
-    // Custom redis ticket registry
-    compileOnly "org.apereo.cas:cas-server-core-util-api"
-    compileOnly "org.apereo.cas:cas-server-support-redis-core"
-    compileOnly "org.apereo.cas:cas-server-core-authentication-api"
-    compileOnly "org.apereo.cas:cas-server-core-tickets-api"
-    compileOnly "org.springframework.data:spring-data-redis"
-    compileOnly "org.springframework.integration:spring-integration-redis"
-    compileOnly "com.redis:lettucemod"
     // Custom TimeBasedRegisteredServiceAccessStrategy
     compileOnly "org.apereo.cas:cas-server-core-services-api"
+    compileOnly "org.apereo.cas:cas-server-core-util-api"
     // Custom ReturnExternalIDAttributeReleasePolicy
     compileOnly "org.apereo.cas:cas-server-core-authentication-attributes"
-
+    // Custom HardSoftTimeoutExpirationPolicy
+    compileOnly "org.apereo.cas:cas-server-core-tickets-api"
 }

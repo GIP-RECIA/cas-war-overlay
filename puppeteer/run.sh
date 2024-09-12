@@ -26,7 +26,7 @@ echo "Cleaning last deployment..."
 casGradlePropertiesFile="${ROOT_DIRECTORY}/gradle.properties"
 if grep -q 'appServer=' "$casGradlePropertiesFile"; then
     echo "Replacing 'appServer=' with 'appServer=-tomcat' in $casGradlePropertiesFile"
-    sed -i 's/appServer=/appServer=-tomcat/' "$casGradlePropertiesFile"
+    sed -i '/^appServer=/c\appServer=-tomcat' "$casGradlePropertiesFile"
 else
     echo "'appServer=' not found or already replaced in $casGradlePropertiesFile"
 fi

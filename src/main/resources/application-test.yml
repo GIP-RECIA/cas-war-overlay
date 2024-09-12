@@ -28,7 +28,7 @@ cas.ticket.registry.in-memory.crypto.signing.key: KncZu0oilh3gi0rMh85Xf477cc8OeI
 cas.ticket.registry.in-memory.crypto.encryption.key: 6Tcf5QqY9PmyZG7vY0PMiQ
 # Ticket Registry
 cas.tgc.crypto.enabled: true
-cas.tgc.crypto.encryption.key: cW0U96gfziZjes3Yqhk7hq5BUn_29CQKVv2UE1L_pKI
+cas.tgc.crypto.encryption.key: j3EISDyWRQ0tH8uzrl-M1DyoNvPHs9ipHFWRvWp-B2fStey9XZOuyTAZJ9OEdY4uR3bGJLX7SrBjrEBWJL9xXA
 cas.tgc.crypto.signing.key: BV-wvTQ4e5-f7vyKfw3K2OG6haonkVBVNsCgC8YEQHAcDj2nPcAvtS3_WaP4QVm8GP0Tdd-geuPa8tNE-IcOdw
 # Webflow
 cas.webflow.crypto.enabled: true

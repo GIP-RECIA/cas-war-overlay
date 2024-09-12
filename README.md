@@ -13,14 +13,13 @@ This CAS server uses the following modules :
 - **cas-server-support-pac4j-webflow** to enable delegated authentication
 
 And has a number of custom enhancements :
-- Bugfix for the redis ticket registry (metaspace leak, see this [commit](https://github.com/GIP-RECIA/cas-war-overlay/commit/3d5f61cdf4edcece7cf2c6ced70f1203f689b246))
 - CI pipeline with end-to-end tests using **puppeteer** and **docker**
 - Multidomain and dynamic redirection on a specific domain
 - Time and attribute service access strategy chaining
 - Dynamic API call during attribute release (externalid)
 - Soft/Hard timeout expiration policy **per service**
 
-Current CAS Base version : **7.0.7**
+Current CAS Base version : **7.1.0**
 
 # Project Structure
 
@@ -64,20 +63,18 @@ All the important parts of the project are listed below:
 │       │       └── apereo
 │       │           └── cas
 │       │               ├── config
-│       │               │   ├── CustomInterruptConfiguration.java
-│       │               │   └── RedisTicketRegistryConfiguration.java
+│       │               │   └── CustomInterruptConfiguration.java
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
-│       │               ├── services
-│       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy
-│       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
-│       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
-│       │               └── ticket
-│       │                   └── RedisTicketRegistry.java
+│       │               └── services
+│       │                   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy
+│       │                   ├── ReturnExternalIDAttributeReleasePolicy.java
+│       │                   └── TimeBasedRegisteredServiceAccessStrategy.java
+|       | 
 |       └── resources
 |           ├── META-INF
-|               └── spring
-|                   └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+|           |   └── spring
+|           |       └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
 |           ├── application-test.yml
 |           └── application.yml
 |
