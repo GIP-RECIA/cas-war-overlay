@@ -79,6 +79,8 @@ python3 service_test2.py &
 pid_python_service_test2=$!
 python3 service_test10.py &
 pid_python_service_test10=$!
+python3 service_test16.py &
+pid_python_service_test16=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
@@ -149,6 +151,7 @@ kill -9 "$pid_cas"
 kill -9 "$pid_python_service_test1"
 kill -9 "$pid_python_service_test2"
 kill -9 "$pid_python_service_test10"
+kill -9 "$pid_python_service_test16"
 kill -9 "$pid_python_structs_info_api"
 kill -9 "$pid_python_externalid_api"
 ps -aux | grep "python3 index.py" | head -n 2 | awk '{print $2}' | xargs kill -9

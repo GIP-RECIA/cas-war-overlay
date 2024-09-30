@@ -97,3 +97,9 @@ cas.custom.properties.externalid.api-path: /generateExternalId
 cas.custom.properties.externalid.attribute-name-response: externalId
 cas.custom.properties.externalid.attribute-name-ldap: ESCOPersonExternalIds
 cas.custom.properties.externalid.split-character: $
+
+# Token
+cas.custom.properties.token.domain-list: falsevaliddomain
+cas.custom.properties.token.redirect-portal-context: /portail
+cas.custom.properties.token.redirect-unknown-domain: https://pagetoredirectnetocentre.fr
+cas.custom.properties.token.domain-mapping-startswith: "DOMAIN-RED:"

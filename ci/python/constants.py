@@ -13,3 +13,6 @@ SERVICE_REDIRECT_URL = "http://localhost:8002/test"
 
 # Url du service utilisé pour tester la release d'attributs (externalid)
 SERVICE_ATTRIBUTE_RELEASE_URL = "http://localhost:8010/test"
+
+# Url du service avec lequel on doit pouvoir se connecter quand on teste la redirection token portail après connexion
+SERVICE_TOKEN_NOREDIRECT_URL = "http://localhost:8016/test"
