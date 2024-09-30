@@ -15,6 +15,7 @@ This CAS server uses the following modules :
 And has a number of custom enhancements :
 - CI pipeline with end-to-end tests using **puppeteer** and **docker**
 - Multidomain and dynamic redirection on a specific domain
+- Portal forced redirection with token check
 - Time and attribute service access strategy chaining
 - Dynamic API call during attribute release (externalid)
 - Soft/Hard timeout expiration policy **per service**
@@ -67,14 +68,25 @@ All the important parts of the project are listed below:
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
 │       │               └── services
-│       │                   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy
-│       │                   ├── ReturnExternalIDAttributeReleasePolicy.java
-│       │                   └── TimeBasedRegisteredServiceAccessStrategy.java
+│       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy
+│       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
+│       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
+│       │               └── web/flow
+│       │                   ├── error
+│       │                   │   └── DefaultDelegatedClientAuthenticationFailureEvaluator.java
+│       │                   ├── resolver/impl
+│       │                   │   └── DefaultCasDelegatingWebflowEventResolver.java
+│       │                   └── BaseServiceAuthorizationCheckAction.java
 |       | 
 |       └── resources
 |           ├── META-INF
 |           |   └── spring
 |           |       └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+|           ├── templates
+|           |   └── delegated-authn
+|           |   |   └── casDelegatedAuthnStopWebflow.html
+|           |   └── interrupt
+|           |       └── casInterruptView.html
 |           ├── application-test.yml
 |           └── application.yml
 |

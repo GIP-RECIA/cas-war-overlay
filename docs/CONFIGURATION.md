@@ -17,7 +17,7 @@ The following tables lists all the properties that are used in this CAS deployme
 | cas.ticket.registry.redis.sentinel.node[i] | List of sentinel adress in the form of host:port | localhost:26379 |
 | cas.authn.accept.enabled | False to disable default authentication | false |
 
-## Service registry
+## Service Registry
 | Property | Description | Example value |
 |----------|-------------|---------------|
 | cas.service-registry.core.init-from-json | False to disable default service registry | false |
@@ -81,11 +81,11 @@ The following tables lists all the properties that are used in this CAS deployme
 | cas.interrupt.core.force-execution | Whether execution of the interrupt inquiry query should be always forced | true |
 | cas.interrupt.core.trigger-mode | How interrupt notifications should be triggered in the authentication flow | AFTER_SSO |
 
-## Custom properties
+## Custom Properties
 
 There is also a number of custom properties that are defined for some custom enhancements:
 
-### Interrupt redirections
+### Interrupt Redirections
 | Property | Description | Default value |
 |----------|-------------|---------------|
 | cas.custom.properties.interrupt.structs-base-api-url | The base url for the structs info API |  |
@@ -101,3 +101,11 @@ There is also a number of custom properties that are defined for some custom enh
 | cas.custom.properties.externalid.attribute-name-response | The path for the externalid API | externalId |
 | cas.custom.properties.externalid.attribute-name-ldap | The name of the LDAP attribute that contains the list of external ids | ESCOPersonExternalIds |
 | cas.custom.properties.externalid.split-character | The character splitting the service name and the external id in LDAP | $ |
+
+### Portal Token Redirection
+| Property | Description | Default value |
+|----------|-------------|---------------|
+| cas.custom.properties.token.domain-list | The list of known domains who can be used for redirect | domain1,domain2,domain3 |
+| cas.custom.properties.token.redirect-portal-context | The path of the portal | /portail |
+| cas.custom.properties.token.redirect-unknown-domain | Where to redirect if the domain is unknown | https://exempledomain.fr |
+| cas.custom.properties.token.domain-mapping-startswith | The prefix used for keys in domain mapping | "DOMAIN-RED:" |
