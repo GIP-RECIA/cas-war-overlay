@@ -64,6 +64,7 @@ echo -n "Node version: " && node --version
 # Installation des dépendances python
 cd "${ROOT_DIRECTORY}"
 pip install -r ci/python/flask-saml-client/requirements.txt
+pip install -r ci/python/flask-oidc-client/requirements.txt
 
 # Démarrage des dockers redis et ldap
 cd "${ROOT_DIRECTORY}/ci/ldap"
@@ -87,6 +88,12 @@ python3 externalid_api.py &
 pid_python_externalid_api=$!
 cd "flask-saml-client"
 python3 index.py &
+pid_python_saml_client=$!
+cd "../flask-oidc-client"
+python3 index.py &
+pid_python_oidc_client=$!
+rm -r /tmp/oidc
+mkdir /tmp/oidc
 cd "${ROOT_DIRECTORY}"
 
 # Lancement du serveur CAS grâce au war qu'on a construit plus haut
@@ -154,7 +161,8 @@ kill -9 "$pid_python_service_test10"
 kill -9 "$pid_python_service_test16"
 kill -9 "$pid_python_structs_info_api"
 kill -9 "$pid_python_externalid_api"
-ps -aux | grep "python3 index.py" | head -n 2 | awk '{print $2}' | xargs kill -9
+kill -9 "$pid_python_saml_client"
+kill -9 "$pid_python_oidc_client"
 cd "${ROOT_DIRECTORY}/ci/ldap"
 ./stop-ldap.sh
 cd "${ROOT_DIRECTORY}/ci/redis"

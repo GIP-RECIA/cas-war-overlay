@@ -39,13 +39,13 @@ cas.interrupt.cookie.crypto.enabled: true
 cas.interrupt.cookie.crypto.encryption.key: Zw6N5Bs0vOQKxON6rb52hr5X6h9zi-BJeOs7oS1nQSk
 cas.interrupt.cookie.crypto.signing.key: Yf1GaNfRqKzezShY3Jr0SfP_UVxaIkegsLd9eOPBrFDzNaoJRurs-8d37dN_nEqqjrFsoEtNy_32RC74vRo0IA
 # OAuth
-cas.authn.oauth.crypto.encryption.key: UfXfteRBAROe_VlXtsnBw5kIwrqAZc7SfPtnTW7llN0
+cas.authn.oauth.crypto.encryption.key: -a3HCYBRYDCcnskNvLMiw_cUgd28PZllv8oRlRWUD8zyVCjMaVn2LKbrEXzxz3tGcxLDB99bJr9cyA9OieKBig
 cas.authn.oauth.crypto.signing.key: XJeUdyaPKz4GHNWmjlFeKlEkGlVPqFTJbOmX8ezbao9lpucrtk5IA9GX3yC6ibVe7Wa-ze4RNhD62Z2v3N8wyA
-cas.authn.oauth.access-token.crypto.encryption.key: mFcyXaH00ZIIXW0dI4Djat0NH7Cdvu-2UiinjiO5SFE
+cas.authn.oauth.access-token.crypto.encryption.key: Jv1r8eGlQ5imRzk6g2lY5e7gFo-HISohmb7iYivfOPxauWjojsHomW58_7ChyitAe3Jdio64UneRx7FGW4z2dg
 cas.authn.oauth.access-token.crypto.signing.key: RfjL0ADLFzj4u5jhj6ysNk4G2P2-FIiPm04TYiENbktq-RO9zwQwsQzLg2496UlQiLNnpu1NJq7dcvsv5xDYjw
-cas.authn.oauth.session-replication.cookie.crypto.encryption.key: hzB0RZ1NISOI0OFswtzUvaksvGobVHPeMllt4src0Po
+cas.authn.oauth.session-replication.cookie.crypto.encryption.key: FuUHa2yjd9FdfTeQsNZuN3gGG2liISzASC5GjhuCkkKSP5L8p0m1MsGjs_ITQAC4n6cMMseSIqmm0twr-wFl4A
 cas.authn.oauth.session-replication.cookie.crypto.signing.key: q1U_Kp0qgl6uMKdVE_k4jvvE-zb3IxdtP5eIxLWbjOy74vYkfYSXspbLXR327F4D7qtuXI4DIVnvU5vEe8sH2Q
-cas.authn.pac4j.core.session-replication.cookie.crypto.encryption.key: Fam8ftR1s0HgGzEyJv1r7CS48a5vER8fKPsCIB7Mv7g
+cas.authn.pac4j.core.session-replication.cookie.crypto.encryption.key: s_3Q9UuJRjieQE5zWMYz91ZhSyigVoJ4CPBymGg-KF7iWCzVfXxcANhSUKD24sWWiJq1Q3g7utTQkK93e61Rxg
 cas.authn.pac4j.core.session-replication.cookie.crypto.signing.key: H9q5Z1Wog_iEzUbF021Z4d1ASDvUPHKeHekUUj4lX_Y5N57WLIyb1KxIUgtfQ6nXLoNRpejk84PDTyQO4fwXOA
 
 # Service ticket registry
@@ -83,6 +83,15 @@ cas.interrupt.core.trigger-mode: AFTER_SSO
 
 # SAML
 cas.authn.saml-idp.core.entity-id: https://localhost:8443/cas/idp/metadata
+
+# OIDC
+cas.authn.oidc.core.issuer: https://localhost:8443/cas/oidc
+cas.authn.oidc.jwks.file-system.jwks-file: /tmp/oidc/keystore.jwks
+cas.authn.oidc.core.claims-map.nickname: ENTPersonLogin
+cas.authn.oidc.core.user-defined-scopes.test: uid,isMemberOf,cn,sn,givenName,displayName,mail
+cas.authn.oidc.discovery.scopes: openid,profile,test
+cas.authn.oidc.discovery.claims: sub,name,cn,nickname,family_name,uid,isMemberOf,sn,givenName,displayName,mail
+cas.authn.oidc.id-token.include-id-token-claims: false
 
 # Custom Properties
 

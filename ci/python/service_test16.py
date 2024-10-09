@@ -1,7 +1,7 @@
 """
 Serveur python simulant un service web.
 Il n'est pas là pour faire les requêtes (ce sont les scripts de test qui les font) mais pour pour faire valider des ST.
-Utilisé comme service vers lequel on va être redirigé pour le test du multidomaine.
+Utilisé comme service vers lequel on va être redirigé pour le test de la redirection portail token.
 """
 
 import urllib3
