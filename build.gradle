@@ -299,12 +299,12 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-ldap"
     implementation "org.apereo.cas:cas-server-support-redis-ticket-registry"
     implementation "org.apereo.cas:cas-server-support-git-service-registry"
-    implementation "org.apereo.cas:cas-server-support-oauth-webflow"
     implementation "org.apereo.cas:cas-server-support-jmx"
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow"
     implementation "org.apereo.cas:cas-server-support-interrupt-webflow"
     implementation "org.apereo.cas:cas-server-support-pac4j-cas"
     implementation "org.apereo.cas:cas-server-support-saml-idp"
+    implementation "org.apereo.cas:cas-server-support-oidc"
     // Custom interrupt
     compileOnly "org.apereo.cas:cas-server-support-interrupt-core"
     compileOnly "org.apereo.cas:cas-server-support-interrupt-api"
