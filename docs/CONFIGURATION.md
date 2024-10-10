@@ -49,6 +49,17 @@ The following tables lists all the properties that are used in this CAS deployme
 | cas.authn.saml-idp.metadata.file-system.location | Where the CAS server will store the metadata that he generated for himself | file:/path/to/directory |
 | cas.authn.saml-idp.logout.sign-logout-response | If logout reponses need to be signed for all SP | false |
 
+## OIDC IDP
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.authn.oidc.core.issuer | URL of the issuer to uniquely identify the CAS server | https://cas.example/cas/oidc|
+| cas.authn.oidc.jwks.file-system.jwks-file | Path to the JWKS file resource used to handle signing/encryption of authentication tokens | /etc/cas/keystore.jwks|
+| cas.authn.oidc.core.claims-map.X | Map fixed claims to CAS attributes. Key is the existing claim name for a scope and value is the new attribute that should take its place and value | Y |
+| cas.authn.oidc.core.user-defined-scopes.X | Mapping of user-defined scopes. Key is the new scope name and value is a comma-separated list of claims mapped to the scope | Y1, Y2, ... |
+| cas.authn.oidc.discovery.scopes | List of supported scopes | openid, profile, ... |
+| cas.authn.oidc.discovery.claims |  List of supported claims | sub, name, ... |
+| cas.authn.oidc.id-token.include-id-token-claims | Setting this flag to true will force CAS to include claims in the ID token regardless of the response type | false |
+
 ## SLO
 | Property | Description | Example value |
 |----------|-------------|---------------|
