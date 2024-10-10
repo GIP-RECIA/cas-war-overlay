@@ -20,7 +20,7 @@ And has a number of custom enhancements :
 - Dynamic API call during attribute release (externalid)
 - Soft/Hard timeout expiration policy **per service**
 
-Current CAS Base version : **7.1.0**
+Current CAS Base version : **7.1.1**
 
 # Project Structure
 
