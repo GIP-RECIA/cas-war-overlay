@@ -8,7 +8,7 @@ This CAS server uses the following modules :
 - **cas-server-support-redis-ticket-registry** as the ticket registry
 - **cas-server-support-git-service-registry** as the service registry
 - **cas-server-support-interrupt-webflow** to interrupt the webflow during the login phase
-- **cas-server-support-oauth-webflow** to enable the Oauth2.0 protocol
+- **cas-server-support-oidc** to enable the OIDC protocol
 - **cas-server-support-saml-idp** to act as an SAML2 identity provider
 - **cas-server-support-pac4j-webflow** to enable delegated authentication
 
