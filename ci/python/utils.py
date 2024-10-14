@@ -58,3 +58,27 @@ def validate_ticket_to_cas_and_return_attributes(request_handler, service_url, c
         request_handler.send_response(404)
         request_handler.end_headers()
         request_handler.wfile.write(b'404 Not Found')
+
+def handle_logout_request(request_handler):
+    """
+    Méthode pour traiter une requête de logout envoyée par le serveur CAS.
+    Retourne un booléen à False si la déconnexion a été réalisée.
+    """
+    # Récupérer le contenu de la requête
+    content_length = int(request_handler.headers['Content-Length'])
+    post_data = request_handler.rfile.read(content_length)
+    post_data = post_data.decode('utf-8')
+    # Si logoutRequest est dans le contenu alors c'est OK
+    if "logoutRequest" in post_data:
+        return False
+    return True
+
+def send_logout_status(request_handler, is_logged_in):
+    """
+    Méthode pour envoyer au client de test le statut actuel de la session (connecté ou non).
+    Se base sur le paramètre is_logged_in qui tracke la connexion.
+    """
+    request_handler.send_response(200)
+    request_handler.send_header('Content-type', 'text/html')
+    request_handler.end_headers()
+    request_handler.wfile.write(f"LOGGED IN={is_logged_in}".encode('utf-8'))
