@@ -321,4 +321,7 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-pac4j-api"
     compileOnly "org.apereo.cas:cas-server-support-pac4j-core"
     compileOnly "org.apereo.cas:cas-server-core-authentication-api"
+    // Fix service registry indexation
+    compileOnly "org.apereo.cas:cas-server-core-services-registry"
+    compileOnly "com.googlecode.cqengine:cqengine"
 }
