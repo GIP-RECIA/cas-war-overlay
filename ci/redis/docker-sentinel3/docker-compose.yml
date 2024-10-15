@@ -1,6 +1,6 @@
 services:
   sentinel:
-    image: redis
+    image: redis:7.4.1
     container_name: sentinel3
     command: ["redis-sentinel", "/etc/redis/sentinel.conf", "--sentinel", "--port 26381"]
     volumes:
