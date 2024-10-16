@@ -3,5 +3,5 @@ services:
     image: redis/redis-stack-server:7.4.0-v1
     container_name: redis-server3
     environment:
-      - REDIS_ARGS= --port 6381 --slaveof localhost 6379
+      - REDIS_ARGS= --masterauth OZwtXSpJCjZEQ5b --requirepass OZwtXSpJCjZEQ5b --port 6381 --slaveof localhost 6379
     network_mode: "host"

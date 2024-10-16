@@ -56,6 +56,8 @@ cas.ticket.registry.redis.sentinel.master: mymaster
 cas.ticket.registry.redis.sentinel.node[0]: localhost:26379
 cas.ticket.registry.redis.sentinel.node[1]: localhost:26380
 cas.ticket.registry.redis.sentinel.node[2]: localhost:26381
+cas.ticket.registry.redis.password: OZwtXSpJCjZEQ5b
+cas.ticket.registry.redis.sentinel.password: GWMije5VNMe7avz
 
 # Service registry
 cas.service-registry.core.init-from-json: false
