@@ -5,6 +5,8 @@ import java.nio.file.*
 import java.lang.reflect.*
 import org.gradle.internal.logging.text.*
 import static org.gradle.internal.logging.text.StyledTextOutput.Style
+import javax.swing.JOptionPane
+import javax.swing.JPasswordField
 
 buildscript {
     repositories {
@@ -82,7 +84,37 @@ apply plugin: "war"
 apply plugin: "org.springframework.boot"
 apply plugin: "io.freefair.lombok"
 
+apply plugin: "maven-publish"
 
+boolean isPublishTask() {
+    return gradle.startParameter.taskNames.any { task -> task.contains("publish") }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact "build/libs/cas.war"
+            groupId = "org.apereo.cas"
+            artifactId = "cas-server"
+            version = "${project.'publishNexusVersion'}" 
+        }
+    }
+
+    repositories {
+        maven {
+            url = uri(project.getProperty("publishNexusUrl"))
+            credentials {
+                username = project.getProperty("publishNexusUsername")
+                if (isPublishTask()){
+                    JPasswordField pwd = new JPasswordField(30)
+                    if(JOptionPane.showConfirmDialog(null, pwd, "Enter Password for "+username, JOptionPane.OK_CANCEL_OPTION) >= 0){
+                        password = new String(pwd.getPassword())
+                    }
+                }
+            }
+        }
+    }
+}
 
 apply from: rootProject.file("gradle/springboot.gradle")
 apply plugin: "com.google.cloud.tools.jib"
