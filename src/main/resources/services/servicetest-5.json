@@ -1,0 +1,23 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8005\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour DefaultRegisteredServiceAccessStrategy",
+    "id": 5,
+    "accessStrategy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+        "requiredAttributes": {
+            "@class": "java.util.HashMap",
+            "ENTPersonLogin": [
+                "java.util.HashSet",
+                [
+                    "test1"
+                ]
+            ]
+        }
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}

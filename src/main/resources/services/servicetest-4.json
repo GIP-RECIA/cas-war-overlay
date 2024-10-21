@@ -1,0 +1,17 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8004\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour TimeBasedRegisteredServiceAccessStrategy invalide",
+    "id": 4,
+    "accessStrategy": {
+        "@class": "org.apereo.cas.services.TimeBasedRegisteredServiceAccessStrategy",
+        "startingDateTime": "2024-07-23T09:52:00.132+02:00",
+        "endingDateTime": "2024-07-23T10:05:00.132+02:00",
+        "zoneId": "UTC+2"
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}

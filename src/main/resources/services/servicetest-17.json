@@ -1,0 +1,30 @@
+{
+  "@class": "org.apereo.cas.services.CasRegisteredService",
+  "serviceId": "^https:\/\/(mappeddomain1|mappeddomain2)\/tokenredirectnoportal.*",
+  "name": "Service Test",
+  "description": "Service de test pour token redirection (service non portail) avec domaine mappé",
+  "id": 17,
+  "webflowInterruptPolicy": {
+      "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+      "enabled": false
+  },
+  "properties" : {
+    "@class" : "java.util.HashMap",
+    "portalRedirectionNeeded" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    },
+    "domainRedirectionNeeded" : {
+      "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+      "values" : [ "java.util.HashSet", [ true ] ]
+    },
+    "DOMAIN-RED:mappeddomain1" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ "mappeddomain3.fr" ] ]
+    },
+    "DOMAIN-RED:mappeddomain2" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ "mappeddomain4.fr" ] ]
+    }
+  }
+}

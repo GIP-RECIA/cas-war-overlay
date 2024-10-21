@@ -1,0 +1,12 @@
+{
+  "@class": "org.apereo.cas.support.saml.services.SamlRegisteredService",
+  "serviceId": "^http:\/\/localhost:8011.*",
+  "name": "Service Test",
+  "description": "Service de test pour flow SAML2",
+  "id": 11,
+  "metadataLocation": "http://localhost:8011/metadata",
+  "webflowInterruptPolicy": {
+      "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+      "enabled": false
+  }
+}

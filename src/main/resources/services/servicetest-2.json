@@ -1,0 +1,7 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8002\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour CI avec Puppeteer (redirection)",
+    "id": 2
+}

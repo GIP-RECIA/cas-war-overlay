@@ -330,7 +330,7 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     implementation "org.apereo.cas:cas-server-support-ldap"
     implementation "org.apereo.cas:cas-server-support-redis-ticket-registry"
-    implementation "org.apereo.cas:cas-server-support-git-service-registry"
+    implementation "org.apereo.cas:cas-server-support-json-service-registry"
     implementation "org.apereo.cas:cas-server-support-jmx"
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow"
     implementation "org.apereo.cas:cas-server-support-interrupt-webflow"

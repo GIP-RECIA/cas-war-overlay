@@ -1,0 +1,38 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8007\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour ChainingRegisteredServiceAccessStrategy avec un AND",
+    "id": 7,
+    "accessStrategy": {
+        "@class": "org.apereo.cas.services.ChainingRegisteredServiceAccessStrategy",
+        "strategies": [
+            "java.util.ArrayList",
+            [
+                {
+                    "@class": "org.apereo.cas.services.TimeBasedRegisteredServiceAccessStrategy",
+                    "startingDateTime": "2024-07-23T09:52:00.132+02:00",
+                    "endingDateTime": "2094-07-23T10:05:00.132+02:00",
+                    "zoneId": "UTC+2"
+                },
+                {
+                    "@class": "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+                    "requiredAttributes": {
+                        "@class": "java.util.HashMap",
+                        "ENTPersonLogin": [
+                            "java.util.HashSet",
+                            [
+                                "test1"
+                            ]
+                        ]
+                    }
+                }
+            ]
+        ],
+        "operator": "AND"
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}

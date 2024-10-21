@@ -1,0 +1,17 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8010\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour génération externalid",
+    "id": 10,
+    "attributeReleasePolicy": {
+        "@class": "org.apereo.cas.services.ReturnExternalIDAttributeReleasePolicy",
+        "internalServiceId": "SERVICE1",
+        "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ],
+        "externalIdAttributeName": "externalIdTest"
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}

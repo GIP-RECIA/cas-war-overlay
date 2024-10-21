@@ -6,7 +6,7 @@ Deploy a CAS server using the WAR Overlay method without having to downoad all t
 This CAS server uses the following modules :
 - **cas-server-support-ldap** as an authentication method
 - **cas-server-support-redis-ticket-registry** as the ticket registry
-- **cas-server-support-git-service-registry** as the service registry
+- **cas-server-support-json-service-registry** as the service registry
 - **cas-server-support-interrupt-webflow** to interrupt the webflow during the login phase
 - **cas-server-support-oidc** to enable the OIDC protocol
 - **cas-server-support-saml-idp** to act as an SAML2 identity provider

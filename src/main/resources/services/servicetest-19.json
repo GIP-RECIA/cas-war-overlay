@@ -1,0 +1,13 @@
+{
+  "@class": "org.apereo.cas.services.CasRegisteredService",
+  "serviceId": "^http:\/\/localhost:8019\/.*",
+  "name": "Service Test",
+  "description": "Service de test pour SLO",
+  "id": 19,
+  "bypassApprovalPrompt": true,
+  "webflowInterruptPolicy": {
+      "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+      "enabled": false
+  },
+  "logoutUrl" : "http://localhost:8019/logout"
+}

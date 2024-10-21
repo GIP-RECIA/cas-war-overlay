@@ -1,0 +1,18 @@
+{
+  "@class": "org.apereo.cas.services.CasRegisteredService",
+  "serviceId": "^https:\/\/wrongdomain\/tokenredirectnoportal.*",
+  "name": "Service Test",
+  "description": "Service de test pour token redirection (service non portail) avec domaine inconnu",
+  "id": 14,
+  "webflowInterruptPolicy": {
+      "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+      "enabled": false
+  },
+  "properties" : {
+    "@class" : "java.util.HashMap",
+    "portalRedirectionNeeded" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    }
+  }
+}
