@@ -62,7 +62,7 @@ cas.ticket.registry.redis.sentinel.password: GWMije5VNMe7avz
 # Service registry
 cas.service-registry.core.init-from-json: false
 cas.service-registry.core.init-default-services: false
-cas.service-registry.json.location: classpath:/services
+cas.service-registry.json.location: classpath:/services-test
 cas.service-registry.schedule.start-delay: 10000
 cas.service-registry.schedule.repeat-interval: 120000
 cas.service-registry.cache.duration: 900000

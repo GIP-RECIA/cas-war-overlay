@@ -375,6 +375,14 @@ if (!skipValidation) {
     processResources.dependsOn(validateConfiguration)
 }
 
+// Exclude files only used in the CI
+processResources {
+    if (project.hasProperty("profile") && project.profile == "prod") {
+        exclude '**/application-test.yml'
+        exclude '**/services-test'
+    }
+}
+
 task duct(group: "CAS", description: "Test ticket registry functionality via the CAS REST API") {
     def service = project.findProperty("duct.service") ?: "https://apereo.github.io"
     def casServerNodes = providers.gradlePropertiesPrefixedBy("duct.cas").get()
