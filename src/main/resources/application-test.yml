@@ -67,7 +67,7 @@ cas.service-registry.schedule.start-delay: 10000
 cas.service-registry.schedule.repeat-interval: 120000
 cas.service-registry.cache.duration: 900000
 
-# LDAP
+# LDAP auth
 cas.authn.ldap[0].base-dn: ou=people,dc=esco-centre,dc=fr
 cas.authn.ldap[0].bind-credential: admin
 cas.authn.ldap[0].bind-dn: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
@@ -75,7 +75,30 @@ cas.authn.ldap[0].ldap-url: ldap://localhost:389
 cas.authn.ldap[0].search-filter: (|(ENTPersonLogin={user})(ENTPersonAlias={user}))
 cas.authn.ldap[0].type: AUTHENTICATED
 cas.authn.ldap[0].principal-attribute-id: uid
-cas.authn.ldap[0].principal-attribute-list: uid,isMemberOf,cn,sn,givenName,displayName,mail,ENTPersonLogin,ESCODomaines,ESCOUAICourant,ESCOSIRENCourant,ENTPersonProfils,ENTEleveClasses,ENTEleveNivFormation,ESCOUAI,ESCOSIREN,ESCOUAIRattachement,ENTPersonDateNaissance,ENTPersonJointure,ENTPersonStructRattach,ESCOPersonEtatCompte,ESCOPersonExternalIds
+cas.person-directory.active-attribute-repository-ids: ldap
+cas.person-directory.use-existing-principal-id: true
+cas.authn.attribute-repository.ldap[0].id: ldap
+cas.authn.attribute-repository.ldap[0].base-dn: ou=people,dc=esco-centre,dc=fr
+cas.authn.attribute-repository.ldap[0].bind-credential: admin
+cas.authn.attribute-repository.ldap[0].bind-dn: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
+cas.authn.attribute-repository.ldap[0].ldap-url: ldap://localhost:389
+cas.authn.attribute-repository.ldap[0].search-filter: uid={0}
+cas.authn.attribute-repository.ldap[0].attributes.uid: uid
+cas.authn.attribute-repository.ldap[0].attributes.cn: cn
+cas.authn.attribute-repository.ldap[0].attributes.sn: sn
+cas.authn.attribute-repository.ldap[0].attributes.mail: mail
+cas.authn.attribute-repository.ldap[0].attributes.ESCOUAICourant: ESCOUAICourant
+cas.authn.attribute-repository.ldap[0].attributes.givenName: givenName
+cas.authn.attribute-repository.ldap[0].attributes.ENTPersonFonctions: ENTPersonFonctions
+cas.authn.attribute-repository.ldap[0].attributes.ENTPersonProfils: ENTPersonProfils
+cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonProfils: ESCOPersonProfils
+cas.authn.attribute-repository.ldap[0].attributes.ESCOUAI: ESCOUAI
+cas.authn.attribute-repository.ldap[0].attributes.ESCOSIRENCourant: ESCOSIRENCourant
+cas.authn.attribute-repository.ldap[0].attributes.ENTPersonGARIdentifiant: ENTPersonGARIdentifiant
+cas.authn.attribute-repository.ldap[0].attributes.ENTPersonJointure: ENTPersonJointure
+cas.authn.attribute-repository.ldap[0].attributes.isMemberOf: isMemberOf
+cas.authn.attribute-repository.ldap[0].attributes.ENTPersonLogin: ENTPersonLogin
+cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
 
 # Login Flow Interrupt
 cas.interrupt.core.force-execution: true
