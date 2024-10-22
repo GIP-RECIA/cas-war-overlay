@@ -7,13 +7,16 @@ cas.server.name: https://localhost:8443
 cas.server.prefix: https://localhost:8443/cas
 
 # Monitoring endpoints
-management.endpoints.web.discovery.enabled: true
-cas.monitor.endpoints.endpoint.defaults.access: ANONYMOUS
+# Health
+management.endpoints.web.exposure.include: health,prometheus           
+management.endpoint.health.enabled: true
 management.health.redis.enabled: true
-management.health.redisHealthIndicator.enabled: true
-management.endpoints.web.exposure.include: health,ssoSessions,ticketRegistry
 management.endpoint.health.show-details: always
-management.endpoints.enabled-by-default: true
+cas.monitor.endpoints.endpoint.health.access: ANONYMOUS
+# Prometheus
+management.endpoint.prometheus.enabled: true
+cas.monitor.endpoints.endpoint.prometheus.access: ANONYMOUS
+management.prometheus.metrics.export.enabled: true
 
 # Audit
 cas.audit.engine.enabled: true
@@ -75,6 +78,7 @@ cas.authn.ldap[0].ldap-url: ldap://localhost:389
 cas.authn.ldap[0].search-filter: (|(ENTPersonLogin={user})(ENTPersonAlias={user}))
 cas.authn.ldap[0].type: AUTHENTICATED
 cas.authn.ldap[0].principal-attribute-id: uid
+# LDAP attribute repository
 cas.person-directory.active-attribute-repository-ids: ldap
 cas.person-directory.use-existing-principal-id: true
 cas.authn.attribute-repository.ldap[0].id: ldap

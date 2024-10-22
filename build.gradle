@@ -337,6 +337,9 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-pac4j-cas"
     implementation "org.apereo.cas:cas-server-support-saml-idp"
     implementation "org.apereo.cas:cas-server-support-oidc"
+    implementation "org.apereo.cas:cas-server-core-monitor"
+    implementation "org.apereo.cas:cas-server-support-reports"
+    implementation "org.apereo.cas:cas-server-support-metrics"
     // Custom interrupt
     compileOnly "org.apereo.cas:cas-server-support-interrupt-core"
     compileOnly "org.apereo.cas:cas-server-support-interrupt-api"
