@@ -17,6 +17,7 @@ echo "Recopie des fichiers locaux dans diff"
 cp build.gradle diff/
 cp gradle.properties diff/
 cp src/main/java/org/apereo/cas/services/TimeBasedRegisteredServiceAccessStrategy.java diff/
+cp src/main/java/org/apereo/cas/services/PrincipalAttributeRegisteredServiceUsernameProvider.java diff/
 cp src/main/java/org/apereo/cas/web/flow/error/DefaultDelegatedClientAuthenticationFailureEvaluator.java diff/
 cp src/main/java/org/apereo/cas/web/flow/resolver/impl/DefaultCasDelegatingWebflowEventResolver.java diff/
 cp src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.java diff/
@@ -24,6 +25,7 @@ cp src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.jav
 # Télécharger les fichiers de la nouvelle version et les placer dans le dossier 'diff'
 echo "Téléchargement des fichiers de la nouvelle version"
 wget -q -O diff/TimeBasedRegisteredServiceAccessStrategy_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-services-api/src/main/java/org/apereo/cas/services/TimeBasedRegisteredServiceAccessStrategy.java
+wget -q -O diff/PrincipalAttributeRegisteredServiceUsernameProvider_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-services-api/src/main/java/org/apereo/cas/services/PrincipalAttributeRegisteredServiceUsernameProvider.java
 wget -q -O diff/DefaultDelegatedClientAuthenticationFailureEvaluator_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/web/flow/error/DefaultDelegatedClientAuthenticationFailureEvaluator.java
 wget -q -O diff/DefaultCasDelegatingWebflowEventResolver_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-webflow-api/src/main/java/org/apereo/cas/web/flow/resolver/impl/DefaultCasDelegatingWebflowEventResolver.java
 wget -q -O diff/BaseServiceAuthorizationCheckAction_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.java
@@ -50,6 +52,7 @@ echo "Comparaison des fichiers avec meld..."
 meld diff/build.gradle diff/build_$VERSION.gradle
 meld diff/gradle.properties diff/gradle_$VERSION.properties
 meld diff/TimeBasedRegisteredServiceAccessStrategy.java diff/TimeBasedRegisteredServiceAccessStrategy_$VERSION.java
+meld diff/PrincipalAttributeRegisteredServiceUsernameProvider.java diff/PrincipalAttributeRegisteredServiceUsernameProvider_$VERSION.java
 meld diff/DefaultDelegatedClientAuthenticationFailureEvaluator.java diff/DefaultDelegatedClientAuthenticationFailureEvaluator_$VERSION.java
 meld diff/DefaultCasDelegatingWebflowEventResolver.java diff/DefaultCasDelegatingWebflowEventResolver_$VERSION.java
 meld diff/BaseServiceAuthorizationCheckAction.java diff/BaseServiceAuthorizationCheckAction_$VERSION.java
@@ -59,6 +62,7 @@ echo "Recopie des fichiers mis à jour dans src"
 cp build.gradle ./
 cp diff/gradle.properties ./
 cp diff/TimeBasedRegisteredServiceAccessStrategy.java src/main/java/org/apereo/cas/services/TimeBasedRegisteredServiceAccessStrategy.java
+cp diff/PrincipalAttributeRegisteredServiceUsernameProvider.java src/main/java/org/apereo/cas/services/PrincipalAttributeRegisteredServiceUsernameProvider.java
 cp diff/DefaultDelegatedClientAuthenticationFailureEvaluator.java src/main/java/org/apereo/cas/web/flow/error/DefaultDelegatedClientAuthenticationFailureEvaluator.java
 cp diff/DefaultCasDelegatingWebflowEventResolver.java src/main/java/org/apereo/cas/web/flow/resolver/impl/DefaultCasDelegatingWebflowEventResolver.java
 cp diff/BaseServiceAuthorizationCheckAction.java src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.java

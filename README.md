@@ -18,6 +18,8 @@ And has a number of custom enhancements :
 - Portal forced redirection with token check
 - Time and attribute service access strategy chaining
 - Dynamic API call during attribute release (externalid)
+- Thrown exception when principal attribute is not found
+- Fix for concurrent access to service index map (see [this](https://groups.google.com/a/apereo.org/g/cas-user/c/pI9l9aT1gtU))
 - Soft/Hard timeout expiration policy **per service**
 
 Current CAS Base version : **7.1.1**
@@ -68,7 +70,8 @@ All the important parts of the project are listed below:
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
 │       │               └── services
-│       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy
+│       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
+│       │               │   ├── PrincipalAttributeRegisteredServiceUsernameProvider.java
 │       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               └── web/flow
