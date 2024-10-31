@@ -340,6 +340,8 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-monitor"
     implementation "org.apereo.cas:cas-server-support-reports"
     implementation "org.apereo.cas:cas-server-support-metrics"
+    // Groovy scripting
+    implementation "org.apereo.cas:cas-server-core-scripting"
     // Custom interrupt
     compileOnly "org.apereo.cas:cas-server-support-interrupt-core"
     compileOnly "org.apereo.cas:cas-server-support-interrupt-api"

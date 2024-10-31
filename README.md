@@ -11,6 +11,7 @@ This CAS server uses the following modules :
 - **cas-server-support-oidc** to enable the OIDC protocol
 - **cas-server-support-saml-idp** to act as an SAML2 identity provider
 - **cas-server-support-pac4j-webflow** to enable delegated authentication
+- **cas-server-core-scripting** for groovy scripting
 
 And has a number of custom enhancements :
 - CI pipeline with end-to-end tests using **puppeteer** and **docker**
