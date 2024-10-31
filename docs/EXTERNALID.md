@@ -31,15 +31,21 @@ Un service avec une `ReturnExternalIDAttributeReleasePolicy` se déclare de la m
     "@class": "org.apereo.cas.services.ReturnExternalIDAttributeReleasePolicy",
     "internalServiceId": "WEBGEREST",
     "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ],
-    "externalIdAttributeName": "externalIdTest"
+    "externalIdAttributeName": "externalIdTest",
+    "usernameAttributeProvider" : {
+        "@class" : "org.apereo.cas.services.PrincipalAttributeRegisteredServiceUsernameProvider",
+    "usernameAttribute" : "externalIdTest"
+  }
 }
 ```
 
 - `internalServiceId` est l'id de service interne, autrement dit celui qu'on retrouve dans l'attribut externalid du ldap qui est de la forme `service$externalid` ;
 - `allowedAttributes` est la liste des attributs qui vont être release **en plus** du externalid. Basé sur le même principe que `ReturnAllowedAttributeReleasePolicy` ;
 - `externexternalIdAttributeNamealIdAttributeName` est le nom de l'attribut qui va être retourné au final. Cela permet de surcharger le paramètre global `externalid.attribute-name-response` par service.
+- Le `usernameAttributeProvider` permet de changer le principal qui sera donné au service. Dans notre cas, il faut le mettre à la valeur de l’attribut externalid puisqu'on ne veut pas retourner l'identifiant de base.
 
+**Attention** : il n'est pas nécessaire d'inclure l'attribut externalid dans la liste des attributs à retourner car il sera ajouté de base. Par contre, il ne faut pas oublier d'ajouter l'externalid à la liste des attributs retournés par l'attribute repository.
 
-## Coté API
+**Cas particulier : attribut principal introuvable**
 
-Voir la doc du projet externalid-api : []
+Le comportement par défaut de CAS vis-à-vis de la gestion de l’attribut principal ne convient pas dans le cadre de l'utilisation de l’externalid. En effet, si l'identifiant externe ne peut pas être retourné, alors CAS remplace le principal par le principal par défaut (l'uid), alors que c'est justement ce qu'on veut éviter. Pour pallier à ce problème, une modification a été faite dans le `PrincipalAttributeRegisteredServiceUsernameProvider` qui consiste à lever une exception `UnsatisfiedAuthenticationContextTicketValidationException` dans le cas où l'attribut du principal n'est pas trouvé.
