@@ -5,10 +5,12 @@
     "description": "Service de test pour génération externalid",
     "id": 10,
     "attributeReleasePolicy": {
-        "@class": "org.apereo.cas.services.ReturnExternalIDAttributeReleasePolicy",
-        "internalServiceId": "SERVICE1",
-        "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ],
-        "externalIdAttributeName": "externalIdTest"
+        "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+        "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ]
+    },
+    "usernameAttributeProvider" : {
+        "@class" : "org.apereo.cas.services.PrincipalExternalIdRegisteredServiceUsernameProvider",
+        "internalServiceId": "SERVICE1"
     },
     "webflowInterruptPolicy": {
         "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",

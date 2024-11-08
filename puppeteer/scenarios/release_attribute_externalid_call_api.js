@@ -23,8 +23,7 @@ const assert = require("assert");
         assert(pageContent.includes("<cas:sn>"))
         assert(pageContent.includes("<cas:cn>"))
         assert(pageContent.includes("<cas:mail>"))
-        assert(pageContent.includes("<cas:mail>"))
-        assert(pageContent.includes("<cas:externalIdTest>00000000-0000-0000-0000-000000000001</cas:externalIdTest>"))
+        assert(pageContent.includes("<cas:user>00000000-0000-0000-0000-000000000001</cas:user>"))
 
         process.exit(0)
 
