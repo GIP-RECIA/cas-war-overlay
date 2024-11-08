@@ -2,20 +2,12 @@
 
 ## Coté CAS
 
-**Nouvelle AttributeReleasePolicy**
+**Nouveau ServiceUsernameProvider**
 
-Une nouvelle AttributeReleasePolicy a été ajoutée pour prendre en compte la génération dynamique d'un externalId en fonction du service.
-La classe java en question est `ReturnExternalIDAttributeReleasePolicy` qui étend `AbstractRegisteredServiceAttributeReleasePolicy`  comme les autres AttributeReleasePolicy.
+Un nouveau ServiceUsernameProvider a été ajouté pour prendre en compte la génération dynamique d'un externalId en fonction du service.
+La classe java en question est `PrincipalExternalIdRegisteredServiceUsernameProvider` qui étend `BaseRegisteredServiceUsernameAttributeProvider` comme les autres ServiceUsernameProvider.
 
-Elle implémente la méthode `getAttributesInternal` qui doit retourner une `Map<String, List<Object>>` qui représente tous les attributs qui vont être release au service. Cette map associe le nom d'un attribut à la liste de ses valeurs.
-
-**Problème :** La méthode `getAttributesInternal` est en réalité appelée plusieurs fois lorsqu'on essaie de se connecter à un serice depuis le CAS, avec en à chaque fois **en entrée les attributs du principal**. Or, la Map des attributs qu'on retourne ne modifie pas les attributs du principal et ne sera donc "utilisée" que lors du dernier appel. Ainsi, lorsqu'on fait un appl à l'API pour générer un externalid, on fait en réalité plusieurs appels car l'AttributeReleasePolicy n'a pas connaissance de l'externalid, puisque même s'il est ajouté dans le LDAP, il n'est pas ajouté dans les attributs du principal avant la prochaine connection.
-
-**Solution :** La solution choisie pour résoudre ce problème a été d'ajouter l'externallid dans les attributs du principal la première fois qu'on le génère grâce à la ligne :
-```java
-context.getPrincipal().getAttributes().put(externalIdAttributeNameResponse, Collections.singletonList(externalUserId));
-```
-Ensuite il suffit de vérifier qu'on à pas déja l'attribut dans la Map d'entrée grâce au `if(!resolvedAttributes.containsKey(externalIdAttributeNameResponse))` pour éviter d'en regénérer un nouveau à chaque appel.
+Elle implémente la méthode `resolveUsernameInternal` qui doit retourner un String qui est la valeur du principal qui va être release au service.
 
 **Appels à l'API**
 
@@ -25,27 +17,16 @@ Pour cela on a la méthode `getOrInsertExternalIdForService` qui s'occupe de fai
 
 **Déclaration du service**
 
-Un service avec une `ReturnExternalIDAttributeReleasePolicy` se déclare de la manière suivante en JSON dans le service registry :
+Un service avec un `PrincipalExternalIdRegisteredServiceUsernameProvider` se déclare de la manière suivante en JSON dans le service registry :
 ```json
-"attributeReleasePolicy": {
-    "@class": "org.apereo.cas.services.ReturnExternalIDAttributeReleasePolicy",
-    "internalServiceId": "WEBGEREST",
-    "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ],
-    "externalIdAttributeName": "externalIdTest",
-    "usernameAttributeProvider" : {
-        "@class" : "org.apereo.cas.services.PrincipalAttributeRegisteredServiceUsernameProvider",
-    "usernameAttribute" : "externalIdTest"
-  }
+"usernameAttributeProvider" : {
+    "@class" : "org.apereo.cas.services.PrincipalExternalIdRegisteredServiceUsernameProvider",
+    "internalServiceId": "MONSERVICE"
 }
 ```
 
 - `internalServiceId` est l'id de service interne, autrement dit celui qu'on retrouve dans l'attribut externalid du ldap qui est de la forme `service$externalid` ;
-- `allowedAttributes` est la liste des attributs qui vont être release **en plus** du externalid. Basé sur le même principe que `ReturnAllowedAttributeReleasePolicy` ;
-- `externexternalIdAttributeNamealIdAttributeName` est le nom de l'attribut qui va être retourné au final. Cela permet de surcharger le paramètre global `externalid.attribute-name-response` par service.
-- Le `usernameAttributeProvider` permet de changer le principal qui sera donné au service. Dans notre cas, il faut le mettre à la valeur de l’attribut externalid puisqu'on ne veut pas retourner l'identifiant de base.
-
-**Attention** : il n'est pas nécessaire d'inclure l'attribut externalid dans la liste des attributs à retourner car il sera ajouté de base. Par contre, il ne faut pas oublier d'ajouter l'externalid à la liste des attributs retournés par l'attribute repository.
 
 **Cas particulier : attribut principal introuvable**
 
-Le comportement par défaut de CAS vis-à-vis de la gestion de l’attribut principal ne convient pas dans le cadre de l'utilisation de l’externalid. En effet, si l'identifiant externe ne peut pas être retourné, alors CAS remplace le principal par le principal par défaut (l'uid), alors que c'est justement ce qu'on veut éviter. Pour pallier à ce problème, une modification a été faite dans le `PrincipalAttributeRegisteredServiceUsernameProvider` qui consiste à lever une exception `UnsatisfiedAuthenticationContextTicketValidationException` dans le cas où l'attribut du principal n'est pas trouvé.
+Le comportement par défaut de CAS vis-à-vis de la gestion de l’attribut principal ne convient pas dans le cadre de l'utilisation de l’externalid. En effet, si l'identifiant externe ne peut pas être retourné, alors CAS remplace le principal par le principal par défaut (l'uid), alors que c'est justement ce qu'on veut éviter. Dans le ServiceUsernameProvider implémenté, la logique est de lever une exception dans le cas ou l'externalid ne peut pas être trouvé.

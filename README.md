@@ -18,8 +18,7 @@ And has a number of custom enhancements :
 - Multidomain and dynamic redirection on a specific domain
 - Portal forced redirection with token check
 - Time and attribute service access strategy chaining
-- Dynamic API call during attribute release (externalid)
-- Thrown exception when principal attribute is not found
+- Principal release with dynamic API call (externalid), with exception thrown when principal attribute is not found
 - Fix for concurrent access to service index map (see [this](https://groups.google.com/a/apereo.org/g/cas-user/c/pI9l9aT1gtU))
 - Soft/Hard timeout expiration policy **per service**
 
@@ -72,8 +71,7 @@ All the important parts of the project are listed below:
 │       │               │   └── DomainChangeInterruptInquirer.java
 │       │               └── services
 │       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
-│       │               │   ├── PrincipalAttributeRegisteredServiceUsernameProvider.java
-│       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
+│       │               │   ├── PrincipalExternalIdRegisteredServiceUsernameProvider.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               └── web/flow
 │       │                   ├── error
