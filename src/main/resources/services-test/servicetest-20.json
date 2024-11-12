@@ -1,0 +1,24 @@
+{
+    "@class": "org.apereo.cas.services.OidcRegisteredService",
+    "clientId": "client2-testcas",
+    "clientSecret": "secret2-testcas",
+    "serviceId": "^http:\/\/localhost:8020\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour OIDC custom acr",
+    "id": 20,
+    "bypassApprovalPrompt": true,
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    },
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "customAcrClaim" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ "eidas1" ] ]
+        }
+    },
+    "scopes": [ "java.util.HashSet", [ "openid" ] ],
+    "supportedGrantTypes": [ "java.util.HashSet", [ "authorization_code" ] ],
+    "supportedResponseTypes": [ "java.util.HashSet", [ "code" ] ]
+  }

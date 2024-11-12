@@ -44,8 +44,8 @@ import java.util.TreeMap;
 public class PrincipalExternalIdRegisteredServiceUsernameProvider extends BaseRegisteredServiceUsernameAttributeProvider {
 
     @Serial
-    private static final long serialVersionUID = -3546719400741715137L;
-
+    private static final long serialVersionUID = 6483763881666720069L;
+    
     @JsonProperty
     private String internalServiceId;
 

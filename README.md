@@ -69,6 +69,9 @@ All the important parts of the project are listed below:
 │       │               │   └── CustomInterruptConfiguration.java
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
+│       │               ├── oidc
+│       │               │   └── token
+│       │               │       └── OidcIdTokenGeneratorService.java
 │       │               └── services
 │       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
 │       │               │   ├── PrincipalExternalIdRegisteredServiceUsernameProvider.java

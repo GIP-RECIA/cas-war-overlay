@@ -128,6 +128,7 @@ C’est un jeton opaque (pas nécessairement au format JWT) qui permet de prouve
 C'est un jeton toujours au format JWT qui contient des informations sur l'utilisateur (les claims) signé par le serveur d'autorisation pour garantir son authenticité et son intégrité. Il permet au client de vérifier qui est l'utilisateur mais il n'est pas destiné à être envoyé à des API pour accéder à des ressources. Il est destiné à avoir une durée de vie courte. CAS n'enverra l'ID Token que pour le protocole OIDC.
 
 **Refresh Token**
+
 C’est un jeton opaque (pas nécessairement au format JWT) qui permet d'obtenir des nouveaux access token sans avoir besoin de se ré-authentifier (une sorte de rememberme). Lorsqu'un AT expire, le client envoie le RT au CAS sur l'endpoint `token` pour obtenir un nouveau AT. Le RT a donc une durée de vie beaucoup plus longue que les autres tokens. Pour que CAS envoie le RT il faut bien préciser dans la déclaration du service deux élements :
 - `generateRefreshToken` à `true`
 - `refresh_token` dans les `supportedGrantTypes`.
