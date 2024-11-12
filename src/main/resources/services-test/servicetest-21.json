@@ -1,0 +1,21 @@
+{
+    "@class": "org.apereo.cas.services.OidcRegisteredService",
+    "clientId": "client3-testcas",
+    "clientSecret": "secret3-testcas",
+    "serviceId": "^http:\/\/localhost:8021\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour OIDC avec externalid",
+    "id": 21,
+    "bypassApprovalPrompt": true,
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    },
+    "usernameAttributeProvider" : {
+        "@class" : "org.apereo.cas.services.PrincipalExternalIdRegisteredOidcServiceUsernameProvider",
+        "internalServiceId": "SERVICE2"
+    },
+    "scopes": [ "java.util.HashSet", [ "openid" ] ],
+    "supportedGrantTypes": [ "java.util.HashSet", [ "authorization_code" ] ],
+    "supportedResponseTypes": [ "java.util.HashSet", [ "code" ] ]
+  }

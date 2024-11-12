@@ -75,6 +75,7 @@ All the important parts of the project are listed below:
 │       │               └── services
 │       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
 │       │               │   ├── PrincipalExternalIdRegisteredServiceUsernameProvider.java
+│       │               │   ├── PrincipalExternalIdRegisteredOidcServiceUsernameProvider.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               └── web/flow
 │       │                   ├── error

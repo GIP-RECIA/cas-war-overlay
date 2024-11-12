@@ -97,6 +97,9 @@ pid_python_oidc_client=$!
 cd "../flask-oidc-client2"
 python3 index.py &
 pid_python_oidc_client2=$!
+cd "../flask-oidc-client3"
+python3 index.py &
+pid_python_oidc_client3=$!
 rm -r /tmp/oidc
 mkdir /tmp/oidc
 cd "${ROOT_DIRECTORY}"
@@ -170,6 +173,7 @@ kill -9 "$pid_python_externalid_api"
 kill -9 "$pid_python_saml_client"
 kill -9 "$pid_python_oidc_client"
 kill -9 "$pid_python_oidc_client2"
+kill -9 "$pid_python_oidc_client3"
 cd "${ROOT_DIRECTORY}/ci/ldap"
 ./stop-ldap.sh
 cd "${ROOT_DIRECTORY}/ci/redis"

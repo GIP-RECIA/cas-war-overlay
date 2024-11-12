@@ -368,5 +368,6 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-oauth-core-api"
     compileOnly "org.apereo.cas:cas-server-support-oauth-api"
     compileOnly "org.apereo.cas:cas-server-support-oauth-services"
-
+    // Custom OIDC + externalid
+    compileOnly "org.apereo.cas:cas-server-core-services-authentication"
 }

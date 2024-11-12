@@ -30,3 +30,7 @@ Un service avec un `PrincipalExternalIdRegisteredServiceUsernameProvider` se dé
 **Cas particulier : attribut principal introuvable**
 
 Le comportement par défaut de CAS vis-à-vis de la gestion de l’attribut principal ne convient pas dans le cadre de l'utilisation de l’externalid. En effet, si l'identifiant externe ne peut pas être retourné, alors CAS remplace le principal par le principal par défaut (l'uid), alors que c'est justement ce qu'on veut éviter. Dans le ServiceUsernameProvider implémenté, la logique est de lever une exception dans le cas ou l'externalid ne peut pas être trouvé.
+
+**Cas particulier : service OIDC**
+
+Pour les services OIDC la classe à utiliser est `PrincipalExternalIdRegisteredOidcServiceUsernameProvider` qui est une version legèrement modifiée de `PrincipalExternalIdRegisteredServiceUsernameProvider`. La modification est nécéssaire car pour les services OIDC on essaie de récupérer le principal à 2 moments : une fois pour le user authentifié, et une fois pour le service oidc. L'objectif est donc de ne pas chercher d'externalid lorsqu'on cherche le principal du service (`if(((AbstractWebApplicationService)context.getService()).getPrincipal() == null)`).
