@@ -19,3 +19,6 @@ SERVICE_TOKEN_NOREDIRECT_URL = "http://localhost:8016/test"
 
 # Url du service pour tester la déconnexion globale
 SERVICE_SLO_URL = "http://localhost:8019/test"
+
+# Url du service pour tester une erreur dans la récupération de l'externalid
+SERVICE_EXTERNALID_ERROR_URL = "http://localhost:8022/test"

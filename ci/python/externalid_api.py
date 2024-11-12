@@ -12,6 +12,9 @@ SERVICE_TO_EXTERNALID = {"SERVICE1":"SERVICE1$00000000-0000-0000-0000-0000000000
                          "SERVICE2":"SERVICE2$00000000-0000-0000-0000-000000000002"}
 DEFAULT_EXTERNALID = "SERVICE$00000000-0000-0000-0000-000000000000"
 
+# Liste des services à retourner en erreur
+SERVICE_ERROR = ["SERVICE3"]
+
 class RequestHandler(BaseHTTPRequestHandler):
     """
     Classe RequestHandler pour répondre aux différentes requêtes
@@ -30,6 +33,10 @@ class RequestHandler(BaseHTTPRequestHandler):
             response_map = {"generatedId":externalid,"error":False,
                             "jdbcresult":{"error":False,"errorMessage":"","exceptionType":""},
                             "ldapresult":{"error":False,"errorMessage":"","exceptionType":""}}
+            if service in SERVICE_ERROR:
+                response_map = {"generatedId":externalid,"error":True,
+                "jdbcresult":{"error":True,"errorMessage":"Error","exceptionType":""},
+                "ldapresult":{"error":True,"errorMessage":"Error","exceptionType":""}}
             json_reponse = json.dumps(response_map)
             self.send_response(200)
             self.send_header('Content-Type', 'application/json')

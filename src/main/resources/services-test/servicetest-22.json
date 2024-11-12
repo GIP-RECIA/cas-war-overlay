@@ -1,0 +1,19 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8022\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour externalid page erreur",
+    "id": 22,
+    "attributeReleasePolicy": {
+        "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+        "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ]
+    },
+    "usernameAttributeProvider" : {
+        "@class" : "org.apereo.cas.services.PrincipalExternalIdRegisteredServiceUsernameProvider",
+        "internalServiceId": "SERVICE3"
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}

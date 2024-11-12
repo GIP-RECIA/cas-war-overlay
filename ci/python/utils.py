@@ -49,11 +49,13 @@ def validate_ticket_to_cas_and_return_attributes(request_handler, service_url, c
             request_handler.send_header("Content-Length", str(len(response.text.encode('utf-8'))))
             request_handler.end_headers()
             request_handler.wfile.write(response.text.encode('utf-8'))
-        # Sinon on a eu un problème donc on retourne un 404
+        # Sinon on a eu un problème donc on retourne le problème
         else:
-            request_handler.send_response(404)
+            request_handler.send_response(response.status_code)
+            request_handler.send_header("Content-type", "application/xml")
+            request_handler.send_header("Content-Length", str(len(response.text.encode('utf-8'))))
             request_handler.end_headers()
-            request_handler.wfile.write(b'404 Not Found')
+            request_handler.wfile.write(response.text.encode('utf-8'))
     else:
         request_handler.send_response(404)
         request_handler.end_headers()
