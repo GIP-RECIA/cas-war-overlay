@@ -1,4 +1,3 @@
-
 package org.apereo.cas.web.flow.error;
 
 import org.apereo.cas.CasProtocolConstants;

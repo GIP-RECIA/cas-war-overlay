@@ -418,3 +418,4 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
             .orElseGet(Set::of);
     }
 }
+

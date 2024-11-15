@@ -23,7 +23,7 @@ And has a number of custom enhancements :
 - Soft/Hard timeout expiration policy **per service**
 - Custom <md:Info> SAML idp metadata generation
 
-Current CAS Base version : **7.1.1**
+Current CAS Base version : **7.1.2**
 
 # Project Structure
 
