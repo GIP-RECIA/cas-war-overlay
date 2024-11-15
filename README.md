@@ -21,6 +21,7 @@ And has a number of custom enhancements :
 - Principal release with dynamic API call (externalid), with exception thrown when principal attribute is not found
 - Fix for concurrent access to service index map (see [this](https://groups.google.com/a/apereo.org/g/cas-user/c/pI9l9aT1gtU))
 - Soft/Hard timeout expiration policy **per service**
+- Custom <md:Info> SAML idp metadata generation
 
 Current CAS Base version : **7.1.1**
 
@@ -72,10 +73,12 @@ All the important parts of the project are listed below:
 │       │               ├── oidc
 │       │               │   └── token
 │       │               │       └── OidcIdTokenGeneratorService.java
-│       │               └── services
+│       │               ├── services
 │       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
 │       │               │   ├── PrincipalExternalIdRegisteredServiceUsernameProvider.java
 │       │               │   ├── PrincipalExternalIdRegisteredOidcServiceUsernameProvider.java
+│       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
+│       │               ├── support/saml/idp/metadata/generator
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               └── web/flow
 │       │                   ├── error
@@ -88,13 +91,21 @@ All the important parts of the project are listed below:
 |           ├── META-INF
 |           |   └── spring
 |           |       └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+|           ├── services-test
+|           |   └── ...
 |           ├── templates
-|           |   └── delegated-authn
+|           |   ├── delegated-authn
 |           |   |   └── casDelegatedAuthnStopWebflow.html
-|           |   └── interrupt
-|           |       └── casInterruptView.html
+|           |   ├── interrupt
+|           |   |   └── casInterruptView.html
+|           |   └── login
+|           |       └── casGenericSuccessView.html
 |           ├── application-test.yml
-|           └── application.yml
+|           ├── application.yml
+|           ├── custom_messages_fr.properties
+|           ├── custom_messages.properties
+|           ├── log4j2.xml
+|           └── template-idp-metadata.vm.yml
 |
 ├── build.gradle
 ├── README.md
