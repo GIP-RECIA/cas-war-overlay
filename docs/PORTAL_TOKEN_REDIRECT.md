@@ -86,3 +86,18 @@ Coté CAS, il faut à minima définir les propriétés `token.domain-list`, `tok
 Dans les tests on cherche surtout à savoir si la redirection va se faire, le problème étant que les domaines utilisés dans les tests n’existent pas car ce sont des domaines arbitraires. Pour cela, on utilise dans les tests un `setRequestInterception` qui va permettre à la fois de stopper les requêtes de redirection (`page.on('request', request =>`), mais aussi de vérifier le résultat des réponses pour voir si on est censé être redirigé au bon endroit (`page.on('response', response =>`).
 
 En stoppant la requête vers le domaine arbitraire puppeteer lèvera une erreur `net::ERR_FAILED` qu'on pourra simplement `catch`, l'objectif étant uniquement de vérifier vers quel domaine cette requête aura du être faite.
+
+## Autre fonctionnalité : ajout d'infos supplémentaires lors de la redirection sur un CAS délégué
+
+Quand on délègue l'authentification, l'IDP sur lequel on délègue n'a pas connaissance du service d'origine : il n'a connaissance que du CAS. On peut avoir envie de transmettre des informations supplémentaires relatives au service d'origine, et pour cela on peut ajouter des paramètres supplémentaires dans l'URL. L'action du webflow qui a été modifiée est `DelegatedClientAuthenticationRedirectAction` et plus particulièrement la méthode `handleIdentityProviderWithExternalRedirect`.
+
+Pour utiliser ce système il suffit de configurer correctement un service en ajoutant la propriété suivante (attention à toujours commencer par `ADD-DELEGAUTHN-PARAM`):
+```
+"properties" : {
+	"@class" : "java.util.HashMap",
+	"ADD-DELEGAUTHN-PARAM:NONPARAM" : {
+		"@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+		"values" : [ "java.util.HashSet", [ "VALEURPARAM" ] ]
+	}
+}
+```

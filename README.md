@@ -22,6 +22,7 @@ And has a number of custom enhancements :
 - Fix for concurrent access to service index map (see [this](https://groups.google.com/a/apereo.org/g/cas-user/c/pI9l9aT1gtU))
 - Soft/Hard timeout expiration policy **per service**
 - Custom <md:Info> SAML idp metadata generation
+- Custom parameter in url for delegation depending on service
 
 Current CAS Base version : **7.1.2**
 
@@ -81,6 +82,8 @@ All the important parts of the project are listed below:
 │       │               ├── support/saml/idp/metadata/generator
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               └── web/flow
+│       │                   ├── actions
+│       │                   │   └── DelegatedClientAuthenticationRedirectAction.java
 │       │                   ├── error
 │       │                   │   └── DefaultDelegatedClientAuthenticationFailureEvaluator.java
 │       │                   ├── resolver/impl
