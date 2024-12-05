@@ -380,6 +380,7 @@ processResources {
     if (project.hasProperty("profile") && project.profile == "prod") {
         exclude '**/application-test.yml'
         exclude '**/services-test'
+        exclude '**/attribute-definition-test'
     }
 }
 

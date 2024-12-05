@@ -86,6 +86,8 @@ python3 service_test19.py &
 pid_python_service_test19=$!
 python3 service_test22.py &
 pid_python_service_test22=$!
+python3 service_test23.py &
+pid_python_service_test23=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
@@ -93,6 +95,9 @@ pid_python_externalid_api=$!
 cd "flask-saml-client"
 python3 index.py &
 pid_python_saml_client=$!
+cd "../flask-saml-client2"
+python3 index.py &
+pid_python_saml_client2=$!
 cd "../flask-oidc-client"
 python3 index.py &
 pid_python_oidc_client=$!
@@ -129,7 +134,7 @@ results=()
 # Si on est sûr que le serveur CAS est lancé, alors on éxécute les scénarios puppeteer un par un
 export NODE_TLS_REJECT_UNAUTHORIZED=0
 echo "Executing puppeteer scenarios..."
-for scenario in "${PWD}"/puppeteer/scenarios/*; do
+for scenario in "${PWD}"/puppeteer/tests/*; do
     scenarioName=$(basename "$scenario")
     echo "=========================="
     echo "- Scenario $scenarioName "
@@ -171,9 +176,11 @@ kill -9 "$pid_python_service_test10"
 kill -9 "$pid_python_service_test16"
 kill -9 "$pid_python_service_test19"
 kill -9 "$pid_python_service_test22"
+kill -9 "$pid_python_service_test23"
 kill -9 "$pid_python_structs_info_api"
 kill -9 "$pid_python_externalid_api"
 kill -9 "$pid_python_saml_client"
+kill -9 "$pid_python_saml_client2"
 kill -9 "$pid_python_oidc_client"
 kill -9 "$pid_python_oidc_client2"
 kill -9 "$pid_python_oidc_client3"

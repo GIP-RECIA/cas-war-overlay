@@ -120,6 +120,9 @@ cas.authn.oidc.discovery.scopes: openid,profile,test
 cas.authn.oidc.discovery.claims: sub,name,cn,nickname,family_name,uid,isMemberOf,sn,givenName,displayName,mail
 cas.authn.oidc.id-token.include-id-token-claims: false
 
+# Attribute definition
+cas.authn.attribute-repository.attribute-definition-store.json.location: classpath:attribute-definition-test.json
+
 # Custom Properties
 
 # Interrupt
@@ -130,6 +133,7 @@ cas.custom.properties.interrupt.replace-domain-regex: (\?service=http:\/\/)[^\/]
 # Externalid
 cas.custom.properties.externalid.base-api-url: http://localhost:7002/externalid/api
 cas.custom.properties.externalid.api-path: /generateExternalId
+cas.custom.properties.externalid.attribute-name-response: externalId
 cas.custom.properties.externalid.attribute-name-ldap: ESCOPersonExternalIds
 cas.custom.properties.externalid.split-character: $
 

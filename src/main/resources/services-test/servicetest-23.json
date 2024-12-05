@@ -1,0 +1,28 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8023\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour externalid via attribute release",
+    "id": 23,
+    "attributeReleasePolicy": {
+        "@class": "org.apereo.cas.services.ChainingAttributeReleasePolicy",
+        "policies": [ "java.util.ArrayList",
+            [
+                {
+                    "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+                    "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ],
+                    "order": 1
+                },
+                {
+                    "@class" : "org.apereo.cas.services.ReturnExternalIDAttributeReleasePolicy",
+                    "order": 0,
+                    "internalServiceId": "SERVICE4"
+                }
+            ]
+        ]
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}

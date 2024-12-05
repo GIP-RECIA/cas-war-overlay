@@ -9,7 +9,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 # Dictionnaire mémorisant les externalids spécifiques à renvoyer pour un service donné
 # Si un service n'est pas spécifié ici DEFAULT_EXTERNALID sera renvoyé
 SERVICE_TO_EXTERNALID = {"SERVICE1":"SERVICE1$00000000-0000-0000-0000-000000000001",
-                         "SERVICE2":"SERVICE2$00000000-0000-0000-0000-000000000002"}
+                         "SERVICE2":"SERVICE2$00000000-0000-0000-0000-000000000002",
+                         "SERVICE4":"SERVICE4$00000000-0000-0000-0000-000000000004",
+                         "SERVICE5":"SERVICE5$00000000-0000-0000-0000-000000000005"}
 DEFAULT_EXTERNALID = "SERVICE$00000000-0000-0000-0000-000000000000"
 
 # Liste des services à retourner en erreur

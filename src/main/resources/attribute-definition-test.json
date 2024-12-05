@@ -1,0 +1,13 @@
+{
+    "@class": "java.util.TreeMap",
+    "newIdMappedFromExternal": {
+        "@class": "org.apereo.cas.support.saml.web.idp.profile.builders.attr.SamlIdPAttributeDefinition",
+        "key": "newIdMappedFromExternal",
+        "name": "newIdMappedFromExternal",
+        "scoped": false,
+        "encrypted": false,
+        "friendlyName": "newIdMappedFromExternal",
+        "attribute": "externalId",
+        "persistent": false
+    }    
+}

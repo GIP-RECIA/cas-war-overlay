@@ -1,0 +1,30 @@
+{
+    "@class": "org.apereo.cas.support.saml.services.SamlRegisteredService",
+    "serviceId": "^http:\/\/localhost:8024\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour externalid dans le principal utilisé pour attribute definition SAML",
+    "id": 24,
+    "metadataLocation": "http://localhost:8024/metadata",
+    "attributeReleasePolicy": {
+        "@class": "org.apereo.cas.services.ChainingAttributeReleasePolicy",
+        "policies": [ "java.util.ArrayList",
+            [
+                {
+                    "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+                    "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn", "newIdMappedFromExternal" ] ],
+                    "order": 0
+                },
+                {
+                    "@class" : "org.apereo.cas.services.ReturnExternalIDAttributeReleasePolicy",
+                    "order": 1,
+                    "internalServiceId": "SERVICE5",
+                    "notReleased": true
+                }
+            ]
+        ]
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}
