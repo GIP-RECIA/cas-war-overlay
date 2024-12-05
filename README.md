@@ -18,7 +18,7 @@ And has a number of custom enhancements :
 - Multidomain and dynamic redirection on a specific domain
 - Portal forced redirection with token check
 - Time and attribute service access strategy chaining
-- Principal release with dynamic API call (externalid), with exception thrown when principal attribute is not found
+- Dynamic attribute username provider and dynamic attribute release(externalid)
 - Fix for concurrent access to service index map (see [this](https://groups.google.com/a/apereo.org/g/cas-user/c/pI9l9aT1gtU))
 - Soft/Hard timeout expiration policy **per service**
 - Custom <md:Info> SAML idp metadata generation
@@ -78,6 +78,7 @@ All the important parts of the project are listed below:
 │       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
 │       │               │   ├── PrincipalExternalIdRegisteredServiceUsernameProvider.java
 │       │               │   ├── PrincipalExternalIdRegisteredOidcServiceUsernameProvider.java
+│       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               ├── support/saml/idp/metadata/generator
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
