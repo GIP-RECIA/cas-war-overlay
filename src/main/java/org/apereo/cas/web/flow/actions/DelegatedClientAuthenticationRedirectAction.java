@@ -138,7 +138,6 @@ public class DelegatedClientAuthenticationRedirectAction extends BaseCasWebflowA
                 .collect(Collectors.toList());
             configureWebContextForRegisteredServiceProperties(registeredService, webContext, oidcProperties);
         }
-
     }
 
     protected void initializeClientIdentityProvider(final IndirectClient client) throws Throwable {
