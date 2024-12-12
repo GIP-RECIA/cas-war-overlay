@@ -19,7 +19,6 @@ const assert = require("assert");
 
         // Assert that the released attributes correspond to expectations
         const pageContent = await page.content();
-        cas.loge(pageContent);
         assert(pageContent.includes("<cas:authenticationSuccess>"))
         assert(pageContent.includes("<cas:sn>"))
         assert(pageContent.includes("<cas:cn>"))
