@@ -1,6 +1,6 @@
 # CAS properties
 
-The following tables lists all the properties that are used in this CAS deployment (test and production):
+The following tables lists all the properties that are useful in this CAS deployment :
 
 ## CAS Server
 | Property | Description | Example value |
@@ -12,35 +12,48 @@ The following tables lists all the properties that are used in this CAS deployme
 | Property | Description | Example value |
 |----------|-------------|---------------|
 | cas.ticket.registry.redis.host | Redis master node host (necessary but unused) | localhost |
+| cas.ticket.registry.redis.password | Redis master password | password |
 | cas.ticket.registry.redis.port | Redis master node port (necessary but unused) | 6379 |
 | cas.ticket.registry.redis.sentinel.master | Name of sentinel master | mymaster |
 | cas.ticket.registry.redis.sentinel.node[i] | List of sentinel adress in the form of host:port | localhost:26379 |
-| cas.authn.accept.enabled | False to disable default authentication | false |
+| cas.ticket.registry.redis.sentinel.password | Sentinel password | password |
+| cas.ticket.registry.redis.pool.enabled | Enable the pooling configuration | true |
+| cas.ticket.registry.redis.pool.max-idle | Max number of "idle" connections in the pool | 512 |
+| cas.ticket.registry.redis.pool.max-active | Max number of connections that can be allocated by the pool at a given time | 512 |
+| cas.ticket.registry.redis.cache.cache-size | Size of CAS cache for redis ticket registry (0 to disable) | 0 |
 
-## Service Registry
+## JSON Service Registry
 | Property | Description | Example value |
 |----------|-------------|---------------|
 | cas.service-registry.core.init-from-json | False to disable default service registry | false |
-| cas.service-registry.git.repository-url | URL of the git repository to clone | `https://github.com/GIP-RECIA/cas-git-service-registry-test.git` |
-| cas.service-registry.git.active-branch | Branch to checkout and activate | master |
-| cas.service-registry.git.branches-to-clone | Branches to clone | master |
-| cas.service-registry.git.root-directory=services_definitions | Directory in the git repository used to store the service definitions | definitions |
-| cas.service-registry.git.clone-directory.location | Location where the git project will be copied | `file:/tmp/cas-service-registry-test` |
-| cas.service-registry.schedule.start-delay | Start delay of loading data | PT15S |
-| cas.service-registry.schedule.repeat-interval | Repeat interval of re-loading data (e.g fetching and merging) | PT2M |
-| cas.service-registry.cache.duration |  Fixed duration for an entry to be automatically removed from the cache after its creation | PT15M |
+| cas.service-registry.core.init-default-service |Indicates whether service definitions that ship with CAS should be imported into CAS service registry | false |
+| cas.service-registry.json.location | The location of the folder containing all the JSON service definition files | file:/path |
 
-## LDAP
+## LDAP Auth
 | Property | Description | Example value |
 |----------|-------------|---------------|
+| cas.authn.accept.enabled | Disable default authentication | false |
 | cas.authn.ldap[0].ldap-url | LDAP url to the server | ldap://localhost:389 |
 | cas.authn.ldap[0].base-dn | Base DN to use when connecting to LDAP | ou=people,dc=esco-centre,dc=fr |
 | cas.authn.ldap[0].bind-dn | Bind DN to use when connecting to LDAP | cn=admin,ou=administrateurs,dc=esco-centre,dc=fr |
-| cas.authn.ldap[0].bind-credential | Bind credential to use when connecting to LDAP | admin |
+| cas.authn.ldap[0].bind-credential | Bind credential to use when connecting to LDAP | password |
 | cas.authn.ldap[0].search-filter | User filter to use for searching ({user} will be replaced by the login entered in CAS) | `(ENTPersonLogin={user})` |
 | cas.authn.ldap[0].type | Authentication type | AUTHENTICATED |
 | cas.authn.ldap[0].principal-attribute-id | Principal attribute CAS will return after a successful authentication (as an identifier) | uid |
-| cas.authn.ldap[0].principal-attribute-list | List of attributes CAS will return after a successful authentication (separated by commas) | uid,isMemberOf,cn,sn,givenName |
+
+## LDAP attribute repository
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.person-directory.active-attribute-repository-ids | IDS of enabled attribute repositories | ldap |
+| cas.person-directory.use-existing-principal-id | Use principal id returned by authentication | true |
+| cas.authn.attribute-repository.ldap[0].id | ID of this attribute repository | ldap |
+| cas.authn.ldap[0].ldap-url | LDAP url to the server | ldap://localhost:389 |
+| cas.authn.ldap[0].base-dn | Base DN to use when connecting to LDAP | ou=people,dc=esco-centre,dc=fr |
+| cas.authn.ldap[0].bind-dn | Bind DN to use when connecting to LDAP | cn=admin,ou=administrateurs,dc=esco-centre,dc=fr |
+| cas.authn.ldap[0].bind-credential | Bind credential to use when connecting to LDAP | password |
+| cas.authn.ldap[0].search-filter | User filter to use for searching | `uid={0}` |
+| cas.authn.attribute-repository.ldap[0].attributes.X | Map each attribute in LDAP to attribute in attribute repository | X |
+| cas.authn.attribute-repository.core.expiration-time | Caching duration (0 to disable caching) | 0 |
 
 ## SAML IDP
 | Property | Description | Example value |
@@ -48,23 +61,48 @@ The following tables lists all the properties that are used in this CAS deployme
 | cas.authn.saml-idp.core.entity-id | The SAML entityId for the CAS server | https://cas.example.org/idp |
 | cas.authn.saml-idp.metadata.file-system.location | Where the CAS server will store the metadata that he generated for himself | file:/path/to/directory |
 | cas.authn.saml-idp.logout.sign-logout-response | If logout reponses need to be signed for all SP | false |
+| cas.server.scope | Scope of the server (useful for scoped attributes) | domaine.fr |
+| cas.authn.saml-idp.core.session-storage-type | Storage type for SAML authn sessions (TST) | TICKET_REGISTRY |
 
 ## OIDC IDP
 | Property | Description | Example value |
 |----------|-------------|---------------|
 | cas.authn.oidc.core.issuer | URL of the issuer to uniquely identify the CAS server | https://cas.example/cas/oidc|
-| cas.authn.oidc.jwks.file-system.jwks-file | Path to the JWKS file resource used to handle signing/encryption of authentication tokens | /etc/cas/keystore.jwks|
+| cas.authn.oidc.jwks.file-system.jwks-file | Path to the JWKS file resource used to handle signing/encryption of authentication tokens | /etc/cas/keystore.jwks |
 | cas.authn.oidc.core.claims-map.X | Map fixed claims to CAS attributes. Key is the existing claim name for a scope and value is the new attribute that should take its place and value | Y |
 | cas.authn.oidc.core.user-defined-scopes.X | Mapping of user-defined scopes. Key is the new scope name and value is a comma-separated list of claims mapped to the scope | Y1, Y2, ... |
 | cas.authn.oidc.discovery.scopes | List of supported scopes | openid, profile, ... |
 | cas.authn.oidc.discovery.claims |  List of supported claims | sub, name, ... |
 | cas.authn.oidc.id-token.include-id-token-claims | Setting this flag to true will force CAS to include claims in the ID token regardless of the response type | false |
 
+## Attribute definition
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.authn.attribute-repository.attribute-definition-store.json.location | JSON file containing all attribute definitions | file:/chemin/vers/fichier.json |
+| cas.authn.attribute-repository.stub.attributes.X | Static attribute definition | Y |
+
+## SSO
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.sso.services.allow-missing-service-parameter | Whether to allow SSO session with a missing target service | false |
+
 ## SLO
 | Property | Description | Example value |
 |----------|-------------|---------------|
 | cas.logout.follow-service-redirects | Whether the user should be redirected after logout | true |
 | cas.logout.redirect-parameter | Parameter in the logout URL used to redirect the user | url |
+
+## Ticket expiration policy
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.ticket.tgt.primary.max-time-to-live-in-seconds | Maximum time in seconds TGT would be live in CAS server | PT8H |
+| cas.ticket.tgt.primary.time-to-kill-in-seconds | Time in seconds after which TGT would be destroyed after a period of inactivity | PT2H |
+
+## Delegated authentication (CAS)
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.authn.pac4j.cas[0].login-url | The CAS server login url | `https://cas-server.com` |
+| cas.authn.pac4j.cas[0].client-name | Name of the client mostly for UI purposes and uniqueness | CASDELEGCLIENT |
 
 ## Crypto
 | Property | Description | Example value |
@@ -78,6 +116,21 @@ The following tables lists all the properties that are used in this CAS deployme
 | cas.webflow.crypto.enabled | hether crypto operations are enabled on the webflow | true |
 | cas.webflow.crypto.encryption.key | Encryption key used to encrypt the webflow | |
 | cas.webflow.crypto.signing.key | Signing key used to sign the webflow | |
+| cas.authn.oauth.access-token.crypto.encryption.key | Encryption key used to encrypt Oauth tokens | |
+| cas.authn.oauth.access-token.crypto.signing.key | Signing key used to sign Oauth tokens | |
+| cas.authn.oauth.session-replication.cookie.crypto.encryption.key | Encryption key used to encrypt the Oauth session replication cookie | |
+| cas.authn.oauth.session-replication.cookie.crypto.signing.key| Signing key used to sign the Oauth session replication cookie | |
+| cas.authn.pac4j.core.session-replication.cookie.crypto.encryption.key | Encryption key used to encrypt the Pac4j session replication cookie | |
+| cas.authn.pac4j.core.session-replication.cookie.crypto.signing.key | Signing key used to sign the Pac4j session replication cookie | |
+| cas.authn.oauth.crypto.signing.key | Encryption key used to encrypt the Oauth protocol | |
+| cas.authn.oauth.crypto.signing.key | Signing key used to sign the Oauth protocol | |
+| cas.authn.saml-idp.core.session-replication.cookie.crypto.encryption.key | Encryption key used to encrypt the SAML session replication cookie | |
+| cas.authn.saml-idp.core.session-replication.cookie.crypto.signing.key | Signing key used to sign the SAML session replication cookie | |
+
+## Logging
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| logging.config | Log4j2 file path | file:/path/log4j2.xml |
 
 ## Audit
 | Property | Description | Example value |
@@ -85,6 +138,15 @@ The following tables lists all the properties that are used in this CAS deployme
 | cas.audit.slf4j.auditable-fields | List of field that will be tracked and saved in the audit files | who,action,client_ip |
 | cas.audit.slf4j.use-single-line | Indicates whether audit logs should be recorded as a single-line | true |
 | cas.audit.engine.supported-actions| List of actions that will be tracked and saved in the audit files | TICKET_GRANTING_TICKET_CREATED,LOGOUT_SUCCESS |
+
+## Monitoring
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| management.endpoints.web.exposure.include | List of all exposed monitor endpoints | health, X, Y, ... |
+| management.endpoint.X.enabled | Whether to enable this endpoint | true |
+| cas.monitor.endpoints.endpoint.X.access | Define the security access level of the endpoint | ANONYMOUS |
+| cas.monitor.endpoints.endpoint.prometheus.required-ip-addresses | Required IP addresses (CIDR ranges are accepted) | W.X.Y.Z/A |
+| management.prometheus.metrics.export.enabled | Enable prometheus metrics export | true |
 
 ## Interrupt
 | Property | Description | Example value |
@@ -102,7 +164,7 @@ There is also a number of custom properties that are defined for some custom enh
 | cas.custom.properties.interrupt.structs-base-api-url | The base url for the structs info API |  |
 | cas.custom.properties.interrupt.structs-api-path | The path for the structs info API |  |
 | cas.custom.properties.interrupt.structs-replace-domain-regex | The regex used to replace the domain name in the URL | (\\?service=https://)[^/]+(/) |
-| cas.custom.properties.interrupt.structs-refresh-cache-interval | Description | PT6H |
+| cas.custom.properties.interrupt.structs-refresh-cache-interval | The duration of the cache on structs info | PT6H |
 
 ### ExternalId Attribute Release
 | Property | Description | Default value |
