@@ -48,6 +48,7 @@ Le fichier qui recense toutes les définitions d'attribut est un fichier JSON qu
 }
 ```
 - `key` et `name` sont le nom de l'attribut qui sera utilisé dans les définitions de services, etc.. (autrement dit le nom en sortie de la définition d'attribut) ;
+- `scope` est un décorateur supplémentaire utilisé dans le protocole SAML pour concaténer le scope à la fin de la valeur de l'attribut ;
 - `friendlyName` est un décorateur supplémentaire utilisé dans le protocole SAML ;
 - `attribute` est le nom de l'attribut source (celui de base dans l'attribute repository). Si c'est le même que la key on peut ne pas le préciser.
 

@@ -24,7 +24,7 @@ And has a number of custom enhancements :
 - Custom <md:Info> SAML idp metadata generation
 - Custom parameter in url for delegation depending on service
 
-Current CAS Base version : **7.1.2**
+Current CAS Base version : **7.1.3**
 
 # Project Structure
 

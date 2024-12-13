@@ -67,12 +67,14 @@ IDP comme SP ont le tag racine `<EntityDescriptor>` qui contient un attribut `en
 
 - Tag : `<SPSSODescriptor>`
 - Attributs : 
-	- `AuthnRequestsSigned` : Indique si les `AuthnRequest` envoyées par le SP seront signées. Valeur par défault `false`
-	- `WantAssertionsSigned` : Indique si les `Assertion` reçues par le SP doivent être signées. Valeur par défaut `false`
+	- `AuthnRequestsSigned` : Indique si les `AuthnRequest` envoyées par le SP seront signées.
+	- `WantAssertionsSigned` : Indique si les `Assertion` reçues par le SP doivent être signées.
 - Enfants :
 	- Un ou des `<KeyDescriptor>` de type `KeyDescriptorType` pour le ou les certificats du SP.
 	- `<AssertionConsumerService>` de type `EndpointType`. C'est l'endpoint ou vont arriver les réponses de l'IDP aux requêtes de login.
 	- `<SingleLogoutService>` de type `EndpointType`. C'est l'endpoint ou vont arriver les réponses de l'IDP aux requêtes de logout.
+
+Par défaut CAS ne signe pas et ne chiffre pas les assertions.
 
 **Types :**
 
@@ -96,10 +98,9 @@ Pour le SSO dans le cadre du web, on utilise en général les bindings HTTP-POST
 |  | Binding HTTP-POST | Binding HTTP-Redirect |
 |--|--|--|
 |**Méthode de transmission** | Message envoyé dans le corps d'une requête POST | Message envoyé dans l’URL via une redirection HTTP |
-**Encodage** |Base64 sans compression | Compression DEFLATE + Base64 |
 **Taille des messages** |Pas de limite stricte | Limité par la longueur maximale de l'URL |
 **Visibilité des messages** | Message non visible dans l'URL | Message visible dans l'URL |
-**Sécurité** | Généralement plus sécurisé pour des messages sensibles | Doit souvent être signé pour garantir l'intégrité et éviter les injections
+**Sécurité** | + | -
 **Utilisation typique** | Réponses SAML (assertions) | Requêtes SAML (AuthnRequest)
 
 Chaque entité donne la liste des bindings qu'il supporte pour chaque endpoint. Par exemple le serveur CAS supporte les bindings suivants : 
@@ -112,7 +113,18 @@ Chaque entité donne la liste des bindings qu'il supporte pour chaque endpoint. 
 <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://cas.test.recia.dev/cas/idp/profile/SAML2/Redirect/SLO"/>
 ```
 
-### 6. Exemple complet d'un flot de login/logout
+### 6. Principal (NameID)
+
+Le NameID correspond au principal dans les assertions SAML. Il peut adopter différents formats selon les besoins spécifiques du SP :
+- Persistent Identifier (*urn:oasis:names:tc:SAML:2.0:nameid-format:persistent*) : un identifiant stable et unique pour un utilisateur ;
+- Transient Identifier (*urn:oasis:names:tc:SAML:2.0:nameid-format:transient*) : un identifiant temporaire, non réutilisable ;
+- Email Address (*urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress*) : l'adresse e-mail de l'utilisateur ;
+- Unspecified (*urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified*) : un identifiant choisi par l'IDP.
+
+Soit l'IDP force le NameID de par sa configuration, soit le SP demande un NameID particulier grâce à la partie `urn:oasis:names:tc:SAML:profiles:subject-id:req` de ses métadonnées. Par exemple demander un `subject-id` à `None` à pour effet de donner un transient identifier. On peut le forcer dans la défintion de service grâce au `requiredNameIdFormat` (voir https://apereo.github.io/cas/7.0.x/installation/Configuring-SAML2-NameID.html)
+
+
+### 7. Exemple complet d'un flot de login/logout
 
 **Première requête du SP vers l'IDP sur l'endpoint SSO**
 ```xml
@@ -226,7 +238,7 @@ On remarque que CAS possède deux informations pour savoir quelle session il doi
 ```
 On remarque le `StatusMessage` à `Success` pour indiquer la déconnexion s'est bien déroulée.
 
-### 7. Configuration
+### 8. Configuration
 
 Le configuration nécéssaire pour activer et utiliser le protocole SAML est la suivante :
 
@@ -247,10 +259,42 @@ On a juste à ajouter un service qui correspond au SP qu'on veut autoriser à co
   "serviceId": "^https:\/\/URL_REGEX_SP",
   "name": "SP SAML",
   "id": 1,
-  "metadataLocation": "https://URL_SP/metadata"
+  "metadataLocation": "https://URL_SP/metadata",
+  "metadataSignatureLocation": "/chemin/local",
+  "logoutResponseEnabled": false,
+  "signAssertions": true,
+  "signResponses": true,
+  "encryptAssertions": true
 }
 ```
-A noter qu'on peut soit donner une URL pour récupérer la métadata du SP, soit donner directement un fichier stocké en local.
+- `metadataLocation` URL ou fichier local pour récupérer la métadata du SP
+- `metadataSignatureLocation` fichier local contenant la clé pour vérifier la signature métadata du SP
+- `logoutResponseEnabled` réponse renvoyée par l'IDP au SP lors du logout
+- `signResponses` signature des réponses
+- `signAssertions` signature des assertions
+- `encryptAssertions`: signature des assertions
+
+Pour retourner les attributs de manière dynamique (en fonction de ce que demande le SP) on peut utiliser la release policy suivante :
+
+```json
+"attributeReleasePolicy": {
+	"@class": "org.apereo.cas.services.ChainingAttributeReleasePolicy",
+	"mergingPolicy": "DESTINATION",
+	"policies": [ "java.util.ArrayList",
+		[
+			{
+				// Policy avec tous les attributs disponibles
+				"order": 0
+			},
+			{
+				"@class": "org.apereo.cas.support.saml.services.MetadataRequestedAttributesAttributeReleasePolicy",
+				"useFriendlyName" : true,
+				"order": 1
+			}
+		]
+	]
+}
+```
 
 ## Service Provider
 
