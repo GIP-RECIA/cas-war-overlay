@@ -93,10 +93,9 @@ pid_python_structs_info_api=$!
 python3 externalid_api.py &
 pid_python_externalid_api=$!
 cd "flask-saml-client"
-python3 index.py &
+python3 index.py --port 8011 --settings "saml/settings11.json" &
 pid_python_saml_client=$!
-cd "../flask-saml-client2"
-python3 index.py &
+python3 index.py --port 8024 --settings "saml/settings24.json" &
 pid_python_saml_client2=$!
 cd "../flask-oidc-client"
 python3 index.py &

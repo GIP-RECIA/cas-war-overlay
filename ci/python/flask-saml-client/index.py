@@ -1,3 +1,11 @@
+import argparse
+
+# Parser les arguments données sur la ligne de commande
+parser = argparse.ArgumentParser()
+parser.add_argument("--port")
+parser.add_argument("--settings")
+args = parser.parse_args()
+
 import json
 
 from flask import Flask, request, render_template, redirect, session, make_response
@@ -9,12 +17,12 @@ from onelogin.saml2.idp_metadata_parser import OneLogin_Saml2_IdPMetadataParser
 # Constantes à modifier si besoin
 SP_CERTIFICATE_PATH ="saml/certs/sp.crt"
 SP_PRIVATEKEY_PATH = "saml/certs/sp.key"
-SETTINGS_PATH = "saml/settings.json"
+SETTINGS_PATH = args.settings
 IDP_METADATA_URL = "https://localhost:8443/cas/idp/metadata"
 
 # Initialisation de l'app flask
 app = Flask(__name__)
-app.config["SECRET_KEY"] = " af5cb14a-c87d-4232-88df-dd01660284d8"
+app.config["SECRET_KEY"] = "af5cb14a-c87d-4232-88df-dd01660284d7"
 
 def load_idp_data():
     """
@@ -43,7 +51,6 @@ def load_idp_data():
 
 def init_saml_auth(req):
     """
-    TODO
     :param req:
     :return:
     """
@@ -53,7 +60,6 @@ def init_saml_auth(req):
 
 def prepare_flask_request(request):
     """
-    TODO
     :param request:
     :return:
     """
@@ -160,4 +166,4 @@ def metadata():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8011)
+    app.run(host="0.0.0.0", port=args.port)
