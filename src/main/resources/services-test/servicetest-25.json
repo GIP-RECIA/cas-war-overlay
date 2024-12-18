@@ -1,0 +1,30 @@
+{
+    "@class": "org.apereo.cas.support.saml.services.SamlRegisteredService",
+    "serviceId": "^http:\/\/localhost:8025\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour release dynamique d'attributs SAML",
+    "id": 25,
+    "metadataLocation": "http://localhost:8025/metadata",
+    "attributeReleasePolicy": {
+        "@class": "org.apereo.cas.services.ChainingAttributeReleasePolicy",
+        "mergingPolicy": "DESTINATION",
+        "policies": [ "java.util.ArrayList",
+            [
+                {
+                    "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
+                    "allowedAttributes": [ "java.util.ArrayList", [ "cn", "mail", "sn" ] ],
+                    "order": 0
+                },
+                {
+                    "@class": "org.apereo.cas.support.saml.services.MetadataRequestedAttributesAttributeReleasePolicy",
+                    "useFriendlyName" : true,
+                    "order": 1
+                }
+            ]
+        ]
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}
