@@ -22,7 +22,6 @@ const assert = require("assert");
         const pageContent = await page.content();
 
         // Assert that user is logged in
-        cas.loge(pageContent);
         assert(pageContent.includes("urn:oid:0.9.2342.19200300.100.1.3"))
         assert(pageContent.includes("<li>test.test@test.com</li>"))
         assert(pageContent.includes("urn:oid:2.5.4.3"))

@@ -15,7 +15,8 @@ const BROWSER_OPTIONS = {
     ignoreHTTPSErrors: true,
     devtools: false,
     defaultViewport: null,
-    slowMo: 5
+    slowMo: 5,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
 };
 
 exports.browserOptions = () => BROWSER_OPTIONS;
