@@ -115,9 +115,14 @@ cas.authn.saml-idp.core.entity-id: https://localhost:8443/cas/idp/metadata
 cas.authn.oidc.core.issuer: https://localhost:8443/cas/oidc
 cas.authn.oidc.jwks.file-system.jwks-file: /tmp/oidc/keystore.jwks
 cas.authn.oidc.core.claims-map.nickname: ENTPersonLogin
-cas.authn.oidc.core.user-defined-scopes.test: uid,isMemberOf,cn,sn,givenName,displayName,mail
+cas.authn.oidc.core.claims-map.given_name: givenName
+cas.authn.oidc.core.claims-map.email: mail
+cas.authn.oidc.core.claims-map.family_name: sn
+cas.authn.oidc.core.claims-map.usual_name: sn
+cas.authn.oidc.core.claims-map.name: displayName
+cas.authn.oidc.core.user-defined-scopes.test: uid,isMemberOf,usual_name
 cas.authn.oidc.discovery.scopes: openid,profile,test
-cas.authn.oidc.discovery.claims: sub,name,cn,nickname,family_name,uid,isMemberOf,sn,givenName,displayName,mail
+cas.authn.oidc.discovery.claims: sub,name,nickname,usual_name,uid,isMemberOf,email,given_name,family_name
 cas.authn.oidc.id-token.include-id-token-claims: false
 
 # Attribute definition

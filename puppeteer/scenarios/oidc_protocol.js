@@ -35,12 +35,14 @@ const assert = require("assert");
 
         //Verify that attributes were received
         assert(pageContent.includes("attributes"));
-        assert(pageContent.includes("isMemberOf"));
-        assert(pageContent.includes("\"cn\":\"TEST TEST\""));
-        assert(pageContent.includes("\"nickname\":\"test1\"")); //Mapped attribute from ENTPersonLogin
+        assert(pageContent.includes("isMemberOf")); //Custom claim
+        assert(pageContent.includes("\"nickname\":\"test1\"")); //Mapped claim from ENTPersonLogin
         assert(pageContent.includes("\"uid\":[\"F1abc\"]"));
-        assert(pageContent.includes("\"mail\":[\"test.test@test.com\"]"));
-        
+        assert(pageContent.includes("\"family_name\":\"TEST\"")); //Mapped claim from cn
+        assert(pageContent.includes("\"given_name\":\"Test\""));
+        assert(pageContent.includes("\"usual_name\":\"TEST\"")); //Mapped claim from cn
+        assert(!pageContent.includes("email")); //Not in scopes
+
         process.exit(0)
 
     } catch (e) {

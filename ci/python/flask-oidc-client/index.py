@@ -1,3 +1,13 @@
+import argparse
+
+# Parser les arguments données sur la ligne de commande
+parser = argparse.ArgumentParser()
+parser.add_argument("--port")
+parser.add_argument("--clientid")
+parser.add_argument("--clientsecret")
+parser.add_argument("--scopes")
+args = parser.parse_args()
+
 import urllib3
 from flask import Flask, redirect, url_for, session, jsonify, request
 from authlib.integrations.flask_client import OAuth
@@ -7,11 +17,11 @@ from functools import wraps
 urllib3.disable_warnings()
 
 # Constantes à modifier si besoin
-CLIENT_ID = "client-testcas"
-CLIENT_SECRET = "secret-testcas"
+CLIENT_ID = args.clientid
+CLIENT_SECRET = args.clientsecret
 PROVIDER_METADATA_URL = "https://localhost:8443/cas/oidc/.well-known"
-CLIENT_CALLBACK_URL = "http://localhost:8018/oidc/authorize"
-SCOPES = "openid profile test"
+CLIENT_CALLBACK_URL = "http://localhost:"+args.port+"/oidc/authorize"
+SCOPES = args.scopes
 
 # Initialisation de l'app flask
 app = Flask(__name__)
@@ -88,4 +98,4 @@ def logout():
 
 # Démarrer l'application Flask
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8018)
+    app.run(host="0.0.0.0", port=args.port)
