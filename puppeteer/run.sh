@@ -99,6 +99,8 @@ python3 index.py --port 8024 --settings "saml/settings24.json" &
 pid_python_saml_client2=$!
 python3 index.py --port 8025 --settings "saml/settings25.json" &
 pid_python_saml_client3=$!
+python3 index.py --port 8026 --settings "saml/settings26.json" &
+pid_python_saml_client4=$!
 cd "../flask-oidc-client"
 python3 index.py --port 8018 --scopes "openid profile test" --clientid "client-testcas" --clientsecret "secret-testcas" &
 pid_python_oidc_client=$!
@@ -181,6 +183,7 @@ kill -9 "$pid_python_externalid_api"
 kill -9 "$pid_python_saml_client"
 kill -9 "$pid_python_saml_client2"
 kill -9 "$pid_python_saml_client3"
+kill -9 "$pid_python_saml_client4"
 kill -9 "$pid_python_oidc_client"
 kill -9 "$pid_python_oidc_client2"
 kill -9 "$pid_python_oidc_client3"

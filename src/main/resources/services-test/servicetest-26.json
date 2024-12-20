@@ -1,0 +1,29 @@
+{
+    "@class": "org.apereo.cas.support.saml.services.SamlRegisteredService",
+    "serviceId": "^http:\/\/localhost:8026\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour pairwise-id et eduPersonTargetedId",
+    "id": 26,
+    "metadataLocation": "http://localhost:8026/metadata",
+    "attributeReleasePolicy": {
+        "@class": "org.apereo.cas.services.ChainingAttributeReleasePolicy",
+        "policies": [ "java.util.ArrayList",
+            [
+                {
+                    "@class" : "org.apereo.cas.support.saml.services.PairwiseIdSamlRegisteredServiceAttributeReleasePolicy",
+                    "attributeName" : "uid",
+                    "salt": "XfpLvtJ72E"
+                },
+                {
+                    "@class" : "org.apereo.cas.support.saml.services.TargetedIdSamlRegisteredServiceAttributeReleasePolicy",
+                    "attributeName" : "uid",
+                    "salt": "XfpLvtJ72E"
+                }
+            ]
+        ]
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
+}

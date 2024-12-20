@@ -5,6 +5,7 @@ server.port: 8443
 spring.main.lazy-initialization: false
 cas.server.name: https://localhost:8443
 cas.server.prefix: https://localhost:8443/cas
+cas.server.scope: cas-ci.git
 
 # Monitoring endpoints
 # Health
