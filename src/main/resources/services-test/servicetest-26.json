@@ -12,6 +12,7 @@
                 {
                     "@class" : "org.apereo.cas.support.saml.services.PairwiseIdSamlRegisteredServiceAttributeReleasePolicy",
                     "attributeName" : "uid",
+                    "releaseName" : "urn:oid:urn:oasis:names:tc:SAML:attribute:pairwise-id",
                     "salt": "XfpLvtJ72E"
                 },
                 {

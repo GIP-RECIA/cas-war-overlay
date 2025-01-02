@@ -42,6 +42,7 @@ public class PairwiseIdSamlRegisteredServiceAttributeReleasePolicy extends BaseS
 
     private String salt;
     private String attributeName;
+    private String releaseName = "pairwise-id";
     private String separator = "!";
     private String algorithm = "SHA";
 
@@ -78,7 +79,7 @@ public class PairwiseIdSamlRegisteredServiceAttributeReleasePolicy extends BaseS
             LOGGER.debug("Final value for pairwise-id is [{}]", finalValue);
 
             Map<String, List<Object>> toRelease = new HashMap<>(1);
-            toRelease.put("urn:oid:urn:oasis:names:tc:SAML:attribute:pairwise-id", Collections.singletonList(finalValue));
+            toRelease.put(releaseName, Collections.singletonList(finalValue));
             return toRelease;
         });
     }

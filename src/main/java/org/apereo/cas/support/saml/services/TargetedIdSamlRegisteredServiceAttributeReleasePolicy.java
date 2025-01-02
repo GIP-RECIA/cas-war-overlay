@@ -42,6 +42,7 @@ public class TargetedIdSamlRegisteredServiceAttributeReleasePolicy extends BaseS
 
     private String salt;
     private String attributeName;
+    private String releaseName = "eduPersonTargetedID";
     private String separator = "!";
     private String algorithm = "SHA";
 
@@ -81,7 +82,7 @@ public class TargetedIdSamlRegisteredServiceAttributeReleasePolicy extends BaseS
             LOGGER.debug("Final value for pairwise-id is [{}]", finalValue);
 
             Map<String, List<Object>> toRelease = new HashMap<>(1);
-            toRelease.put("eduPersonTargetedID", Collections.singletonList(finalValue));
+            toRelease.put(releaseName, Collections.singletonList(finalValue));
             return toRelease;
         });
 
