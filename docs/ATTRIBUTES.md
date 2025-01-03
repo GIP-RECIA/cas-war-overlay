@@ -92,3 +92,9 @@ La logique pour cette partie se situe dans la `attributeReleasePolicy` des défi
 ```
 
 La logique mise en place est de ne donner aucun attribut par défaut aux services (hormis le principal) et de donner les attributs définition de service par définition de service (grâce à la policy `ReturnAllowedAttributeReleasePolicy`).
+
+## 4- Points d'attention
+
+**Confusion entre attribut SAML et OIDC**
+
+Quand on défini un attribut SAML il faut bien faire attention à qu'on ne release pas un attribut avec le même nom en OIDC. SI c'est le cas une erreur de cast sera retournée lorsque CAS essayera de récupérer l'attribut OIDC puisqu'il récupèrera l'attribut SAML à la place. Ce cas ne devrait pas se produire car les attributs OIDC standards n'ont pas forcément les mêmes normes que les attributs SAML standards (snake case vs camel case). Si on a besoin d'un attribut SAML qui à le même nom qu'un attribut OIDC il faudra définir l'attribut par service et non globalement.

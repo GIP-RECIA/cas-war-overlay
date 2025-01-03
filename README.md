@@ -23,6 +23,7 @@ And has a number of custom enhancements :
 - Soft/Hard timeout expiration policy **per service**
 - Custom <md:Info> SAML idp metadata generation
 - Custom parameter in url for delegation depending on service
+- Custom SAML attribute generation (pairwise-id and eduPersonTargetedId)
 
 Current CAS Base version : **7.1.3**
 
@@ -81,7 +82,11 @@ All the important parts of the project are listed below:
 │       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               ├── support/saml/idp/metadata/generator
-│       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
+│       │               │   ├── idp/metadata/generator
+│       │               │   │   └── BaseSamlIdPMetadataGenerator.java
+│       │               │   └── services
+│       │               │       ├── PairwiseIdSamlRegisteredServiceAttributeReleasePolicy.java
+│       │               │       └── TargetedIdSamlRegisteredServiceAttributeReleasePolicy.java
 │       │               └── web/flow
 │       │                   ├── actions
 │       │                   │   └── DelegatedClientAuthenticationRedirectAction.java

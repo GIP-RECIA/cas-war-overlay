@@ -296,6 +296,38 @@ Pour retourner les attributs de manière dynamique (en fonction de ce que demand
 }
 ```
 
+`useFriendlyName` est à mettre à `true` si jamais on applique cette policy sur une autre policy qui retourne les attributs sous forme de friendlyName côté CAS.
+
+### 9. Custom policies
+
+Il existe 2 release policy supplémentaires pour des attributs SAML :
+- `PairwiseIdSamlRegisteredServiceAttributeReleasePolicy`
+- `TargetedIdSamlRegisteredServiceAttributeReleasePolicy`
+
+Les deux policies sont basées sur le même algorithme pour générer un identifiant opaque unique et pérenne par entité SAML (et non pas par service SAML, car un service SAML côté CAS peut accepter plusieurs entités distinctes). L'algorithme est le suivant :
+- Création d'un tableau de byte avec l'entityid et l'attribut utilisateur séparés par un séparateur (`!` par défaut). On rajoute également un séparateur à la fin ;
+- Hashage du tableau de byte avec un salt à définir dans la définition de service ;
+- Conversion du résultat en Base32.
+
+Les policies s'utilisent de la manière suivante :
+```json
+{
+	"@class": "org.apereo.cas.support.saml.services.TargetedIdSamlRegisteredServiceAttributeReleasePolicy",
+	"algorithm": "SHA",
+	"attributeName": "uid",
+	"releaseName": "eduPersonTargetedId",
+	"salt": "AZERTYUIOP",
+	"separator": "!"
+}
+```
+
+Avec :
+- `algorithm` le nom de l'algorithme de hashage
+- `attributeName` le nom de l'attribut utilisateur en entrée
+- `releaseName` le nom de l'attribut à release (si besoin de mapping)
+- `salt` la valeur du salt
+- `separator` la valeur du séparateur
+
 ## Service Provider
 
 Pour l'instant le serveur CAS n'agit pas en tant que SP via le protocole SAML. Agir en tant que SP signifierait que le serveur CAS déléguerait son authentification à un IDP SAML. C'est par exemple le cas pour EduConnect (mais pas encore implémenté).
