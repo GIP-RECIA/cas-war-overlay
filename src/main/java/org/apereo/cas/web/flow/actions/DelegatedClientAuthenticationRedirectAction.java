@@ -176,13 +176,15 @@ public class DelegatedClientAuthenticationRedirectAction extends BaseCasWebflowA
         // Custom enchancement: pass custom parameter to delegated idp
         StringBuilder url = new StringBuilder(builder.toString());
         val registeredService = configContext.getServicesManager().findServiceBy(ticket.getService());
-        if (!registeredService.getProperties().isEmpty()) {
-            for(String propertyName: registeredService.getProperties().keySet()){
-                if(propertyName.startsWith("ADD-DELEGAUTHN-PARAM:")){
-                    val paramValue = registeredService.getProperties().get(propertyName).getValue(String.class);
-                    val paramName = propertyName.substring(propertyName.indexOf(":")+1);
-                    LOGGER.debug("Add paramater [{}] to url with value [{}]", paramName, paramValue);
-                    url.append("&").append(paramName).append("=").append(paramValue);
+        if(registeredService != null){
+            if (!registeredService.getProperties().isEmpty()) {
+                for(String propertyName: registeredService.getProperties().keySet()){
+                    if(propertyName.startsWith("ADD-DELEGAUTHN-PARAM:")){
+                        val paramValue = registeredService.getProperties().get(propertyName).getValue(String.class);
+                        val paramName = propertyName.substring(propertyName.indexOf(":")+1);
+                        LOGGER.debug("Add paramater [{}] to url with value [{}]", paramName, paramValue);
+                        url.append("&").append(paramName).append("=").append(paramValue);
+                    }
                 }
             }
         }
