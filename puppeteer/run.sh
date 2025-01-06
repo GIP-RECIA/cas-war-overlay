@@ -88,6 +88,8 @@ python3 service_test22.py &
 pid_python_service_test22=$!
 python3 service_test23.py &
 pid_python_service_test23=$!
+python3 service_test27.py &
+pid_python_service_test27=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &

@@ -25,3 +25,6 @@ SERVICE_EXTERNALID_ERROR_URL = "http://localhost:8022/test"
 
 # Url du service utilisé pour tester la release de l'externalid en tant qu'attribut
 SERVICE_EXTERNALID_ATTRIBUTE_RELEASE_URL = "http://localhost:8023/test"
+
+# Url du service faisant valider un ST via delegation CAS
+SERVICE_DELEGATION_CAS_URL = "http://localhost:8027/test"
