@@ -97,15 +97,31 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
                     final String requestParams = nativeRequest.getQueryString();
                     // If service.getId() does not contain the user domain, that means we need to redirect the user
                     if (!service.getId().contains(domain)) {
-                        final String oldURL = requestURL + "?" + requestParams;
-                        LOGGER.debug("Redirecting user [{}]: Old URL is [{}]", authentication.getPrincipal().getId(), oldURL);
-                        final String newURL = replaceServiceDomain(domain, oldURL);
-                        LOGGER.debug("Redirecting user [{}]: New URL is [{}]", authentication.getPrincipal().getId(), newURL);
-                        // Building the interrupt response : it will automatically redirect the user to the link provided
-                        InterruptResponse interrupt = new InterruptResponse("Changement de domaine", Map.of("Continuer", newURL), false, true);
-                        interrupt.setAutoRedirect(true);
-                        LOGGER.trace("Returning an interrupt response to redirect the user to [{}]", newURL);
-                        return interrupt;
+                        // Redirection after delegated authn
+                        if(requestParams.startsWith("ticket=")){
+                            LOGGER.trace("Domain redirection : delegation case");
+                            final String oldURL = requestURL + "?" + requestParams;
+                            LOGGER.debug("Redirecting user [{}]: Old URL is [{}]", authentication.getPrincipal().getId(), oldURL);
+                            final String newURL = requestURL + "?service=" + service.getOriginalUrl();
+                            LOGGER.debug("Redirecting user [{}]: New URL is [{}]", authentication.getPrincipal().getId(), newURL);
+                            InterruptResponse interrupt = new InterruptResponse("Changement de domaine", Map.of("Continuer", newURL), false, true);
+                            interrupt.setAutoRedirect(true);
+                            LOGGER.trace("Returning an interrupt response to redirect the user to [{}]", newURL);
+                            return interrupt;
+                        }
+                        // Redirection after classic authn
+                        else{
+                            LOGGER.trace("Domain redirection : no delegation case");
+                            final String oldURL = requestURL + "?" + requestParams;
+                            LOGGER.debug("Redirecting user [{}]: Old URL is [{}]", authentication.getPrincipal().getId(), oldURL);
+                            final String newURL = replaceServiceDomain(domain, oldURL);
+                            LOGGER.debug("Redirecting user [{}]: New URL is [{}]", authentication.getPrincipal().getId(), newURL);
+                            // Building the interrupt response : it will automatically redirect the user to the link provided
+                            InterruptResponse interrupt = new InterruptResponse("Changement de domaine", Map.of("Continuer", newURL), false, true);
+                            interrupt.setAutoRedirect(true);
+                            LOGGER.trace("Returning an interrupt response to redirect the user to [{}]", newURL);
+                            return interrupt;
+                        }
                     }
                 }
             } else {
