@@ -1,0 +1,45 @@
+{
+    "@class": "java.util.TreeMap",
+    "newIdMappedFromExternal": {
+        "@class": "org.apereo.cas.support.saml.web.idp.profile.builders.attr.SamlIdPAttributeDefinition",
+        "key": "newIdMappedFromExternal",
+        "name": "newIdMappedFromExternal",
+        "scoped": false,
+        "encrypted": false,
+        "friendlyName": "newIdMappedFromExternal",
+        "attribute": "externalId",
+        "persistent": false
+    },
+    "cn": {
+        "@class": "org.apereo.cas.support.saml.web.idp.profile.builders.attr.SamlIdPAttributeDefinition",
+        "key": "cn",
+        "name": "cn",
+        "urn": "urn:oid:2.5.4.3",
+        "scoped": false,
+        "encrypted": false,
+        "friendlyName": "cn",
+        "attribute": "cn",
+        "persistent": false
+    },
+    "mail": {
+        "@class": "org.apereo.cas.support.saml.web.idp.profile.builders.attr.SamlIdPAttributeDefinition",
+        "key": "mail",
+        "name": "mail",
+        "urn": "urn:oid:0.9.2342.19200300.100.1.3",
+        "scoped": false,
+        "encrypted": false,
+        "friendlyName": "mail",
+        "persistent": false
+      },
+      "sn": {
+        "@class": "org.apereo.cas.support.saml.web.idp.profile.builders.attr.SamlIdPAttributeDefinition",
+        "key": "sn",
+        "name": "sn",
+        "urn": "urn:oid:2.5.4.4",
+        "scoped": false,
+        "encrypted": false,
+        "friendlyName": "sn",
+        "attribute": "sn",
+        "persistent": false
+      }
+}

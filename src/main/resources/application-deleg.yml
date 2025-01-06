@@ -1,10 +1,10 @@
-# Ce fichier contient les properties utilisées pour les tests avec puppeteer
+# Ce fichier contient les properties utilisées par le serveur de délégation utilisé pour les tests avec puppeteer
 
 # Server
-server.port: 8443
+server.port: 9443
 spring.main.lazy-initialization: false
-cas.server.name: https://localhost:8443
-cas.server.prefix: https://localhost:8443/cas
+cas.server.name: https://localhost:9443
+cas.server.prefix: https://localhost:9443/cas
 cas.server.scope: cas-ci.git
 
 # Monitoring endpoints
@@ -14,43 +14,6 @@ management.endpoint.health.enabled: true
 management.health.redis.enabled: true
 management.endpoint.health.show-details: always
 cas.monitor.endpoints.endpoint.health.access: ANONYMOUS
-# Prometheus
-management.endpoint.prometheus.enabled: true
-cas.monitor.endpoints.endpoint.prometheus.access: ANONYMOUS
-management.prometheus.metrics.export.enabled: true
-
-# Audit
-cas.audit.engine.enabled: true
-cas.audit.slf4j.use-single-line: true
-cas.audit.redis.host: localhost
-cas.audit.redis.port: 6379
-
-# Crypto
-# In-Memory
-cas.ticket.registry.in-memory.crypto.enabled: true
-cas.ticket.registry.in-memory.crypto.signing.key: KncZu0oilh3gi0rMh85Xf477cc8OeIpL-uQ7dS6342PKENv3kWXFz5yu85n7pZIgNn8XLEAajMBqduuDWArzJQ
-cas.ticket.registry.in-memory.crypto.encryption.key: 6Tcf5QqY9PmyZG7vY0PMiQ
-# Ticket Registry
-cas.tgc.crypto.enabled: true
-cas.tgc.crypto.encryption.key: j3EISDyWRQ0tH8uzrl-M1DyoNvPHs9ipHFWRvWp-B2fStey9XZOuyTAZJ9OEdY4uR3bGJLX7SrBjrEBWJL9xXA
-cas.tgc.crypto.signing.key: BV-wvTQ4e5-f7vyKfw3K2OG6haonkVBVNsCgC8YEQHAcDj2nPcAvtS3_WaP4QVm8GP0Tdd-geuPa8tNE-IcOdw
-# Webflow
-cas.webflow.crypto.enabled: true
-cas.webflow.crypto.encryption.key: tEYwAdEdYSZGMA1gLqugKA
-cas.webflow.crypto.signing.key: chz7ZTpcBIFdkZ-DLxjOYD-2OFj2B9xdDsAw5IGDsdsRi7_dfzo_EHEP9MyrVuVmxSeo3VHZBQSNmc6sjStiQQ
-# Interrupt
-cas.interrupt.cookie.crypto.enabled: true
-cas.interrupt.cookie.crypto.encryption.key: Zw6N5Bs0vOQKxON6rb52hr5X6h9zi-BJeOs7oS1nQSk
-cas.interrupt.cookie.crypto.signing.key: Yf1GaNfRqKzezShY3Jr0SfP_UVxaIkegsLd9eOPBrFDzNaoJRurs-8d37dN_nEqqjrFsoEtNy_32RC74vRo0IA
-# OAuth
-cas.authn.oauth.crypto.encryption.key: -a3HCYBRYDCcnskNvLMiw_cUgd28PZllv8oRlRWUD8zyVCjMaVn2LKbrEXzxz3tGcxLDB99bJr9cyA9OieKBig
-cas.authn.oauth.crypto.signing.key: XJeUdyaPKz4GHNWmjlFeKlEkGlVPqFTJbOmX8ezbao9lpucrtk5IA9GX3yC6ibVe7Wa-ze4RNhD62Z2v3N8wyA
-cas.authn.oauth.access-token.crypto.encryption.key: Jv1r8eGlQ5imRzk6g2lY5e7gFo-HISohmb7iYivfOPxauWjojsHomW58_7ChyitAe3Jdio64UneRx7FGW4z2dg
-cas.authn.oauth.access-token.crypto.signing.key: RfjL0ADLFzj4u5jhj6ysNk4G2P2-FIiPm04TYiENbktq-RO9zwQwsQzLg2496UlQiLNnpu1NJq7dcvsv5xDYjw
-cas.authn.oauth.session-replication.cookie.crypto.encryption.key: FuUHa2yjd9FdfTeQsNZuN3gGG2liISzASC5GjhuCkkKSP5L8p0m1MsGjs_ITQAC4n6cMMseSIqmm0twr-wFl4A
-cas.authn.oauth.session-replication.cookie.crypto.signing.key: q1U_Kp0qgl6uMKdVE_k4jvvE-zb3IxdtP5eIxLWbjOy74vYkfYSXspbLXR327F4D7qtuXI4DIVnvU5vEe8sH2Q
-cas.authn.pac4j.core.session-replication.cookie.crypto.encryption.key: s_3Q9UuJRjieQE5zWMYz91ZhSyigVoJ4CPBymGg-KF7iWCzVfXxcANhSUKD24sWWiJq1Q3g7utTQkK93e61Rxg
-cas.authn.pac4j.core.session-replication.cookie.crypto.signing.key: H9q5Z1Wog_iEzUbF021Z4d1ASDvUPHKeHekUUj4lX_Y5N57WLIyb1KxIUgtfQ6nXLoNRpejk84PDTyQO4fwXOA
 
 # Service ticket registry
 cas.authn.accept.enabled: false
@@ -66,7 +29,7 @@ cas.ticket.registry.redis.sentinel.password: GWMije5VNMe7avz
 # Service registry
 cas.service-registry.core.init-from-json: false
 cas.service-registry.core.init-default-services: false
-cas.service-registry.json.location: classpath:/services-test
+cas.service-registry.json.location: classpath:/services-deleg
 cas.service-registry.schedule.start-delay: 10000
 cas.service-registry.schedule.repeat-interval: 120000
 cas.service-registry.cache.duration: 900000
@@ -110,10 +73,10 @@ cas.interrupt.core.force-execution: true
 cas.interrupt.core.trigger-mode: AFTER_SSO
 
 # SAML
-cas.authn.saml-idp.core.entity-id: https://localhost:8443/cas/idp/metadata
+cas.authn.saml-idp.core.entity-id: https://localhost:9443/cas/idp/metadata
 
 # OIDC
-cas.authn.oidc.core.issuer: https://localhost:8443/cas/oidc
+cas.authn.oidc.core.issuer: https://localhost:9443/cas/oidc
 cas.authn.oidc.jwks.file-system.jwks-file: /tmp/oidc/keystore.jwks
 cas.authn.oidc.core.claims-map.nickname: ENTPersonLogin
 cas.authn.oidc.core.claims-map.given_name: givenName
@@ -127,28 +90,4 @@ cas.authn.oidc.discovery.claims: sub,name,nickname,usual_name,uid,isMemberOf,ema
 cas.authn.oidc.id-token.include-id-token-claims: false
 
 # Attribute definition
-cas.authn.attribute-repository.attribute-definition-store.json.location: classpath:attribute-definition-test.json
-
-# Delegation
-cas.authn.pac4j.cas[0].login-url: https://localhost:9443/cas/login
-cas.authn.pac4j.cas[0].client-name: DELEGTEST
-
-# Custom Properties
-
-# Interrupt
-cas.custom.properties.interrupt.structs-base-api-url: http://localhost:7001
-cas.custom.properties.interrupt.structs-api-path: /structsinfo/
-cas.custom.properties.interrupt.replace-domain-regex: (\?service=http:\/\/)[^\/]+(\/)
-
-# Externalid
-cas.custom.properties.externalid.base-api-url: http://localhost:7002/externalid/api
-cas.custom.properties.externalid.api-path: /generateExternalId
-cas.custom.properties.externalid.attribute-name-response: externalId
-cas.custom.properties.externalid.attribute-name-ldap: ESCOPersonExternalIds
-cas.custom.properties.externalid.split-character: $
-
-# Token
-cas.custom.properties.token.domain-list: falsevaliddomain
-cas.custom.properties.token.redirect-portal-context: /portail
-cas.custom.properties.token.redirect-unknown-domain: https://pagetoredirectnetocentre.fr
-cas.custom.properties.token.domain-mapping-startswith: "DOMAIN-RED:"
+cas.authn.attribute-repository.attribute-definition-store.json.location: classpath:attribute-definition-deleg.json

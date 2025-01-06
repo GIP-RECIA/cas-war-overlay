@@ -381,6 +381,9 @@ processResources {
         exclude '**/application-test.yml'
         exclude '**/services-test'
         exclude '**/attribute-definition-test'
+        exclude '**/application-deleg.yml'
+        exclude '**/services-deleg'
+        exclude '**/attribute-definition-deleg'
     }
 }
 

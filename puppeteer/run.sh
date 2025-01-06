@@ -113,19 +113,52 @@ mkdir /tmp/oidc
 cd "${ROOT_DIRECTORY}"
 
 # Lancement du serveur CAS grâce au war qu'on a construit plus haut
+# Attention à avoir un délai suffisant pour attendre que le serveur CAS soit démarré
+# On lance d'abord le serveur de délagation
+echo "Launching CAS delegation server at $casWebApplicationFile with options $CAS_DELEG_ARGS"
+java -jar "$casWebApplicationFile" $CAS_DELEG_ARGS &
+pid_cas_deleg=$!
+sleep 30
+# Puis le serveur sur lequel on va faire les tests
 echo "Launching CAS at $casWebApplicationFile with options $CAS_ARGS"
 java -jar "$casWebApplicationFile" $CAS_ARGS &
 pid_cas=$!
-echo "Waiting for CAS under process id ${pid_cas}"
-# Attention à avoir un délai suffisant ici, il faut bien attendre que le serveur CAS soit démarré
-sleep 60
+sleep 30
+
+exit_ci () {
+    kill -9 "$pid_cas"
+    kill -9 "$pid_cas_deleg"
+    kill -9 "$pid_python_service_test1"
+    kill -9 "$pid_python_service_test2"
+    kill -9 "$pid_python_service_test10"
+    kill -9 "$pid_python_service_test16"
+    kill -9 "$pid_python_service_test19"
+    kill -9 "$pid_python_service_test22"
+    kill -9 "$pid_python_service_test23"
+    kill -9 "$pid_python_service_test27"
+    kill -9 "$pid_python_structs_info_api"
+    kill -9 "$pid_python_externalid_api"
+    kill -9 "$pid_python_saml_client"
+    kill -9 "$pid_python_saml_client2"
+    kill -9 "$pid_python_saml_client3"
+    kill -9 "$pid_python_saml_client4"
+    kill -9 "$pid_python_oidc_client"
+    kill -9 "$pid_python_oidc_client2"
+    kill -9 "$pid_python_oidc_client3"
+    cd "${ROOT_DIRECTORY}/ci/ldap"
+    ./stop-ldap.sh
+    cd "${ROOT_DIRECTORY}/ci/redis"
+    ./stop-all.sh
+    cd "${ROOT_DIRECTORY}"
+}
+
 casLogin="${PUPPETEER_CAS_HOST:-https://localhost:8443}/cas/login"
 echo "Checking CAS status at ${casLogin}"
 curl -k -L --output /dev/null --silent --fail "$casLogin"
 if [[ $? -ne 0 ]]; then
     printred "Unable to launch CAS instance under process id ${pid_cas}."
-    printred "Killing process id $pid_cas and exiting"
-    kill -9 "$pid_cas"
+    printred "Killing and exiting"
+    exit_ci
     exit 1
 fi
 
@@ -169,29 +202,8 @@ for result in "${results[@]}"; do
 done
 echo -e "\n"
 
-# On kill le serveur CAS et les docker avant de terminer le script
-kill -9 "$pid_cas"
-kill -9 "$pid_python_service_test1"
-kill -9 "$pid_python_service_test2"
-kill -9 "$pid_python_service_test10"
-kill -9 "$pid_python_service_test16"
-kill -9 "$pid_python_service_test19"
-kill -9 "$pid_python_service_test22"
-kill -9 "$pid_python_service_test23"
-kill -9 "$pid_python_structs_info_api"
-kill -9 "$pid_python_externalid_api"
-kill -9 "$pid_python_saml_client"
-kill -9 "$pid_python_saml_client2"
-kill -9 "$pid_python_saml_client3"
-kill -9 "$pid_python_saml_client4"
-kill -9 "$pid_python_oidc_client"
-kill -9 "$pid_python_oidc_client2"
-kill -9 "$pid_python_oidc_client3"
-cd "${ROOT_DIRECTORY}/ci/ldap"
-./stop-ldap.sh
-cd "${ROOT_DIRECTORY}/ci/redis"
-./stop-all.sh
-cd "${ROOT_DIRECTORY}"
+# On kill les process avant de terminer le script (utile pour test en local)
+exit_ci
 
 # Terminer le script en erreur si un des scénarios a échoué
 if [[ $overall_status -ne 0 ]]; then
