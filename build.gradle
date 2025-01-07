@@ -5,8 +5,7 @@ import java.nio.file.*
 import java.lang.reflect.*
 import org.gradle.internal.logging.text.*
 import static org.gradle.internal.logging.text.StyledTextOutput.Style
-import javax.swing.JOptionPane
-import javax.swing.JPasswordField
+import javax.swing.*
 
 buildscript {
     repositories {
@@ -104,12 +103,20 @@ publishing {
         maven {
             url = uri(project.getProperty("publishNexusUrl"))
             credentials {
-                username = project.getProperty("publishNexusUsername")
                 if (isPublishTask()){
-                    JPasswordField pwd = new JPasswordField(30)
-                    if(JOptionPane.showConfirmDialog(null, pwd, "Enter Password for "+username, JOptionPane.OK_CANCEL_OPTION) >= 0){
-                        password = new String(pwd.getPassword())
-                    }
+                JTextField usernameField = new JTextField(30)
+                JPasswordField passwordField = new JPasswordField(30)
+                JPanel panel = new JPanel()
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS))
+                panel.add(new JLabel("Username:"))
+                panel.add(usernameField)
+                panel.add(Box.createVerticalStrut(10))
+                panel.add(new JLabel("Password:"))
+                panel.add(passwordField)
+                if (JOptionPane.showConfirmDialog(null, panel, "Login", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+                    username = usernameField.getText()
+                    password = new String(passwordField.getPassword())
+                }
                 }
             }
         }

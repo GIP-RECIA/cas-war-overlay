@@ -4,9 +4,8 @@ Le plugin gradle `maven-publish` permet de déployer le `cas.war` sur un nexus.
 
 Dans le `gradle.properties`, renseingner les paramètres :
 - `publishNexusUrl` l'url du nexus
-- `publishNexusUsername` le username pour se connecter au nexus
 - `publishNexusVersion` la version sous la forme `VERSION_CAS-esco-VERSION_LOCALE`
 
-Puis faire un simple `./gradlew publish` après avoir construit le war.
+Un script `publish.sh` permet ensuite de publier facilement une nouvelle version. Il suffit d'entrer le username/password pour se connecter au nexus.
 
-Attention à bien ajouter le profil `prod` lors de la construction du war : `./gradlew clean build -Pprofile=prod`.
+Il constuit d'abord un war avec le profil prod avec `./gradlew clean build -Pprofile=prod`, puis publie sur le nexus avec `./gradlew publish`.
