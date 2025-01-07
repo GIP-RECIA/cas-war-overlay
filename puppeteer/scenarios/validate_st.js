@@ -12,7 +12,7 @@ const assert = require("assert");
         const service = "http://localhost:8001/test"
 
         // Login to cas
-        await cas.loginWith(page, casHost, service, "test2", "test")
+        await cas.loginWith(page, casHost, service, "test3", "test")
 
         // Assert that TGC exists
         await cas.verifyTGC(client)
