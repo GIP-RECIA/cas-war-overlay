@@ -38,4 +38,4 @@ jobs:
     - name: Run Pupeteer scenarios
       run: |
         chmod +x puppeteer/run.sh
-        CAS_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=test" CAS_DELEG_ARGS="--spring.profiles.active=deleg" ./puppeteer/run.sh
+        CAS_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=test" CAS_DELEG_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=deleg" ./puppeteer/run.sh
