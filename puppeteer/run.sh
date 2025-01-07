@@ -129,7 +129,7 @@ sleep 30
 echo "Launching CAS at $casWebApplicationFile with options $CAS_ARGS"
 java -jar "$casWebApplicationFile" $CAS_ARGS &
 pid_cas=$!
-sleep 30
+sleep 120
 
 exit_ci () {
     kill -9 "$pid_cas"
