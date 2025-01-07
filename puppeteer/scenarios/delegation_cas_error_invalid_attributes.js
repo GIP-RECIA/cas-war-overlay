@@ -20,8 +20,6 @@ const assert = require("assert");
         await cas.typeCredentialsAndEnter(page, "test2", "test");
         await page.waitForNavigation();
 
-        await new Promise(resolve => setTimeout(resolve, 10000));
-
         // Assert that the we got the right error message
         const pageContent = await page.content();
         assert(pageContent.includes("You are not authorized to access this service. This may be due either to insufficient permissions or to an access restriction based on the date."))
