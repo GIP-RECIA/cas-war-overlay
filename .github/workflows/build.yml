@@ -30,6 +30,8 @@ jobs:
         chmod +x ./gradlew
         sudo chown $USER:$USER /etc
         ./gradlew createKeystore
+        cp /etc/cas/cas.crt /etc/cas/cas.pem
+        sudo keytool -importcert -trustcacerts -file /etc/cas/cas.pem -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias cas -noprompt
 
     - name: Disable IPv6
       run: |
