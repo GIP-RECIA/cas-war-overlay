@@ -28,3 +28,6 @@ SERVICE_EXTERNALID_ATTRIBUTE_RELEASE_URL = "http://localhost:8023/test"
 
 # Url du service faisant valider un ST via delegation CAS
 SERVICE_DELEGATION_CAS_URL = "http://localhost:8027/test"
+
+# Url du service faisant valider un ST via delegation CAS après redirect de domaine
+SERVICE_DELEGATION_CAS_REDIRECT_URL = "http://localhost:8028/test"

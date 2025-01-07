@@ -69,7 +69,7 @@ cas.authn.attribute-repository.ldap[0].attributes.ENTPersonLogin: ENTPersonLogin
 cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
 
 # Login Flow Interrupt
-cas.interrupt.core.force-execution: true
+cas.interrupt.core.force-execution: false
 cas.interrupt.core.trigger-mode: AFTER_SSO
 
 # SAML

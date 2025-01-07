@@ -2,5 +2,9 @@
     "@class": "org.apereo.cas.services.CasRegisteredService",
     "serviceId": "^https:\/\/localhost:8443\/cas\/.*",
     "name": "CAS de test",
-    "id": 1
+    "id": 1,
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
+    }
 }
