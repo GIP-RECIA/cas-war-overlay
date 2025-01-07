@@ -74,6 +74,7 @@ cas.interrupt.core.trigger-mode: AFTER_SSO
 
 # SAML
 cas.authn.saml-idp.core.entity-id: https://localhost:9443/cas/idp/metadata
+cas.authn.saml-idp.metadata.file-system.location: file:/etc/cas/metadata-deleg
 
 # OIDC
 cas.authn.oidc.core.issuer: https://localhost:9443/cas/oidc
