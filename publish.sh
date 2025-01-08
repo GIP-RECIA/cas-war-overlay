@@ -6,4 +6,4 @@ publish_version=$(grep "^publishNexusVersion=" gradle.properties | awk -F= '{pri
 git add gradle.properties
 git commit -m "chore: release $publish_version"
 git tag $publish_version
-git push
+git push --atomic origin master $publish_version
