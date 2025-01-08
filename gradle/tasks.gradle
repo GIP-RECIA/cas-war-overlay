@@ -380,10 +380,10 @@ processResources {
     if (project.hasProperty("profile") && project.profile == "prod") {
         exclude '**/application-test.yml'
         exclude '**/services-test'
-        exclude '**/attribute-definition-test'
+        exclude '**/attribute-definition-test.json'
         exclude '**/application-deleg.yml'
         exclude '**/services-deleg'
-        exclude '**/attribute-definition-deleg'
+        exclude '**/attribute-definition-deleg.json'
     }
 }
 
