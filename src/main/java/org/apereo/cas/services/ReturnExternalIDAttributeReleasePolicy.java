@@ -101,9 +101,7 @@ public class ReturnExternalIDAttributeReleasePolicy extends AbstractRegisteredSe
 
             if (externalUserId != null) {
                 externalUserId = externalUserId.substring(externalUserId.lastIndexOf(splitCharacter) + 1);
-                if(notReleased){
-                    resolvedAttributes.put(externalIdAttributeNameResponse, Collections.singletonList(externalUserId));
-                }
+                resolvedAttributes.put(externalIdAttributeNameResponse, Collections.singletonList(externalUserId));
                 context.getPrincipal().getAttributes().put(externalIdAttributeNameResponse, Collections.singletonList(externalUserId));
                 LOGGER.debug("Added externalid [{}] to principal and released attributes for user [{}] and service [{}]",
                         externalUserId, principalId, context.getRegisteredService().getName());
