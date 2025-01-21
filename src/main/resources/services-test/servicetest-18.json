@@ -7,12 +7,15 @@
   "description": "Service de test pour OIDC",
   "id": 18,
   "bypassApprovalPrompt": true,
-  "webflowInterruptPolicy": {
-      "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
-      "enabled": false
-  },
   "generateRefreshToken": "true",
   "scopes": [ "java.util.HashSet", [ "openid", "profile", "test" ] ],
   "supportedGrantTypes": [ "java.util.HashSet", [ "authorization_code", "refresh_token" ] ],
-  "supportedResponseTypes": [ "java.util.HashSet", [ "code" ] ]
+  "supportedResponseTypes": [ "java.util.HashSet", [ "code" ] ],
+  "properties" : {
+    "@class" : "java.util.HashMap",
+    "skipDomainRedirect" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    }
+  }
 }

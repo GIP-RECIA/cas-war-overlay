@@ -86,6 +86,12 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
                                                 RequestContext requestContext) {
         // A null service means that the request is coming directly from the cas (so no redirection needed)
         if (service != null) {
+            // Verify that redirection is not disabled for this service
+            if (!registeredService.getProperties().isEmpty()) {
+                if (registeredService.getProperties().containsKey("skipDomainRedirect") && registeredService.getProperties().get("skipDomainRedirect").getBooleanValue()){
+                    return null;
+                }
+            }
             final String sirenCourant = (String) authentication.getPrincipal().getAttributes().get("ESCOSIRENCourant").getFirst();
             if(sirenCourant != null){
                 final String domain = getUserDomain(sirenCourant);

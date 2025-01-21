@@ -4,8 +4,11 @@
     "name": "Service Test",
     "description": "Service de test pour delegation CAS",
     "id": 27,
-    "webflowInterruptPolicy": {
-        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
-        "enabled": false
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "skipDomainRedirect" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ true ] ]
+        }
     }
 }

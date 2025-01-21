@@ -10,8 +10,11 @@
         "endingDateTime": "2024-07-23T10:05:00.132+02:00",
         "zoneId": "UTC+2"
     },
-    "webflowInterruptPolicy": {
-        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
-        "enabled": false
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "skipDomainRedirect" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ true ] ]
+        }
     }
 }

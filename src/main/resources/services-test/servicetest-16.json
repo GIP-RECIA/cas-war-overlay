@@ -4,15 +4,15 @@
   "name": "Service Test",
   "description": "Service de test pour token redirection post connexion",
   "id": 16,
-  "webflowInterruptPolicy": {
-      "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
-      "enabled": false
-  },
   "properties" : {
     "@class" : "java.util.HashMap",
     "portalRedirectionNeeded" : {
         "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
         "values" : [ "java.util.HashSet", [ true ] ]
+    },
+    "skipDomainRedirect" : {
+      "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+      "values" : [ "java.util.HashSet", [ true ] ]
     }
   }
 }

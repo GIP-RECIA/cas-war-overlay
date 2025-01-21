@@ -5,9 +5,12 @@
   "description": "Service de test pour SLO",
   "id": 19,
   "bypassApprovalPrompt": true,
-  "webflowInterruptPolicy": {
-      "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
-      "enabled": false
-  },
-  "logoutUrl" : "http://localhost:8019/logout"
+  "logoutUrl" : "http://localhost:8019/logout",
+  "properties" : {
+    "@class" : "java.util.HashMap",
+    "skipDomainRedirect" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    }
+  }
 }

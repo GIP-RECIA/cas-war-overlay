@@ -4,10 +4,6 @@
   "name": "Service Test",
   "description": "Service de test pour token redirection (service non portail) avec domaine mappé",
   "id": 17,
-  "webflowInterruptPolicy": {
-      "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
-      "enabled": false
-  },
   "properties" : {
     "@class" : "java.util.HashMap",
     "portalRedirectionNeeded" : {
@@ -25,6 +21,10 @@
     "DOMAIN-RED:mappeddomain2" : {
         "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
         "values" : [ "java.util.HashSet", [ "mappeddomain4.fr" ] ]
+    },
+    "skipDomainRedirect" : {
+      "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+      "values" : [ "java.util.HashSet", [ true ] ]
     }
   }
 }
