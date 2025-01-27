@@ -25,7 +25,7 @@ And has a number of custom enhancements :
 - Custom parameter in url for delegation depending on service
 - Custom SAML attribute generation (pairwise-id and eduPersonTargetedId)
 
-Current CAS Base version : **7.1.3**
+Current CAS Base version : **7.1.4**
 
 # Project Structure
 
