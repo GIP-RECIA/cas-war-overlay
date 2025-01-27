@@ -393,4 +393,6 @@ dependencies {
     // Custom TOTP MFA
     compileOnly "org.apereo.cas:cas-server-support-gauth-core-mfa"
     compileOnly "org.apereo.cas:cas-server-support-otp-mfa-core"
+    compileOnly "org.apereo.cas:cas-server-support-redis-core"
+    compileOnly "org.springframework.data:spring-data-redis"
 }
