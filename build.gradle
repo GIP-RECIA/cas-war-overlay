@@ -347,6 +347,10 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-monitor"
     implementation "org.apereo.cas:cas-server-support-reports"
     implementation "org.apereo.cas:cas-server-support-metrics"
+    implementation "org.apereo.cas:cas-server-support-gauth"
+    implementation "org.apereo.cas:cas-server-support-gauth-redis"
+    implementation "org.apereo.cas:cas-server-support-trusted-mfa"
+    implementation "org.apereo.cas:cas-server-support-trusted-mfa-redis"
     // Groovy scripting
     implementation "org.apereo.cas:cas-server-core-scripting"
     // Custom interrupt
