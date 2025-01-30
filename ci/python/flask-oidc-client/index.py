@@ -114,7 +114,6 @@ def slo():
 # Route utile pour les tests afin de savoir quel principal a été déconnecté
 @app.route('/checkLogout')
 def checkLogout():
-    print(other_infos)
     return other_infos["slo"]
 
 # Démarrer l'application Flask

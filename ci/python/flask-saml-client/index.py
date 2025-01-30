@@ -7,8 +7,10 @@ parser.add_argument("--settings")
 args = parser.parse_args()
 
 import json
+import base64
+import zlib
 
-from flask import Flask, request, render_template, redirect, session, make_response
+from flask import Flask, request, render_template, redirect, session, make_response, Response
 
 from onelogin.saml2.auth import OneLogin_Saml2_Auth
 from onelogin.saml2.utils import OneLogin_Saml2_Utils
@@ -23,6 +25,9 @@ IDP_METADATA_URL = "https://localhost:8443/cas/idp/metadata"
 # Initialisation de l'app flask
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "af5cb14a-c87d-4232-88df-dd01660284d7"
+
+# Dictionnaire servant à stocker des infos
+other_infos = {}
 
 def load_idp_data():
     """
@@ -164,6 +169,17 @@ def metadata():
         resp = make_response(", ".join(errors), 500)
     return resp
 
+# Endpoint utilisé par les requêtes de SLO envoyées depuis le CAS
+@app.route('/saml/slo', methods=['GET', 'POST'])
+def slo():
+    samlrequest = str(zlib.decompress(base64.b64decode(request.args["SAMLRequest"]), -zlib.MAX_WBITS), "utf-8")
+    other_infos["slo"] = samlrequest
+    return Response(status=200)
+
+# Route utile pour les tests afin de savoir quel principal a été déconnecté
+@app.route('/checkLogout')
+def checkLogout():
+    return other_infos["slo"]
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=args.port)

@@ -1,0 +1,19 @@
+{
+  "@class": "org.apereo.cas.support.saml.services.SamlRegisteredService",
+  "serviceId": "^http:\/\/localhost:8034.*",
+  "name": "Service Test",
+  "description": "Service de test pour SLO SAML2 principal custom",
+  "id": 34,
+  "metadataLocation": "http://localhost:8034/metadata",
+  "usernameAttributeProvider" : {
+    "@class" : "org.apereo.cas.services.PrincipalExternalIdRegisteredServiceUsernameProvider",
+    "internalServiceId": "SERVICE7"
+  },
+  "properties" : {
+    "@class" : "java.util.HashMap",
+    "skipDomainRedirect" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    }
+}
+}
