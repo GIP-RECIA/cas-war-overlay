@@ -24,6 +24,7 @@ And has a number of custom enhancements :
 - Custom <md:Info> SAML idp metadata generation
 - Custom parameter in url for delegation depending on service
 - Custom SAML attribute generation (pairwise-id and eduPersonTargetedId)
+- Change subject in SLO OIDC request based on usernameAttributeProvider per service
 
 Current CAS Base version : **7.1.4**
 
@@ -73,6 +74,8 @@ All the important parts of the project are listed below:
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
 │       │               ├── oidc
+│       │               │   └── slo
+│       │               │   │   └── OidcSingleLogoutMessageCreator.java
 │       │               │   └── token
 │       │               │       └── OidcIdTokenGeneratorService.java
 │       │               ├── services
