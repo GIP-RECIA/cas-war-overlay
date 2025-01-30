@@ -6,7 +6,7 @@ Utilisé comme service pour tester si le CAS envoie bien une requête de SLO lor
 
 import urllib3
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from constants import CAS_BASE_URL, SERVICE_SLO_URL
+from constants import CAS_BASE_URL, SERVICE_SLO_CUSTOM_PRINCIPAL_URL
 from utils import validate_ticket_to_cas, handle_logout_request, send_logout_status
 
 urllib3.disable_warnings()
@@ -19,7 +19,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         if "checkLogout" in self.path:
             send_logout_status(self, data["logged_in"], data["principal"])
         else:
-            validate_ticket_to_cas(self, SERVICE_SLO_URL, CAS_BASE_URL)
+            validate_ticket_to_cas(self, SERVICE_SLO_CUSTOM_PRINCIPAL_URL, CAS_BASE_URL)
             data["logged_in"] = True
     
     def do_POST(self):
@@ -29,7 +29,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 data["logged_in"] = False
                 data["principal"] = logout_reponse
 
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=8019):
+def run(server_class=HTTPServer, handler_class=RequestHandler, port=8035):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f'Starting server on port {port}...')

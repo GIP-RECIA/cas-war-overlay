@@ -9,7 +9,7 @@ const assert = require("assert");
         const page = await browser.newPage();
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8019"
+        const service = "http://localhost:8035"
 
         // Login to cas
         await cas.loginWith(page, casHost, service+"/test", "test1", "test")
@@ -26,7 +26,7 @@ const assert = require("assert");
         // Assert that the user is logged out of the app
         const pageContent = await page.content();
         assert(pageContent.includes("LOGGED IN=False"))
-        assert(pageContent.includes("PRINCIPAL=F1abc"))
+        assert(pageContent.includes("PRINCIPAL=test.test%40test.com"))
 
         process.exit(0)
 

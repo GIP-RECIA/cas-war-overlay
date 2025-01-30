@@ -34,3 +34,6 @@ SERVICE_DELEGATION_CAS_REDIRECT_URL = "http://localhost:8028/test"
 
 # Url du service faisant valider un ST via delegation CAS sans redirection de domaine
 SERVICE_DELEGATION_CAS_NO_REDIRECT_URL = "http://localhost:8029/test"
+
+# Url du service pour tester la déconnexion globale avec principal different
+SERVICE_SLO_CUSTOM_PRINCIPAL_URL = "http://localhost:8035/test"
