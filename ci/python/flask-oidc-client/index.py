@@ -9,10 +9,12 @@ parser.add_argument("--scopes")
 args = parser.parse_args()
 
 import urllib3
-from flask import Flask, redirect, url_for, session, jsonify, request
+from flask import Flask, redirect, url_for, session, jsonify, request, Response
 from authlib.integrations.flask_client import OAuth
 from authlib.oauth2.rfc6749.errors import OAuth2Error
 from functools import wraps
+import base64
+import json
 
 urllib3.disable_warnings()
 
@@ -29,6 +31,9 @@ app.secret_key = "7f2d013e-1bfe-4a7a-9734-b40f50a95bbf"
 
 # Initialisation de l'OIDC avec Authlib
 oauth = OAuth(app)
+
+# Dictionnaire servant à stocker des infos
+other_infos = {}
 
 # Configuration pour communiquer avec l'IDP OIDC
 oauth.register(
@@ -90,11 +95,27 @@ def userinfo():
         return jsonify({"error": f"Erreur lors de la récupération des informations utilisateur : {error}"}), 400
 
 
-# Route de déconnexion
+# Route de déconnexion initiée par le client
 @app.route('/oidc/logout')
 def logout():
     session.pop("oidc", None)
     return redirect(url_for("protected"))
+
+# Endpoint utilisé par les requêtes de SLO envoyées depuis le CAS
+@app.route('/oidc/slo', methods=['GET', 'POST'])
+def slo():
+    session.pop("oidc", None)
+    token = request.form["logout_token"]
+    token_payload = token.split(".")[1]
+    token_payload_decoded = str(base64.b64decode(token_payload + "=="), "utf-8")
+    other_infos["slo"] = json.loads(token_payload_decoded)
+    return Response(status=200)
+
+# Route utile pour les tests afin de savoir quel principal a été déconnecté
+@app.route('/checkLogout')
+def checkLogout():
+    print(other_infos)
+    return other_infos["slo"]
 
 # Démarrer l'application Flask
 if __name__ == '__main__':

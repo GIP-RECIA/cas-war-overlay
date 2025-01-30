@@ -114,6 +114,10 @@ python3 index.py --port 8020 --scopes "openid" --clientid "client2-testcas" --cl
 pid_python_oidc_client2=$!
 python3 index.py --port 8021 --scopes "openid" --clientid "client3-testcas" --clientsecret "secret3-testcas" &
 pid_python_oidc_client3=$!
+python3 index.py --port 8031 --scopes "openid" --clientid "client4-testcas" --clientsecret "secret4-testcas" &
+pid_python_oidc_client4=$!
+python3 index.py --port 8032 --scopes "openid" --clientid "client5-testcas" --clientsecret "secret5-testcas" &
+pid_python_oidc_client5=$!
 rm -r /tmp/oidc
 mkdir /tmp/oidc
 cd "${ROOT_DIRECTORY}"
@@ -153,6 +157,8 @@ exit_ci () {
     kill -9 "$pid_python_oidc_client"
     kill -9 "$pid_python_oidc_client2"
     kill -9 "$pid_python_oidc_client3"
+    kill -9 "$pid_python_oidc_client4"
+    kill -9 "$pid_python_oidc_client5"
     cd "${ROOT_DIRECTORY}/ci/ldap"
     ./stop-ldap.sh
     cd "${ROOT_DIRECTORY}/ci/redis"

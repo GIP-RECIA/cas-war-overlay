@@ -1,0 +1,22 @@
+{
+  "@class": "org.apereo.cas.services.OidcRegisteredService",
+  "serviceId": "^http:\/\/localhost:8032\/.*",
+  "name": "Service Test",
+  "clientId": "client5-testcas",
+  "clientSecret": "secret5-testcas",
+  "description": "Service de test pour SLO OIDC principal custom",
+  "id": 32,
+  "bypassApprovalPrompt": true,
+  "logoutUrl" : "http://localhost:8032/oidc/slo",
+  "usernameAttributeProvider" : {
+    "@class" : "org.apereo.cas.services.PrincipalExternalIdRegisteredServiceUsernameProvider",
+    "internalServiceId": "SERVICE6"
+  },
+  "properties" : {
+    "@class" : "java.util.HashMap",
+    "skipDomainRedirect" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    }
+  }
+}
