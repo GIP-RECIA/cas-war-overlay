@@ -24,6 +24,8 @@ cp src/main/java/org/apereo/cas/oidc/token/OidcIdTokenGeneratorService.java diff
 cp src/main/java/org/apereo/cas/oidc/slo/OidcSingleLogoutMessageCreator.java diff/
 cp src/main/java/org/apereo/cas/support/saml/idp/metadata/generator/BaseSamlIdPMetadataGenerator.java diff/
 cp src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationRedirectAction.java diff/
+cp src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java diff/
+cp src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java diff/
 
 # Télécharger les fichiers de la nouvelle version et les placer dans le dossier 'diff'
 echo "Téléchargement des fichiers de la nouvelle version"
@@ -35,6 +37,8 @@ wget -q -O diff/OidcIdTokenGeneratorService_$VERSION.java https://raw.githubuser
 wget -q -O diff/OidcSingleLogoutMessageCreator_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-oidc-core-api/src/main/java/org/apereo/cas/oidc/slo/OidcSingleLogoutMessageCreator.java
 wget -q -O diff/BaseSamlIdPMetadataGenerator_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-saml-idp-core/src/main/java/org/apereo/cas/support/saml/idp/metadata/generator/BaseSamlIdPMetadataGenerator.java
 wget -q -O diff/DelegatedClientAuthenticationRedirectAction_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationRedirectAction.java
+wget -q -O diff/CasCoreLogoutAutoConfiguration_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-logout/src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java
+wget -q -O diff/DefaultSingleLogoutMessageCreator_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java
 
 # Pour les fichiers de l'overlay c'est un peu différent il faut générer un nouvel overlay, l'extraire puis les recopier
 mkdir tmp
@@ -65,6 +69,8 @@ meld diff/OidcIdTokenGeneratorService.java diff/OidcIdTokenGeneratorService_$VER
 meld diff/OidcSingleLogoutMessageCreator.java diff/OidcSingleLogoutMessageCreator_$VERSION.java
 meld diff/BaseSamlIdPMetadataGenerator.java diff/BaseSamlIdPMetadataGenerator_$VERSION.java
 meld diff/DelegatedClientAuthenticationRedirectAction.java diff/DelegatedClientAuthenticationRedirectAction_$VERSION.java
+meld diff/CasCoreLogoutAutoConfiguration.java diff/CasCoreLogoutAutoConfiguration_$VERSION.java
+meld diff/DefaultSingleLogoutMessageCreator.java diff/DefaultSingleLogoutMessageCreator_$VERSION.java
 
 # Une fois la comparaison finie remplacer les fichiers dans src/ par ceux modifiés dans diff/
 echo "Recopie des fichiers mis à jour dans src"
@@ -78,6 +84,8 @@ cp diff/OidcIdTokenGeneratorService.java src/main/java/org/apereo/cas/oidc/token
 cp diff/OidcSingleLogoutMessageCreator.java src/main/java/org/apereo/cas/oidc/slo/OidcSingleLogoutMessageCreator.java
 cp diff/BaseSamlIdPMetadataGenerator.java src/main/java/org/apereo/cas/support/saml/idp/metadata/generator/BaseSamlIdPMetadataGenerator.java
 cp diff/DelegatedClientAuthenticationRedirectAction.java src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationRedirectAction.java
+cp diff/CasCoreLogoutAutoConfiguration.java src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java
+cp diff/DefaultSingleLogoutMessageCreator.java src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java
 
 # Supprimer le dossier diff une fois qu'on a fini de faire les modifs
 echo "Suppression du dosser diff pour prochaine màj"

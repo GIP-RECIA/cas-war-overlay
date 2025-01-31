@@ -24,7 +24,7 @@ And has a number of custom enhancements :
 - Custom <md:Info> SAML idp metadata generation
 - Custom parameter in url for delegation depending on service
 - Custom SAML attribute generation (pairwise-id and eduPersonTargetedId)
-- Change subject in SLO OIDC request based on usernameAttributeProvider per service
+- Change subject in SLO request based on usernameAttributeProvider per service
 
 Current CAS Base version : **7.1.4**
 
@@ -70,19 +70,25 @@ All the important parts of the project are listed below:
 │       │       └── apereo
 │       │           └── cas
 │       │               ├── config
+│       │               │   ├── CasCoreLogoutAutoConfiguration.java
 │       │               │   └── CustomInterruptConfiguration.java
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
+│       │               ├── logout
+│       │               │   └── DefaultSingleLogoutMessageCreator.java
 │       │               ├── oidc
 │       │               │   └── slo
 │       │               │   │   └── OidcSingleLogoutMessageCreator.java
 │       │               │   └── token
 │       │               │       └── OidcIdTokenGeneratorService.java
 │       │               ├── services
+│       │               │   ├── mgmt
+│       │               │   │   └── AbstractServicesManager.java
 │       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
 │       │               │   ├── PrincipalExternalIdRegisteredServiceUsernameProvider.java
 │       │               │   ├── PrincipalExternalIdRegisteredOidcServiceUsernameProvider.java
 │       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
+│       │               │   ├── ReturnExternalIDOidcAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               ├── support/saml/idp/metadata/generator
 │       │               │   ├── idp/metadata/generator
