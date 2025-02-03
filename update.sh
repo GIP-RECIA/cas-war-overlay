@@ -8,6 +8,20 @@ if [ -z "$1" ]; then
 fi
 VERSION=$1
 
+# Liste des fichiers à traiter sous le format "local_path remote_path"
+FILES=(
+    "src/main/java/org/apereo/cas/services/TimeBasedRegisteredServiceAccessStrategy.java core/cas-server-core-services-api/src/main/java/org/apereo/cas/services/TimeBasedRegisteredServiceAccessStrategy.java"
+    "src/main/java/org/apereo/cas/web/flow/error/DefaultDelegatedClientAuthenticationFailureEvaluator.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/web/flow/error/DefaultDelegatedClientAuthenticationFailureEvaluator.java"
+    "src/main/java/org/apereo/cas/web/flow/resolver/impl/DefaultCasDelegatingWebflowEventResolver.java core/cas-server-core-webflow-api/src/main/java/org/apereo/cas/web/flow/resolver/impl/DefaultCasDelegatingWebflowEventResolver.java"
+    "src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.java"
+    "src/main/java/org/apereo/cas/oidc/token/OidcIdTokenGeneratorService.java support/cas-server-support-oidc-core-api/src/main/java/org/apereo/cas/oidc/token/OidcIdTokenGeneratorService.java"
+    "src/main/java/org/apereo/cas/oidc/slo/OidcSingleLogoutMessageCreator.java support/cas-server-support-oidc-core-api/src/main/java/org/apereo/cas/oidc/slo/OidcSingleLogoutMessageCreator.java"
+    "src/main/java/org/apereo/cas/support/saml/idp/metadata/generator/BaseSamlIdPMetadataGenerator.java support/cas-server-support-saml-idp-core/src/main/java/org/apereo/cas/support/saml/idp/metadata/generator/BaseSamlIdPMetadataGenerator.java"
+    "src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationRedirectAction.java support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationRedirectAction.java"
+    "src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java core/cas-server-core-logout/src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java"
+    "src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java"
+)
+
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux
 echo "Création du dossier diff"
 mkdir diff
@@ -16,29 +30,19 @@ mkdir diff
 echo "Recopie des fichiers locaux dans diff"
 cp build.gradle diff/
 cp gradle.properties diff/
-cp src/main/java/org/apereo/cas/services/TimeBasedRegisteredServiceAccessStrategy.java diff/
-cp src/main/java/org/apereo/cas/web/flow/error/DefaultDelegatedClientAuthenticationFailureEvaluator.java diff/
-cp src/main/java/org/apereo/cas/web/flow/resolver/impl/DefaultCasDelegatingWebflowEventResolver.java diff/
-cp src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.java diff/
-cp src/main/java/org/apereo/cas/oidc/token/OidcIdTokenGeneratorService.java diff/
-cp src/main/java/org/apereo/cas/oidc/slo/OidcSingleLogoutMessageCreator.java diff/
-cp src/main/java/org/apereo/cas/support/saml/idp/metadata/generator/BaseSamlIdPMetadataGenerator.java diff/
-cp src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationRedirectAction.java diff/
-cp src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java diff/
-cp src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java diff/
+for file_info in "${FILES[@]}"; do
+    local_path=$(echo "$file_info" | cut -d ' ' -f 1)
+    cp "$local_path" "diff/$(basename "$local_path")"
+done
 
 # Télécharger les fichiers de la nouvelle version et les placer dans le dossier 'diff'
 echo "Téléchargement des fichiers de la nouvelle version"
-wget -q -O diff/TimeBasedRegisteredServiceAccessStrategy_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-services-api/src/main/java/org/apereo/cas/services/TimeBasedRegisteredServiceAccessStrategy.java
-wget -q -O diff/DefaultDelegatedClientAuthenticationFailureEvaluator_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/web/flow/error/DefaultDelegatedClientAuthenticationFailureEvaluator.java
-wget -q -O diff/DefaultCasDelegatingWebflowEventResolver_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-webflow-api/src/main/java/org/apereo/cas/web/flow/resolver/impl/DefaultCasDelegatingWebflowEventResolver.java
-wget -q -O diff/BaseServiceAuthorizationCheckAction_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.java
-wget -q -O diff/OidcIdTokenGeneratorService_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-oidc-core-api/src/main/java/org/apereo/cas/oidc/token/OidcIdTokenGeneratorService.java
-wget -q -O diff/OidcSingleLogoutMessageCreator_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-oidc-core-api/src/main/java/org/apereo/cas/oidc/slo/OidcSingleLogoutMessageCreator.java
-wget -q -O diff/BaseSamlIdPMetadataGenerator_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-saml-idp-core/src/main/java/org/apereo/cas/support/saml/idp/metadata/generator/BaseSamlIdPMetadataGenerator.java
-wget -q -O diff/DelegatedClientAuthenticationRedirectAction_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationRedirectAction.java
-wget -q -O diff/CasCoreLogoutAutoConfiguration_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-logout/src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java
-wget -q -O diff/DefaultSingleLogoutMessageCreator_$VERSION.java https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java
+for file_info in "${FILES[@]}"; do
+    local_path=$(echo "$file_info" | cut -d ' ' -f 1)
+    remote_path=$(echo "$file_info" | cut -d ' ' -f 2)
+    filename=$(basename "$local_path")
+    wget -q -O "diff/${filename}_$VERSION" "https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/$remote_path"
+done
 
 # Pour les fichiers de l'overlay c'est un peu différent il faut générer un nouvel overlay, l'extraire puis les recopier
 mkdir tmp
@@ -61,31 +65,21 @@ fi
 echo "Comparaison des fichiers avec meld..."
 meld diff/build.gradle diff/build_$VERSION.gradle
 meld diff/gradle.properties diff/gradle_$VERSION.properties
-meld diff/TimeBasedRegisteredServiceAccessStrategy.java diff/TimeBasedRegisteredServiceAccessStrategy_$VERSION.java
-meld diff/DefaultDelegatedClientAuthenticationFailureEvaluator.java diff/DefaultDelegatedClientAuthenticationFailureEvaluator_$VERSION.java
-meld diff/DefaultCasDelegatingWebflowEventResolver.java diff/DefaultCasDelegatingWebflowEventResolver_$VERSION.java
-meld diff/BaseServiceAuthorizationCheckAction.java diff/BaseServiceAuthorizationCheckAction_$VERSION.java
-meld diff/OidcIdTokenGeneratorService.java diff/OidcIdTokenGeneratorService_$VERSION.java
-meld diff/OidcSingleLogoutMessageCreator.java diff/OidcSingleLogoutMessageCreator_$VERSION.java
-meld diff/BaseSamlIdPMetadataGenerator.java diff/BaseSamlIdPMetadataGenerator_$VERSION.java
-meld diff/DelegatedClientAuthenticationRedirectAction.java diff/DelegatedClientAuthenticationRedirectAction_$VERSION.java
-meld diff/CasCoreLogoutAutoConfiguration.java diff/CasCoreLogoutAutoConfiguration_$VERSION.java
-meld diff/DefaultSingleLogoutMessageCreator.java diff/DefaultSingleLogoutMessageCreator_$VERSION.java
+for file_info in "${FILES[@]}"; do
+    local_path=$(echo "$file_info" | cut -d ' ' -f 1)
+    filename=$(basename "$local_path")
+    meld "diff/$filename" "diff/${filename}_$VERSION"
+done
 
 # Une fois la comparaison finie remplacer les fichiers dans src/ par ceux modifiés dans diff/
 echo "Recopie des fichiers mis à jour dans src"
 cp build.gradle ./
 cp diff/gradle.properties ./
-cp diff/TimeBasedRegisteredServiceAccessStrategy.java src/main/java/org/apereo/cas/services/TimeBasedRegisteredServiceAccessStrategy.java
-cp diff/DefaultDelegatedClientAuthenticationFailureEvaluator.java src/main/java/org/apereo/cas/web/flow/error/DefaultDelegatedClientAuthenticationFailureEvaluator.java
-cp diff/DefaultCasDelegatingWebflowEventResolver.java src/main/java/org/apereo/cas/web/flow/resolver/impl/DefaultCasDelegatingWebflowEventResolver.java
-cp diff/BaseServiceAuthorizationCheckAction.java src/main/java/org/apereo/cas/web/flow/BaseServiceAuthorizationCheckAction.java
-cp diff/OidcIdTokenGeneratorService.java src/main/java/org/apereo/cas/oidc/token/OidcIdTokenGeneratorService.java
-cp diff/OidcSingleLogoutMessageCreator.java src/main/java/org/apereo/cas/oidc/slo/OidcSingleLogoutMessageCreator.java
-cp diff/BaseSamlIdPMetadataGenerator.java src/main/java/org/apereo/cas/support/saml/idp/metadata/generator/BaseSamlIdPMetadataGenerator.java
-cp diff/DelegatedClientAuthenticationRedirectAction.java src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationRedirectAction.java
-cp diff/CasCoreLogoutAutoConfiguration.java src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java
-cp diff/DefaultSingleLogoutMessageCreator.java src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java
+for file_info in "${FILES[@]}"; do
+    local_path=$(echo "$file_info" | cut -d ' ' -f 1)
+    filename=$(basename "$local_path")
+    cp "diff/$filename" "$local_path"
+done
 
 # Supprimer le dossier diff une fois qu'on a fini de faire les modifs
 echo "Suppression du dosser diff pour prochaine màj"
