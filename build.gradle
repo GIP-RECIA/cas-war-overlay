@@ -396,4 +396,5 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-redis-core"
     compileOnly "org.springframework.data:spring-data-redis"
     compileOnly "org.apereo.cas:cas-server-core-webflow-mfa-api"
+    compileOnly "org.apereo.cas:cas-server-support-trusted-mfa-core"
 }
