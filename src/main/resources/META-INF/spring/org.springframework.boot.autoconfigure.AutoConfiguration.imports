@@ -1,1 +1,2 @@
 org.apereo.cas.config.CustomInterruptConfiguration
+org.apereo.cas.config.ScimV2PrincipalAttributeMapperConfiguration

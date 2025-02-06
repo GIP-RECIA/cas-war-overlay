@@ -404,5 +404,9 @@ dependencies {
     // Fix TOTP scratch code
     compileOnly "org.springframework.data:spring-data-redis"
     compileOnly "org.apereo.cas:cas-server-support-redis-core"
-
+    //SCIM
+    implementation "org.apereo.cas:cas-server-support-scim"
+    compileOnly "de.captaingoldfish:scim-sdk-common:1.27.1"
+    compileOnly "de.captaingoldfish:scim-sdk-client:1.27.1"
+    compileOnly "org.apereo.cas:cas-server-support-scim-core"
 }
