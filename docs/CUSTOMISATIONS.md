@@ -14,3 +14,4 @@
 | Pairwise-id/eduPersonTargetedId | PairwiseIdSamlRegisteredServiceAttributeReleasePolicy + TargetedIdSamlRegisteredServiceAttributeReleasePolicy |
 | SLO par principal | DefaultSingleLogoutMessageCreator + OidcSingleLogoutMessageCreator + CasCoreLogoutAutoConfiguration |
 | IDToken custom acr | OidcIdTokenGeneratorService |
+| Meilleur compatibilité clients SAML | SamlProfileSaml2ResponseBuilder |

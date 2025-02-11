@@ -328,6 +328,13 @@ Avec :
 - `salt` la valeur du salt
 - `separator` la valeur du séparateur
 
+### 10. Personnalisations
+
+**Amélioration de la compatibilité envers les clients SAML**
+
+Une modification a été faite dans `SamlProfileSaml2ResponseBuilder` afin de supprimer dans la SAMLResponse la balise `<xenc11:MGF>` dans la partie <EncryptionMethod> de la clé, car certains client SAML qui ont un validateur de schéma trop strict rejettent cette requête.
+
+
 ## Service Provider
 
 Pour l'instant le serveur CAS n'agit pas en tant que SP via le protocole SAML. Agir en tant que SP signifierait que le serveur CAS déléguerait son authentification à un IDP SAML. C'est par exemple le cas pour EduConnect (mais pas encore implémenté).

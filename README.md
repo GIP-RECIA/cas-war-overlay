@@ -25,6 +25,7 @@ And has a number of custom enhancements :
 - Custom parameter in url for delegation depending on service
 - Custom SAML attribute generation (pairwise-id and eduPersonTargetedId)
 - Change subject in SLO request based on usernameAttributeProvider per service
+- Better compatibility with SAML clients (see `SamlProfileSaml2ResponseBuilder.java`) 
 
 Current CAS Base version : **7.1.4**
 
@@ -96,14 +97,17 @@ All the important parts of the project are listed below:
 │       │               │   └── services
 │       │               │       ├── PairwiseIdSamlRegisteredServiceAttributeReleasePolicy.java
 │       │               │       └── TargetedIdSamlRegisteredServiceAttributeReleasePolicy.java
-│       │               └── web/flow
-│       │                   ├── actions
-│       │                   │   └── DelegatedClientAuthenticationRedirectAction.java
-│       │                   ├── error
-│       │                   │   └── DefaultDelegatedClientAuthenticationFailureEvaluator.java
-│       │                   ├── resolver/impl
-│       │                   │   └── DefaultCasDelegatingWebflowEventResolver.java
-│       │                   └── BaseServiceAuthorizationCheckAction.java
+│       │               └── web
+│       │                   ├── flow
+│       │                   │   ├── actions
+│       │                   │   │   └── DelegatedClientAuthenticationRedirectAction.java
+│       │                   │   ├── error
+│       │                   │   │   └── DefaultDelegatedClientAuthenticationFailureEvaluator.java
+│       │                   │   ├── resolver/impl
+│       │                   │   │   └── DefaultCasDelegatingWebflowEventResolver.java
+│       │                   │   └── BaseServiceAuthorizationCheckAction.java
+│       │                   └── idp/profile/builders/response
+│       │                       └── SamlProfileSaml2ResponseBuilder.java
 |       | 
 |       └── resources
 |           ├── META-INF

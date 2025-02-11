@@ -382,5 +382,8 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-saml-idp-core"
     // Fix SLO custom principal
     compileOnly "org.apereo.cas:cas-server-core-logout-api"
-
+    // Fix SAML schema validation
+    compileOnly "org.apereo.cas:cas-server-support-saml-idp-web"
+    compileOnly "org.apereo.cas:cas-server-support-saml-idp-ticket"
+    compileOnly "org.apereo.cas:cas-server-core-cookie-api"
 }
