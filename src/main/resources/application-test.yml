@@ -133,6 +133,9 @@ cas.authn.attribute-repository.attribute-definition-store.json.location: classpa
 cas.authn.pac4j.cas[0].login-url: https://localhost:9443/cas/login
 cas.authn.pac4j.cas[0].client-name: DELEGTEST
 
+# SCIM
+cas.scim.target: http://localhost:8036/scim/v2
+
 # Custom Properties
 
 # Interrupt
@@ -152,3 +155,10 @@ cas.custom.properties.token.domain-list: falsevaliddomain
 cas.custom.properties.token.redirect-portal-context: /portail
 cas.custom.properties.token.redirect-unknown-domain: https://pagetoredirectnetocentre.fr
 cas.custom.properties.token.domain-mapping-startswith: "DOMAIN-RED:"
+
+# SCIM
+cas.custom.properties.scim.regex-etab-class: ":Etablissements:(?:[^:]+)_([^:]+):.*?:(?:Profs|Eleves)_([^:]+$)"
+cas.custom.properties.scim.groups-attribute: isMemberOf
+cas.custom.properties.scim.principal-attribute: ENTPersonLogin
+cas.custom.properties.scim.profile-attribute: ENTPersonProfils
+cas.custom.properties.scim.teacher-attribute-value: National_ENS
