@@ -36,6 +36,9 @@ FILES=(
     "src/main/java/org/apereo/cas/util/LdapUtils.java support/cas-server-support-ldap-core/src/main/java/org/apereo/cas/util/LdapUtils.java"
     "src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationCredentialSelectionAction.java support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationCredentialSelectionAction.java"
     "src/main/resources/templates/login/casLoginView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casLoginView.html"
+    "src/main/java/org/apereo/cas/scim/v2/ScimV2PrincipalProvisioner.java support/cas-server-support-scim-core/src/main/java/org/apereo/cas/scim/v2/ScimV2PrincipalProvisioner.java"
+    "src/main/java/org/apereo/cas/web/flow/PrincipalProvisionerAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/PrincipalProvisionerAction.java"
+    "src/main/java/org/apereo/cas/config/CasScimAutoConfiguration.java support/cas-server-support-scim/src/main/java/org/apereo/cas/config/CasScimAutoConfiguration.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux
