@@ -2,17 +2,21 @@ package org.apereo.cas.scim.v2;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import de.captaingoldfish.scim.sdk.client.response.ServerResponse;
 import de.captaingoldfish.scim.sdk.common.constants.enums.PatchOp;
+import de.captaingoldfish.scim.sdk.common.exceptions.InternalServerException;
 import de.captaingoldfish.scim.sdk.common.resources.Group;
 import de.captaingoldfish.scim.sdk.common.resources.complex.Meta;
+import de.captaingoldfish.scim.sdk.common.resources.complex.Name;
+import de.captaingoldfish.scim.sdk.common.resources.multicomplex.Email;
 import org.apereo.cas.authentication.Authentication;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.principal.Principal;
 import org.apereo.cas.authentication.principal.PrincipalProvisioner;
+import org.apereo.cas.configuration.model.support.custom.CasCustomProperties;
 import org.apereo.cas.configuration.model.support.scim.ScimProperties;
 import org.apereo.cas.services.RegisteredService;
 import org.apereo.cas.services.RegisteredServiceProperty.RegisteredServiceProperties;
+import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.LoggingUtils;
 
 import de.captaingoldfish.scim.sdk.client.ScimClientConfig;
@@ -29,8 +33,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * This is {@link ScimV2PrincipalProvisioner}.
@@ -43,39 +49,47 @@ import java.util.regex.Pattern;
 public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
 
     private final ScimProperties scimProperties;
-
-    private final ScimV2PrincipalAttributeMapper mapper;
+    private final CasCustomProperties customProperties;
 
     @Override
     public boolean provision(final Principal principal, final Credential credential) {
-        return provision(credential, Optional.empty(), principal);
+        return provision(Optional.empty(), principal);
     }
 
     @Override
     public boolean provision(final Authentication auth, final Credential credential,
                              final RegisteredService registeredService) {
         val principal = auth.getPrincipal();
-        return provision(credential, Optional.ofNullable(registeredService), principal);
+        return provision(Optional.ofNullable(registeredService), principal);
     }
 
-    private boolean provision(final Credential credential,
-                              final Optional<RegisteredService> registeredService,
+    /**
+     * Provision a user for a given service
+     * Also creates all necessary establishments, classes and group members
+     * @param registeredService The service demanding SCIM provisionning
+     * @param principal The user from cas
+     */
+    private boolean provision(final Optional<RegisteredService> registeredService,
                               final Principal principal) {
         try {
             LOGGER.info("Attempting to execute provisioning ops for [{}]", principal.getId());
             val scimService = getScimService(registeredService);
+            val regex = customProperties.getProperties().get("scim.regex-etab-class");
+            val groupsAttribute = customProperties.getProperties().get("scim.groups-attribute");
+            val principalAttribute = customProperties.getProperties().get("scim.principal-attribute");
+            val profileAttribute = customProperties.getProperties().get("scim.profile-attribute");
+            val teacherAttributeValue = customProperties.getProperties().get("scim.teacher-attribute-value");
 
             // 0.1 Get all etabs and classes of user in LDAP
-            LOGGER.info("Finding classes in attribute isMemberOf for user [{}]", principal.getId());
+            LOGGER.debug("Finding classes in attribute isMemberOf for user [{}]", principal.getId());
             Map<String,Set<String>> classesByEtab = new HashMap<>();
-            String regex = ":Etablissements:(?:[^:]+)_([^:]+):.*?:(?:Profs|Eleves)_([^:]+$)";
-            for(val isMemberOf : principal.getAttributes().get("isMemberOf")){
+            for(val isMemberOf : principal.getAttributes().get(groupsAttribute)){
                 Pattern pattern = Pattern.compile(regex);
                 Matcher matcher = pattern.matcher((String) isMemberOf);
                 if (matcher.find()) {
                     String codeEtab = matcher.group(1);
                     String nomClasse = matcher.group(2);
-                    LOGGER.info("Class [{}] found for etab [{}] in attribute [{}]", nomClasse, codeEtab, isMemberOf);
+                    LOGGER.debug("Class [{}] found for etab [{}] in attribute [{}]", nomClasse, codeEtab, isMemberOf);
                     if(!classesByEtab.containsKey(codeEtab)){
                         classesByEtab.put(codeEtab, new HashSet<>());
                     }
@@ -88,86 +102,115 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
             Set<String> classesOfUserInLDAP = new HashSet<>();
             User user = null;
             String userId = null;
-            val userName = principal.getAttributes().get("mail").getFirst();
+            val userName = principal.getAttributes().get(principalAttribute).getFirst();
 
             // 1.1 Check if user exists
-            LOGGER.info("GET /Users for user [{}]", userName);
+            LOGGER.debug("GET /Users for user [{}]", userName);
             val responseGetUser = scimService.list(User.class, EndpointPaths.USERS)
                     .filter("userName eq \"" + userName + "\"")
                     .get()
                     .sendRequest();
             LOGGER.debug("Response body is [{}]", responseGetUser.getResponseBody());
-            LOGGER.info("GET /Users for user [{}] returned [{}] value", userName, responseGetUser.getResource().getTotalResults());
+            if(responseGetUser.isSuccess() && responseGetUser.isValidScimResponse()){
+                LOGGER.debug("GET /Users for user [{}] returned [{}] value", userName, responseGetUser.getResource().getTotalResults());
+            } else {
+                throw new InternalServerException("An error occurred on GET /Users for user "+userName);
+            }
 
             // 1.2 Create or update user
             if (responseGetUser.getResource().getTotalResults() > 0) {
                 userId = responseGetUser.getResource().getListedResources().getFirst().getId().get();
                 user = responseGetUser.getResource().getListedResources().getFirst();
-                LOGGER.info("Collecting user [{}] with id [{}]", userName, userId);
+                LOGGER.debug("Collecting user [{}] with id [{}]", userName, userId);
             } else {
-                LOGGER.info("Creating user [{}]", userName);
-                val responsePostUser = createUserResource(principal, credential, registeredService);
+                LOGGER.debug("Creating user [{}]", userName);
+                val userResource = mapUserResource(principal, principalAttribute, profileAttribute, teacherAttributeValue);
+                LOGGER.trace("Creating user resource [{}]", userResource);
+                val responsePostUser = getScimService(registeredService)
+                        .create(User.class, EndpointPaths.USERS)
+                        .setResource(userResource)
+                        .sendRequest();
                 LOGGER.debug("Response body is [{}]", responsePostUser.getResponseBody());
-                userId = responsePostUser.getResource().getId().get();
-                user = responsePostUser.getResource();
-                LOGGER.info("User [{}] created with id [{}]", userName, userId);
+                if(responsePostUser.isSuccess() && responsePostUser.isValidScimResponse()){
+                    userId = responsePostUser.getResource().getId().get();
+                    user = responsePostUser.getResource();
+                    LOGGER.debug("User [{}] created with id [{}]", userName, userId);
+                } else {
+                    throw new InternalServerException("An error occurred on POST /Users for user "+userName);
+                }
             }
 
             // 2.1 For each user establishment, check if establishment exists
             for(val currentEtab: classesByEtab.keySet()) {
-                LOGGER.info("Check if establishment [{}] exists", currentEtab);
-                LOGGER.info("GET /Groups for establishment [{}]", currentEtab);
+                LOGGER.debug("Check if establishment [{}] exists", currentEtab);
+                LOGGER.debug("GET /Groups for establishment [{}]", currentEtab);
                 val responseGetEtab = scimService.list(Group.class, EndpointPaths.GROUPS)
                         .filter("displayName eq \"" + currentEtab + "\"")
                         .get()
                         .sendRequest();
                 LOGGER.debug("Response body is [{}]", responseGetEtab.getResponseBody());
-                LOGGER.info("GET /Groups for [{}] returned [{}] establishment", currentEtab, responseGetEtab.getResource().getTotalResults());
+                if(responseGetEtab.isSuccess() && responseGetEtab.isValidScimResponse()){
+                    LOGGER.debug("GET /Groups for [{}] returned [{}] establishment", currentEtab, responseGetEtab.getResource().getTotalResults());
+                } else {
+                    throw new InternalServerException("An error occurred on GET /Groups for etab "+currentEtab);
+                }
 
                 // 2.2 Create or update establishment
                 String etabId = null;
                 if (responseGetEtab.getResource().getTotalResults() == 0) {
                     val etab = mapEstablishmentResource(currentEtab);
-                    LOGGER.info("Creating establishment [{}]", etab);
+                    LOGGER.debug("Creating establishment [{}]", etab);
                     val responsePostEtab = getScimService(registeredService)
                             .create(Group.class, EndpointPaths.GROUPS)
                             .setResource(etab)
                             .sendRequest();
                     LOGGER.debug("Response body is [{}]", responsePostEtab.getResponseBody());
-                    etabId = responsePostEtab.getResource().getId().get();
-                    LOGGER.info("Establishment [{}] created with id [{}]", currentEtab, etabId);
+                    if(responsePostEtab.isSuccess() && responsePostEtab.isValidScimResponse()){
+                        etabId = responsePostEtab.getResource().getId().get();
+                        LOGGER.debug("Establishment [{}] created with id [{}]", currentEtab, etabId);
+                    } else {
+                        throw new InternalServerException("An error occurred on POST /Groups for etab "+currentEtab);
+                    }
                 } else {
                     etabId = responseGetEtab.getResource().getListedResources().getFirst().getId().get();
-                    LOGGER.info("Establishment [{}] collected with id [{}]", currentEtab, etabId);
+                    LOGGER.debug("Establishment [{}] collected with id [{}]", currentEtab, etabId);
                 }
 
                 // 3.1 For each user class, check if class exists
                 for(val userClass : classesByEtab.get(currentEtab)){
-                    LOGGER.info("GET /Groups for class [{}]", userClass);
+                    LOGGER.debug("GET /Groups for class [{}]", userClass);
                     val responseGetClass = scimService.list(Group.class, EndpointPaths.GROUPS)
                             .filter("displayName eq \"" + userClass + "\"")
                             .get()
                             .sendRequest();
                     LOGGER.debug("Response body is [{}]", responseGetClass.getResponseBody());
-                    LOGGER.info("GET /Groups for [{}] returned [{}] class", userClass, responseGetClass.getResource().getTotalResults());
+                    if(responseGetClass.isSuccess() && responseGetClass.isValidScimResponse()){
+                        LOGGER.debug("GET /Groups for [{}] returned [{}] class", userClass, responseGetClass.getResource().getTotalResults());
+                    } else {
+                        throw new InternalServerException("An error occurred on GET /Groups for class "+userClass);
+                    }
 
                     // 3.2 Create or update class
                     String classId = null;
                     if (responseGetClass.getResource().getTotalResults() == 0) {
-                        LOGGER.info("No class [{}] was found", userClass);
+                        LOGGER.debug("No class [{}] was found", userClass);
                         val classResource = mapClassResource(userClass);
-                        LOGGER.info("Creating class [{}]", classResource);
+                        LOGGER.debug("Creating class [{}]", classResource);
                         val responsePostClass = getScimService(registeredService)
                                 .create(Group.class, EndpointPaths.GROUPS)
                                 .setResource(classResource)
                                 .sendRequest();
                         LOGGER.debug("Response body is [{}]", responsePostClass.getResponseBody());
-                        classId = responsePostClass.getResource().getId().get();
-                        classesOfUserInLDAP.add(classId);
-                        LOGGER.info("Class [{}] created with id [{}]", userClass, classId);
+                        if(responsePostClass.isSuccess() && responsePostClass.isValidScimResponse()){
+                            classId = responsePostClass.getResource().getId().get();
+                            classesOfUserInLDAP.add(classId);
+                            LOGGER.debug("Class [{}] created with id [{}]", userClass, classId);
+                        } else {
+                            throw new InternalServerException("An error occurred on POST /Groups for class "+userClass);
+                        }
 
                         // 3.3 Add class to establishment group
-                        LOGGER.info("Now adding class [{}] to [{}] members", classId, etabId);
+                        LOGGER.debug("Now adding class [{}] to [{}] members", classId, etabId);
                         ObjectMapper mapper = new ObjectMapper();
                         ObjectNode rootNode = mapper.createObjectNode();
                         rootNode.put("value", classId);
@@ -180,13 +223,14 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
                                 .build()
                                 .sendRequest();
                         LOGGER.debug("Response body is [{}]", responsePatchEtab.getResponseBody());
-                        if (responsePatchEtab.isSuccess()) {
-                            LOGGER.info("Class [{}] was successfully added to [{}]", userClass, currentEtab);
+                        if (responsePatchEtab.isSuccess() && responsePatchEtab.isValidScimResponse()) {
+                            LOGGER.debug("Class [{}] was successfully added to [{}]", userClass, currentEtab);
+                        } else {
+                            throw new InternalServerException("An error occurred on PATCH /Groups for etab "+etabId);
                         }
-                        LOGGER.debug("Response body is [{}]", responsePatchEtab.getResponseBody());
                     } else {
                         classId = responseGetClass.getResource().getListedResources().getFirst().getId().get();
-                        LOGGER.info("Class [{}] collected with id [{}]", userClass, classId);
+                        LOGGER.debug("Class [{}] collected with id [{}]", userClass, classId);
                         classesOfUserInLDAP.add(classId);
                     }
                 }
@@ -200,12 +244,12 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
                     classesOfUserInSCIM.add(group.get("value").asText());
                 }
             }
-            LOGGER.info("Classes IDS in SCIM (actual) [{}]", classesOfUserInSCIM);
-            LOGGER.info("Classes IDS in LDAP (update) [{}]", classesOfUserInLDAP);
+            LOGGER.debug("Classes IDS in SCIM (actual) [{}]", classesOfUserInSCIM);
+            LOGGER.debug("Classes IDS in LDAP (update) [{}]", classesOfUserInLDAP);
             // First step : add new classes
             for(String clsId : classesOfUserInLDAP){
                 if(!classesOfUserInSCIM.contains(clsId)){
-                    LOGGER.info("Adding user [{}] to [{}] members", userId, clsId);
+                    LOGGER.debug("Adding user [{}] to [{}] members", userId, clsId);
                     ObjectMapper mapper = new ObjectMapper();
                     ObjectNode rootNode = mapper.createObjectNode();
                     rootNode.put("value", userId);
@@ -218,15 +262,17 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
                             .build()
                             .sendRequest();
                     LOGGER.debug("Response body is [{}]", responsePatchEtabAddUserToClass.getResponseBody());
-                    if (responsePatchEtabAddUserToClass.isSuccess()) {
-                        LOGGER.info("User [{}] was successfully added to [{}]", userId, clsId);
+                    if (responsePatchEtabAddUserToClass.isSuccess() && responsePatchEtabAddUserToClass.isValidScimResponse()) {
+                        LOGGER.debug("User [{}] was successfully added to [{}]", userId, clsId);
+                    } else {
+                        throw new InternalServerException("An error occurred on PATCH /Groups for class "+clsId);
                     }
                 }
             }
             // Second step : remove old classes
             for(String clsId : classesOfUserInSCIM){
                 if(!classesOfUserInLDAP.contains(clsId)){
-                    LOGGER.info("Removing user [{}] from [{}] members", userId, clsId);
+                    LOGGER.debug("Removing user [{}] from [{}] members", userId, clsId);
                     ObjectMapper mapper = new ObjectMapper();
                     ObjectNode rootNode = mapper.createObjectNode();
                     rootNode.put("value", userId);
@@ -239,8 +285,10 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
                             .build()
                             .sendRequest();
                     LOGGER.debug("Response body is [{}]", responsePatchEtabRemoveUserToClass.getResponseBody());
-                    if (responsePatchEtabRemoveUserToClass.isSuccess()) {
-                        LOGGER.info("User [{}] was successfully removed from [{}]", userId, clsId);
+                    if (responsePatchEtabRemoveUserToClass.isSuccess() && responsePatchEtabRemoveUserToClass.isValidScimResponse()) {
+                        LOGGER.debug("User [{}] was successfully removed from [{}]", userId, clsId);
+                    } else {
+                        throw new InternalServerException("An error occurred on PATCH /Groups for class "+clsId);
                     }
                 }
             }
@@ -251,6 +299,10 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
         return false;
     }
 
+    /**
+     * Creates a group object (SCIM)
+     * @param displayName The displayName of the establishment
+     */
     protected Group mapEstablishmentResource(String displayName){
         // Root object
         val etab = new Group();
@@ -279,6 +331,10 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
         return etab;
     }
 
+    /**
+     * Creates a group object (SCIM)
+     * @param displayName The displayName of the class
+     */
     protected Group mapClassResource(String displayName){
         // Root object
         val cls = new Group();
@@ -301,29 +357,52 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
         return cls;
     }
 
-    protected boolean updateUserResource(final User user, final Principal principal,
-                                         final Credential credential,
-                                         final Optional<RegisteredService> registeredService) throws Exception {
-        this.mapper.map(user, principal, credential);
-        LOGGER.trace("Updating user resource [{}]", user);
-        val response = getScimService(registeredService)
-            .update(User.class, EndpointPaths.USERS, user.getId().orElseThrow())
-            .setResource(user)
-            .sendRequest();
-        return response.isSuccess();
-    }
-
-    protected ServerResponse<User> createUserResource(final Principal principal, final Credential credential,
-                                                final Optional<RegisteredService> registeredService) throws Exception {
+    /**
+     * Creates a user object (SCIM)
+     * @param principal The principal returned from cas
+     * @param principalAttribute The attribute name used to identify the principal
+     */
+    protected User mapUserResource(final Principal principal, final String principalAttribute,
+                                   final String profileAttribute, final String teacherAttributeValue) throws Exception {
         val user = new User();
-        mapper.map(user, principal, credential);
-        LOGGER.trace("Creating user resource [{}]", user);
-        return getScimService(registeredService)
-            .create(User.class, EndpointPaths.USERS)
-            .setResource(user)
-            .sendRequest();
+        // Custom Schema
+        user.addSchema("urn:ietf:params:scim:schemas:extension:idruide:education:2.0:User");
+        // Username
+        user.setUserName((String) principal.getAttributes().get(principalAttribute).getFirst());
+        // Email
+        val email = new Email();
+        email.setPrimary(Boolean.TRUE);
+        email.setValue(getPrincipalAttributeValue(principal, "mail"));
+        user.setEmails(CollectionUtils.wrap(email));
+        //GivenName et FamilyName
+        val name = new Name();
+        name.setGivenName(getPrincipalAttributeValue(principal, "givenName"));
+        name.setFamilyName(getPrincipalAttributeValue(principal, "sn"));
+        user.setName(name);
+        // Meta
+        if (user.getMeta().isEmpty()) {
+            val meta = new Meta();
+            meta.setResourceType("User");
+            user.setMeta(meta);
+        }
+        // Active
+        user.setActive(true);
+        // urn:ietf:params:scim:schemas:extension:idruide:education:2.0:User
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode userType = mapper.createObjectNode();
+        if(getPrincipalAttributeValues(principal, profileAttribute).contains(teacherAttributeValue)){
+            userType.put("educationUserType", "teacher");
+        } else {
+            userType.put("educationUserType", "student");
+        }
+        user.set("urn:ietf:params:scim:schemas:extension:idruide:education:2.0:User", userType);
+        return user;
     }
 
+    /**
+     * Initialize an http request for a specific service
+     * @param givenService The service demanding SCIM provisionning
+     */
     protected ScimRequestBuilder getScimService(final Optional<RegisteredService> givenService) {
         val headersMap = new HashMap<String, String>();
 
@@ -371,5 +450,35 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
             .httpHeaders(headersMap)
             .build();
         return new ScimRequestBuilder(target, scimClientConfig);
+    }
+
+    /**
+     * Gets the attribute value for a given attribute and principal
+     * @param principal The principal (from cas)
+     * @param attributeName The attribute name
+     */
+    protected String getPrincipalAttributeValue(final Principal principal,
+                                                final String attributeName) {
+        val attributes = principal.getAttributes();
+        if (attributes.containsKey(attributeName)) {
+            return CollectionUtils.toCollection(attributes.get(attributeName)).iterator().next().toString();
+        }
+        return null;
+    }
+
+    /**
+     * Gets the attribute values for a given attribute and principal
+     * @param principal The principal (from cas)
+     * @param attributeName The attribute name
+     */
+    protected List<String> getPrincipalAttributeValues(final Principal principal,
+                                                final String attributeName) {
+        val attributes = principal.getAttributes();
+        if (attributes.containsKey(attributeName)) {
+            return attributes.get(attributeName).stream()
+                   .map(element->(String) element)
+                   .collect(Collectors.toList());
+        }
+        return null;
     }
 }
