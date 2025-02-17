@@ -162,3 +162,4 @@ cas.custom.properties.scim.groups-attribute: isMemberOf
 cas.custom.properties.scim.principal-attribute: ENTPersonLogin
 cas.custom.properties.scim.profile-attribute: ENTPersonProfils
 cas.custom.properties.scim.teacher-attribute-value: National_ENS
+cas.custom.properties.scim.scim.etab-attribute: ESCOUAIRattachement

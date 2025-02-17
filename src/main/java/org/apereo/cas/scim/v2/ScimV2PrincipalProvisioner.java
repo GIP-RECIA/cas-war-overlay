@@ -77,6 +77,7 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
             val regex = customProperties.getProperties().get("scim.regex-etab-class");
             val groupsAttribute = customProperties.getProperties().get("scim.groups-attribute");
             val principalAttribute = customProperties.getProperties().get("scim.principal-attribute");
+            val etabAttribute = customProperties.getProperties().get("scim.etab-attribute");
             val profileAttribute = customProperties.getProperties().get("scim.profile-attribute");
             val teacherAttributeValue = customProperties.getProperties().get("scim.teacher-attribute-value");
 
@@ -89,11 +90,15 @@ public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
                 if (matcher.find()) {
                     String codeEtab = matcher.group(1);
                     String nomClasse = matcher.group(2);
-                    LOGGER.debug("Class [{}] found for etab [{}] in attribute [{}]", nomClasse, codeEtab, isMemberOf);
-                    if(!classesByEtab.containsKey(codeEtab)){
-                        classesByEtab.put(codeEtab, new HashSet<>());
+                    if(codeEtab.equals(principal.getAttributes().get(etabAttribute).get(0))){
+                        LOGGER.debug("Class [{}] found for etab [{}] in attribute [{}]", nomClasse, codeEtab, isMemberOf);
+                        if(!classesByEtab.containsKey(codeEtab)){
+                            classesByEtab.put(codeEtab, new HashSet<>());
+                        }
+                        classesByEtab.get(codeEtab).add(codeEtab+"/"+nomClasse);
+                    } else {
+                        LOGGER.debug("Class [{}] was found but not in current etab", nomClasse);
                     }
-                    classesByEtab.get(codeEtab).add(codeEtab+"/"+nomClasse);
                 }
             }
 
