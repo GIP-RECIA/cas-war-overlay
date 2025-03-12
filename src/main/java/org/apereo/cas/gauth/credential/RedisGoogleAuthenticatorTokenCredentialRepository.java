@@ -123,13 +123,10 @@ public class RedisGoogleAuthenticatorTokenCredentialRepository extends BaseGoogl
     @Override
     public void delete(final String username) {
         val redisKeyPattern = RedisCompositeKey.forPrincipals().withPrincipal(username).toKeyPattern();
-        LOGGER.error("redisKeyPattern : {}", redisKeyPattern.toString());
         val accounts = casRedisTemplates.getPrincipalsRedisTemplate().boundSetOps(redisKeyPattern).members();
-        LOGGER.error("accounts : {}", accounts.toString());
         casRedisTemplates.getAccountsRedisTemplate().executePipelined((RedisCallback<Object>) connection -> {
             Objects.requireNonNull(accounts).forEach(account -> {
                 val accountKey = RedisCompositeKey.forAccounts().withAccount(account).toKeyPattern();
-                LOGGER.error("accountKey : {}", accountKey.toString());
                 connection.keyCommands().del(accountKey.getBytes(StandardCharsets.UTF_8));
             });
             return null;
@@ -147,17 +144,12 @@ public class RedisGoogleAuthenticatorTokenCredentialRepository extends BaseGoogl
     // Custom method to delete a device by id and username (fix for delete by long id)
     public void delete(final long id, final String username) {
         val redisKeyPattern = RedisCompositeKey.forPrincipals().withPrincipal(username).toKeyPattern();
-        val accounts = casRedisTemplates.getPrincipalsRedisTemplate().boundSetOps(redisKeyPattern).members();
-        for(OneTimeTokenAccount oneTimeTokenAccount: accounts){
-            if(oneTimeTokenAccount.getId() == id){
-                val encodedAccount = encode(oneTimeTokenAccount);
-                // Delete device from CAS_TOKEN_PRINCIPAL members
-                casRedisTemplates.getPrincipalsRedisTemplate().boundSetOps(redisKeyPattern).remove(encodedAccount);
-                val accountKey = RedisCompositeKey.forAccounts().withAccount(id).toKeyPattern();
-                // Delete from CAS_TOKEN_ACCOUNT
-                casRedisTemplates.getAccountsRedisTemplate().delete(accountKey);
-            }
-        }
+        // Delete from CAS_TOKEN_ACCOUNT
+        val accountKey = RedisCompositeKey.forAccounts().withAccount(id).toKeyPattern();
+        casRedisTemplates.getAccountsRedisTemplate().delete(accountKey);
+        // Delete from CAS_TOKEN_PRINCIPAL as there is only one device
+        // TODO : Delete if multiple devices
+        casRedisTemplates.getPrincipalsRedisTemplate().delete(redisKeyPattern);
     }
 
     @Override
