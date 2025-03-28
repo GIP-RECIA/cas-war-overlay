@@ -21,6 +21,11 @@ FILES=(
     "src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java core/cas-server-core-logout/src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java"
     "src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java"
     "src/main/java/org/apereo/cas/web/idp/profile/builders/response/SamlProfileSaml2ResponseBuilder.java support/cas-server-support-saml-idp-web/src/main/java/org/apereo/cas/support/saml/web/idp/profile/builders/response/SamlProfileSaml2ResponseBuilder.java"
+    "src/main/java/org/apereo/cas/web/flow/DefaultDelegatedClientIdentityProviderConfigurationProducer.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/web/flow/DefaultDelegatedClientIdentityProviderConfigurationProducer.java"
+    "src/main/java/org/apereo/cas/authentication/principal/BaseDelegatedClientAuthenticationCredentialResolver.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/authentication/principal/BaseDelegatedClientAuthenticationCredentialResolver.java"
+    "src/main/java/org/apereo/cas/authentication/principal/ldap/LdapDelegatedClientAuthenticationCredentialResolver.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/authentication/principal/ldap/LdapDelegatedClientAuthenticationCredentialResolver.java"
+    "src/main/java/org/apereo/cas/persondir/DefaultAttributeRepositoryResolver.java support/cas-server-support-person-directory-core/src/main/java/org/apereo/cas/persondir/DefaultAttributeRepositoryResolver.java"
+    "src/main/resources/templates/login/casLoginView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casLoginView.html"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

@@ -347,6 +347,8 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-monitor"
     implementation "org.apereo.cas:cas-server-support-reports"
     implementation "org.apereo.cas:cas-server-support-metrics"
+    implementation "org.apereo.cas:cas-server-support-pac4j-saml"
+    implementation "org.apereo.cas:cas-server-support-ldap-core"
     // Groovy scripting
     implementation "org.apereo.cas:cas-server-core-scripting"
     // Custom interrupt

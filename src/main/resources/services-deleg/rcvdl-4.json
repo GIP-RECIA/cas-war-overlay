@@ -1,0 +1,14 @@
+{
+    "@class" : "org.apereo.cas.support.saml.services.SamlRegisteredService",
+    "serviceId" : "^https:\/\/localhost:8443\/cas\/rcvdl",
+    "name" : "CAS de test vu par l'IDP rcvdl",
+    "id" : 4,
+    "metadataLocation" : "https://localhost:8443/cas/sp/RCVDL/metadata",
+    "attributeReleasePolicy" : {
+        "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
+        "allowedAttributes" : {
+            "@class" : "java.util.TreeMap",
+            "mail" : "groovy { return 'test8.test@mail.com' }"
+        }
+    }
+}

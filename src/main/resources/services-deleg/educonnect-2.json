@@ -1,0 +1,16 @@
+{
+    "@class" : "org.apereo.cas.support.saml.services.SamlRegisteredService",
+    "serviceId" : "^https:\/\/localhost:8443\/cas\/educonnect",
+    "name" : "CAS de test vu par l'IDP educonnect",
+    "id" : 2,
+    "metadataLocation" : "https://localhost:8443/cas/sp/EDUCONNECT/metadata",
+    "attributeReleasePolicy" : {
+        "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
+        "allowedAttributes" : {
+            "@class" : "java.util.TreeMap",
+            "FrEduCtRefId" : "groovy { return [ 'AAF5', 'AAF6', 'ECT1', 'ECT-ENT2'] }",
+            "FrEduCtId" : "groovy { return '1' }",
+            "FrEduCtOpaqueId" : "groovy { return '1' }"
+        }
+    }
+}
