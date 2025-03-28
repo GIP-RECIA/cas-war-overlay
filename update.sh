@@ -29,6 +29,11 @@ FILES=(
     "src/main/resources/templates/fragments/footer.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/footer.html"
     "src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorTokenCredential.java support/cas-server-support-gauth-core-mfa/src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorTokenCredential.java"
     "src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorMultifactorWebflowConfigurer.java support/cas-server-support-gauth-core/src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorMultifactorWebflowConfigurer.java"
+    "src/main/java/org/apereo/cas/web/flow/DefaultDelegatedClientIdentityProviderConfigurationProducer.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/web/flow/DefaultDelegatedClientIdentityProviderConfigurationProducer.java"
+    "src/main/java/org/apereo/cas/authentication/principal/BaseDelegatedClientAuthenticationCredentialResolver.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/authentication/principal/BaseDelegatedClientAuthenticationCredentialResolver.java"
+    "src/main/java/org/apereo/cas/authentication/principal/ldap/LdapDelegatedClientAuthenticationCredentialResolver.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/authentication/principal/ldap/LdapDelegatedClientAuthenticationCredentialResolver.java"
+    "src/main/java/org/apereo/cas/persondir/DefaultAttributeRepositoryResolver.java support/cas-server-support-person-directory-core/src/main/java/org/apereo/cas/persondir/DefaultAttributeRepositoryResolver.java"
+    "src/main/resources/templates/login/casLoginView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casLoginView.html"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

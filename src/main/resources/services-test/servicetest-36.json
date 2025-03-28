@@ -1,0 +1,18 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8036\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour delegation SAML",
+    "id": 36,
+    "attributeReleasePolicy" : {
+        "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy",
+        "excludedAttributes": ["java.util.LinkedHashSet", ["cn"]]
+    },
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "skipDomainRedirect" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ true ] ]
+        }
+    }
+}

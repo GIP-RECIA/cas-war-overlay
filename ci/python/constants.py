@@ -49,3 +49,6 @@ SERVICE_SLO_REDIRECTION_CLASSIC_URL = "http://localhost:8048/test"
 
 # Url du service avec MFA TOTP, cas spécial ou il y a un paramètre token dans l'url
 SERVICE_TOTP_WITH_TOKEN_PARAMETER_URL = "http://localhost:8051/test&token=aaaaa"
+
+# Url du service pour tester la profile selection dans le cas d'une auth déléguée
+SERVICE_PROFILE_SELECTION_URL = "http://localhost:8036/test"
