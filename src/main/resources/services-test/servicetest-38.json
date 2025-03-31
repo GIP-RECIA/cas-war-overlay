@@ -1,9 +1,9 @@
 {
     "@class": "org.apereo.cas.services.CasRegisteredService",
-    "serviceId": "^http:\/\/localhost:8036\/.*",
+    "serviceId": "^http:\/\/localhost:8038\/.*",
     "name": "Service Test",
     "description": "Service de test pour delegation SAML",
-    "id": 36,
+    "id": 38,
     "attributeReleasePolicy" : {
         "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
     },

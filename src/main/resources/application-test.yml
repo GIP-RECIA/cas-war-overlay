@@ -79,15 +79,18 @@ cas.authn.ldap[0].ldap-url: ldap://localhost:389
 cas.authn.ldap[0].search-filter: (|(ENTPersonLogin={user})(ENTPersonAlias={user}))
 cas.authn.ldap[0].type: AUTHENTICATED
 cas.authn.ldap[0].principal-attribute-id: uid
+
 # LDAP attribute repository
-cas.person-directory.active-attribute-repository-ids: ldap
-cas.person-directory.use-existing-principal-id: true
-cas.authn.attribute-repository.ldap[0].id: ldap
+cas.person-directory.active-attribute-repository-ids: "*"
+cas.person-directory.principal-resolution-conflict-strategy: first
+cas.person-directory.principal-attribute: uid
+# First test IDP
+cas.authn.attribute-repository.ldap[0].id: AGRI
 cas.authn.attribute-repository.ldap[0].base-dn: ou=people,dc=esco-centre,dc=fr
 cas.authn.attribute-repository.ldap[0].bind-credential: admin
 cas.authn.attribute-repository.ldap[0].bind-dn: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
 cas.authn.attribute-repository.ldap[0].ldap-url: ldap://localhost:389
-cas.authn.attribute-repository.ldap[0].search-filter: uid={0}
+cas.authn.attribute-repository.ldap[0].search-filter: mail={0}
 cas.authn.attribute-repository.ldap[0].attributes.uid: uid
 cas.authn.attribute-repository.ldap[0].attributes.cn: cn
 cas.authn.attribute-repository.ldap[0].attributes.sn: sn
@@ -104,6 +107,29 @@ cas.authn.attribute-repository.ldap[0].attributes.ENTPersonJointure: ENTPersonJo
 cas.authn.attribute-repository.ldap[0].attributes.isMemberOf: isMemberOf
 cas.authn.attribute-repository.ldap[0].attributes.ENTPersonLogin: ENTPersonLogin
 cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
+# Second test IDP
+cas.authn.attribute-repository.ldap[1].id: RCVDL
+cas.authn.attribute-repository.ldap[1].base-dn: ou=people,dc=esco-centre,dc=fr
+cas.authn.attribute-repository.ldap[1].bind-credential: admin
+cas.authn.attribute-repository.ldap[1].bind-dn: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
+cas.authn.attribute-repository.ldap[1].ldap-url: ldap://localhost:389
+cas.authn.attribute-repository.ldap[1].search-filter: mail={0}
+cas.authn.attribute-repository.ldap[1].attributes.uid: uid
+cas.authn.attribute-repository.ldap[1].attributes.cn: cn
+cas.authn.attribute-repository.ldap[1].attributes.sn: sn
+cas.authn.attribute-repository.ldap[1].attributes.mail: mail
+cas.authn.attribute-repository.ldap[1].attributes.ESCOUAICourant: ESCOUAICourant
+cas.authn.attribute-repository.ldap[1].attributes.givenName: givenName
+cas.authn.attribute-repository.ldap[1].attributes.ENTPersonFonctions: ENTPersonFonctions
+cas.authn.attribute-repository.ldap[1].attributes.ENTPersonProfils: ENTPersonProfils
+cas.authn.attribute-repository.ldap[1].attributes.ESCOPersonProfils: ESCOPersonProfils
+cas.authn.attribute-repository.ldap[1].attributes.ESCOUAI: ESCOUAI
+cas.authn.attribute-repository.ldap[1].attributes.ESCOSIRENCourant: ESCOSIRENCourant
+cas.authn.attribute-repository.ldap[1].attributes.ENTPersonGARIdentifiant: ENTPersonGARIdentifiant
+cas.authn.attribute-repository.ldap[1].attributes.ENTPersonJointure: ENTPersonJointure
+cas.authn.attribute-repository.ldap[1].attributes.isMemberOf: isMemberOf
+cas.authn.attribute-repository.ldap[1].attributes.ENTPersonLogin: ENTPersonLogin
+cas.authn.attribute-repository.ldap[1].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
 
 # SLO
 cas.logout.follow-service-redirects: true
@@ -187,7 +213,7 @@ cas.authn.pac4j.saml[1].keystore-path: /etc/cas/AGRI-keystore.jks
 cas.authn.pac4j.saml[1].private-key-password: pac4j-demo-passwd
 cas.authn.pac4j.saml[1].metadata.service-provider.file-system.location: /etc/cas/AGRI-metadata.xml
 cas.authn.pac4j.saml[1].client-name: AGRI
-cas.authn.pac4j.saml[1].principal-id-attribute: FrEduCtId
+cas.authn.pac4j.saml[1].principal-id-attribute: mail
 cas.authn.pac4j.saml[1].metadata.identity-provider-metadata-path: https://localhost:9443/cas/idp/metadata
 cas.authn.pac4j.saml[2].service-provider-entity-id: https://localhost:8443/cas/rcvdl
 cas.authn.pac4j.saml[2].keystore-password: pac4j-demo-passwd
@@ -195,6 +221,7 @@ cas.authn.pac4j.saml[2].keystore-path: /etc/cas/RCVDL-keystore.jks
 cas.authn.pac4j.saml[2].private-key-password: pac4j-demo-passwd
 cas.authn.pac4j.saml[2].metadata.service-provider.file-system.location: /etc/cas/RCVDL-metadata.xml
 cas.authn.pac4j.saml[2].client-name: RCVDL
+cas.authn.pac4j.saml[2].principal-id-attribute: mail
 cas.authn.pac4j.saml[2].metadata.identity-provider-metadata-path: https://localhost:9443/cas/idp/metadata
 
 # Profile selection

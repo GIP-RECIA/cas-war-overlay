@@ -8,7 +8,7 @@
         "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
         "allowedAttributes" : {
             "@class" : "java.util.TreeMap",
-            "mail" : "groovy { return 'test8.test@mail.com' }"
+            "mail" : "groovy { return 'test8.test@idp2.com' }"
         }
     }
 }
