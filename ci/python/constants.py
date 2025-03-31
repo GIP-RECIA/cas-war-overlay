@@ -40,3 +40,9 @@ SERVICE_SLO_CUSTOM_PRINCIPAL_URL = "http://localhost:8035/test"
 
 # Url du service pour tester la profile selection dans le cas d'une auth déléguée
 SERVICE_PROFILE_SELECTION_URL = "http://localhost:8036/test"
+
+# Url du service pour tester la délégation d'authentication vers un IDP SAML
+SERVICE_DELEGATION_SAML_1 = "http://localhost:8037/test"
+
+# Url du second service pour tester la délégation d'authentication vers un IDP SAML
+SERVICE_DELEGATION_SAML_2 = "http://localhost:8038/test"
