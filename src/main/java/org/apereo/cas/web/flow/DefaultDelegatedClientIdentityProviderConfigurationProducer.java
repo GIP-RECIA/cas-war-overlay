@@ -84,7 +84,12 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
                             DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.FALSE);
                         }
                     } else {
-                        context.getRequestScope().put("local_url", webContext.getFullRequestURL()+"&idpId=autres-publics");
+                        // TODO : better encoding and decoding of urls
+                        if(webContext.getFullRequestURL().contains("?")){
+                            context.getRequestScope().put("local_url", webContext.getFullRequestURL()+"&idpId=autres-publics");
+                        } else {
+                            context.getRequestScope().put("local_url", webContext.getFullRequestURL()+"?idpId=autres-publics");
+                        }
                         DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
                         DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.FALSE);
                     }
