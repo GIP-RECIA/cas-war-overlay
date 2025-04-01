@@ -11,15 +11,8 @@ const assert = require("assert");
         const casHost = "https://localhost:8443";
         const service = "http://localhost:8027/test"
 
-        // Goto CAS login page
-        await page.goto(`${casHost}/cas/login?service=${service}`);
-
-        // Click on external idp button
-        await page.click("#DELEGTEST");
-
-        // Enter credentials and validate
-        await cas.typeCredentialsAndEnter(page, "test1", "test");
-        await page.waitForNavigation();
+        // Login to CAS
+        await cas.loginWith(page, casHost, service, "test1", "test")
  
         // Assert that TGC exists
         await cas.verifyTGC(client)

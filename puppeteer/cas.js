@@ -38,8 +38,16 @@ exports.loge = async (text) => {
     await LOGGER.error(`📛 ${text}`);
 };
 
+exports.goToPageAndEnterLocalCredentials = async (page, url, username, password) => {
+    // Go to requested page
+    await page.goto(url);
+    await page.click("#LOCAL_AUTH");
+    await this.typeCredentialsAndEnter(page, username, password);
+    return page.waitForNavigation();
+};
+
 exports.loginWith = async (page, casHost, service, username, password) => {
-    // Go to login page
+    // Go to CAS login page
     await page.goto(`${casHost}/cas/login?service=${service}`);
     await page.click("#LOCAL_AUTH");
     await this.typeCredentialsAndEnter(page, username, password);
@@ -47,7 +55,7 @@ exports.loginWith = async (page, casHost, service, username, password) => {
 };
 
 exports.loginWithoutService = async (page, casHost, username, password) => {
-    // Go to login page
+    // Go to CAS login page
     await page.goto(`${casHost}/cas/login`);
     await page.click("#LOCAL_AUTH");
     await this.typeCredentialsAndEnter(page, username, password);
@@ -55,7 +63,7 @@ exports.loginWithoutService = async (page, casHost, username, password) => {
 };
 
 exports.loginAgain = async (page, casHost, service) => {
-    // Go to login page and log in instantly because TGC is present
+    // Go to CAS login page and log in instantly because TGC is present
     await page.goto(`${casHost}/cas/login?service=${service}`);
 };
 
@@ -67,8 +75,7 @@ exports.typeCredentialsAndEnter = async (page, username, password) => {
     await page.waitForSelector("#password", {visible: true});
     await page.$eval("#password", el => el.value = '');
     await page.type("#password", password);
-
-    // Validate credentials and send request to CAs
+    // Validate credentials and send request to CAS
     await page.keyboard.press('Enter');
 };
 
