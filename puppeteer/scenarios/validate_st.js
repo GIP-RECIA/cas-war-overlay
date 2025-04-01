@@ -19,7 +19,10 @@ const assert = require("assert");
 
         // Assert that the ST was successfully validated 
         const pageContent = await page.content();
-        assert(pageContent.includes("SUCCESS SERVICE=" + service))
+        assert(pageContent.includes("<cas:authenticationSuccess>"))
+        assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
+        assert(pageContent.includes("<cas:ENTPersonLogin>test3</cas:ENTPersonLogin>"))
+        assert(pageContent.includes("<cas:givenName>Test</cas:givenName>"))
 
         process.exit(0)
 
