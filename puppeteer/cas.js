@@ -41,6 +41,7 @@ exports.loge = async (text) => {
 exports.loginWith = async (page, casHost, service, username, password) => {
     // Go to login page
     await page.goto(`${casHost}/cas/login?service=${service}`);
+    await page.click("#LOCAL_AUTH");
     await this.typeCredentialsAndEnter(page, username, password);
     return page.waitForNavigation();
 };
@@ -48,6 +49,7 @@ exports.loginWith = async (page, casHost, service, username, password) => {
 exports.loginWithoutService = async (page, casHost, username, password) => {
     // Go to login page
     await page.goto(`${casHost}/cas/login`);
+    await page.click("#LOCAL_AUTH");
     await this.typeCredentialsAndEnter(page, username, password);
     return page.waitForNavigation();
 };

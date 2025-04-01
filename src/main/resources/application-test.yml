@@ -79,13 +79,15 @@ cas.authn.ldap[0].ldap-url: ldap://localhost:389
 cas.authn.ldap[0].search-filter: (|(ENTPersonLogin={user})(ENTPersonAlias={user}))
 cas.authn.ldap[0].type: AUTHENTICATED
 cas.authn.ldap[0].principal-attribute-id: uid
+cas.authn.ldap[0].principal-attribute-list: uid,cn,sn,mail,ESCOUAICourant,givenName,ENTPersonFonctions,ENTPersonProfils,ESCOPersonProfils,ESCOUAI,ESCOSIRENCourant,ENTPersonGARIdentifiant,ENTPersonJointure,isMemberOf,ENTPersonLogin,ESCOPersonExternalIds
 
 # LDAP attribute repository
-cas.person-directory.active-attribute-repository-ids: "*"
+cas.person-directory.use-existing-principal-id: true
 cas.person-directory.principal-resolution-conflict-strategy: first
 cas.person-directory.principal-attribute: uid
 # First test IDP
 cas.authn.attribute-repository.ldap[0].id: AGRI
+cas.authn.attribute-repository.ldap[0].state: STANDBY 
 cas.authn.attribute-repository.ldap[0].base-dn: ou=people,dc=esco-centre,dc=fr
 cas.authn.attribute-repository.ldap[0].bind-credential: admin
 cas.authn.attribute-repository.ldap[0].bind-dn: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
@@ -109,6 +111,7 @@ cas.authn.attribute-repository.ldap[0].attributes.ENTPersonLogin: ENTPersonLogin
 cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
 # Second test IDP
 cas.authn.attribute-repository.ldap[1].id: RCVDL
+cas.authn.attribute-repository.ldap[1].state: STANDBY 
 cas.authn.attribute-repository.ldap[1].base-dn: ou=people,dc=esco-centre,dc=fr
 cas.authn.attribute-repository.ldap[1].bind-credential: admin
 cas.authn.attribute-repository.ldap[1].bind-dn: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
@@ -257,8 +260,6 @@ cas.custom.properties.token.redirect-unknown-domain: https://pagetoredirectnetoc
 cas.custom.properties.token.domain-mapping-startswith: "DOMAIN-RED:"
 
 # Delegated authn
-cas.custom.properties.profile-selection.regex-extract-principal-id-value: AAF(.*)
-cas.custom.properties.profile-selection.principal-id-name: FrEduCtRefId
 cas.custom.properties.profile-selection.client-name: EDUCONNECT
 cas.custom.properties.delegation.idp-id.parameter: idpId
 cas.custom.properties.delegation.idp-id.local-auth: autres-publics

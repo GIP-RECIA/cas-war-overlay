@@ -3,6 +3,9 @@
     "serviceId": "^https:\/\/localhost:8443\/cas\/.*",
     "name": "CAS de test",
     "id": 1,
+    "attributeReleasePolicy" : {
+        "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+    },
     "webflowInterruptPolicy": {
         "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
         "enabled": false
