@@ -12,8 +12,15 @@ const assert = require("assert");
         const service = "http://localhost2:8028/test"
         const serviceToRedirect = "http://localhost:8028/test"
 
-        // Login to CAS
-        await cas.loginWith(page, casHost, service, "test2", "test")
+        // Goto CAS login page
+        await page.goto(`${casHost}/cas/login?service=${service}`);
+
+        // Click on external idp button
+        await page.click("#DELEGTEST");
+
+        // Enter credentials and validate
+        await cas.typeCredentialsAndEnter(page, "test2", "test");
+        await page.waitForNavigation();
  
         // Assert that TGC exists
         await cas.verifyTGC(client)
