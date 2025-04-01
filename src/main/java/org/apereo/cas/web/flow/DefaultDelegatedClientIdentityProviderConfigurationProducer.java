@@ -76,8 +76,11 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
                 case MENU -> {
                     // Customization : do not put any provider if local auth is requested
                     // and put local_url in webflow in order to generate urls for other providers when necessary
-                    if(request.getParameterMap().containsKey("idpId")){
-                        if(request.getParameterMap().get("idpId")[0].equals("autres-publics")){
+                    val delegationIdpIdParameter = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.parameter");
+                    val delegationIdpIdLocalAuth = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.local-auth");
+                    val providerSelectionWebflowUrlParameter = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.provider-selection.webflow-url.parameter");
+                    if(request.getParameterMap().containsKey(delegationIdpIdParameter)){
+                        if(request.getParameterMap().get(delegationIdpIdParameter)[0].equals("autres-publics")){
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, null);
                         } else {
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
@@ -86,9 +89,9 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
                     } else {
                         // TODO : better encoding and decoding of urls
                         if(webContext.getFullRequestURL().contains("?")){
-                            context.getRequestScope().put("local_url", webContext.getFullRequestURL()+"&idpId=autres-publics");
+                            context.getRequestScope().put(providerSelectionWebflowUrlParameter, webContext.getFullRequestURL()+"&"+delegationIdpIdParameter+"="+delegationIdpIdLocalAuth);
                         } else {
-                            context.getRequestScope().put("local_url", webContext.getFullRequestURL()+"?idpId=autres-publics");
+                            context.getRequestScope().put(providerSelectionWebflowUrlParameter, webContext.getFullRequestURL()+"?"+delegationIdpIdParameter+"="+delegationIdpIdLocalAuth);
                         }
                         DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
                         DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.FALSE);

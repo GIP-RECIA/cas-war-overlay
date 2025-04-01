@@ -52,7 +52,6 @@ public class LdapDelegatedClientAuthenticationCredentialResolver extends BaseDel
         LOGGER.debug("Configured LDAP delegated authentication profile selection via [{}]", ldap.getLdapUrl());
         try (val factory = new LdapConnectionFactory(connectionFactory)) {
             // Customization : pass all attributes info to ldap filter and not only principal id
-            LOGGER.error(profile.toString());
             List<String> paramNames = new ArrayList<>();
             List<String> values = new ArrayList<>();
             for(String key : profile.getAttributes().keySet()){
