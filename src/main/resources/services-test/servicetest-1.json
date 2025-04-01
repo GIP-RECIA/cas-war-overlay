@@ -3,5 +3,8 @@
     "serviceId": "^http:\/\/localhost:8001\/.*",
     "name": "Service Test",
     "description": "Service de test pour CI avec Puppeteer",
-    "id": 1
+    "id": 1,
+    "attributeReleasePolicy" : {
+        "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+    }
 }

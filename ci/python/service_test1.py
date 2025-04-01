@@ -7,13 +7,13 @@ Utilisé comme service pour un test de validation basique d'un ST.
 import urllib3
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from constants import CAS_BASE_URL, SERVICE_VALIDATE_ST_URL
-from utils import validate_ticket_to_cas
+from utils import validate_ticket_to_cas_and_return_attributes
 
 urllib3.disable_warnings()
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        validate_ticket_to_cas(self, SERVICE_VALIDATE_ST_URL, CAS_BASE_URL)
+        validate_ticket_to_cas_and_return_attributes(self, SERVICE_VALIDATE_ST_URL, CAS_BASE_URL)
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=8001):
     server_address = ('', port)
