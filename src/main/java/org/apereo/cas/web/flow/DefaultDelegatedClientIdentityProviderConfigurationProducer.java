@@ -18,7 +18,6 @@ import org.pac4j.core.client.IndirectClient;
 import org.pac4j.jee.context.JEEContext;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.webflow.execution.RequestContext;
 
 import java.util.HashSet;
@@ -81,12 +80,11 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
                         if(request.getParameterMap().get("idpId")[0].equals("autres-publics")){
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, null);
                         } else {
-                            context.getRequestScope().put("local_url",  UriComponentsBuilder.fromUriString(webContext.getFullRequestURL()).queryParam("idpId", "autres-publics").build().toUri());
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
                             DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.FALSE);
                         }
                     } else {
-                        context.getRequestScope().put("local_url",  UriComponentsBuilder.fromUriString(webContext.getFullRequestURL()).queryParam("idpId", "autres-publics").build().toUri());
+                        context.getRequestScope().put("local_url", webContext.getFullRequestURL()+"&idpId=autres-publics");
                         DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
                         DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.FALSE);
                     }
