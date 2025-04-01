@@ -2,6 +2,7 @@ package org.apereo.cas.persondir;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.authentication.attribute.AttributeRepositoryResolver;
+import org.apereo.cas.authentication.principal.ClientCredential;
 import org.apereo.cas.authentication.principal.RegisteredServicePrincipalAttributesRepository;
 import org.apereo.cas.authentication.principal.attribute.PersonAttributeDao;
 import org.apereo.cas.configuration.CasConfigurationProperties;
@@ -37,8 +38,8 @@ public class DefaultAttributeRepositoryResolver implements AttributeRepositoryRe
         // Customization : select attribute repository based on delegated clientName
         if(query.getAuthenticationHandler() != null){
             if(query.getAuthenticationHandler().getName().equals("DelegatedClientAuthenticationHandler")){
-                if(!query.getPrincipal().getAttributes().get("clientName").getFirst().toString().equals("EDUCONNECT")){
-                    repositoryIds.add(query.getPrincipal().getAttributes().get("clientName").getFirst().toString());
+                if(!query.getPrincipal().getAttributes().get(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME).getFirst().toString().equals(casProperties.getCustom().getProperties().get("profile-selection.client-name"))){
+                    repositoryIds.add(query.getPrincipal().getAttributes().get(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME).getFirst().toString());
                     return repositoryIds;
                 } else {
                     return repositoryIds;
