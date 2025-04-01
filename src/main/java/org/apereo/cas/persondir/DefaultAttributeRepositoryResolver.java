@@ -35,12 +35,14 @@ public class DefaultAttributeRepositoryResolver implements AttributeRepositoryRe
         val repositoryIds = new HashSet<String>();
 
         // Customization : select attribute repository based on delegated clientName
-        if(query.getAuthenticationHandler().getName().equals("DelegatedClientAuthenticationHandler")){
-            if(!query.getPrincipal().getAttributes().get("clientName").getFirst().toString().equals("EDUCONNECT")){
-                repositoryIds.add(query.getPrincipal().getAttributes().get("clientName").getFirst().toString());
-                return repositoryIds;
-            } else {
-                return repositoryIds;
+        if(query.getAuthenticationHandler() != null){
+            if(query.getAuthenticationHandler().getName().equals("DelegatedClientAuthenticationHandler")){
+                if(!query.getPrincipal().getAttributes().get("clientName").getFirst().toString().equals("EDUCONNECT")){
+                    repositoryIds.add(query.getPrincipal().getAttributes().get("clientName").getFirst().toString());
+                    return repositoryIds;
+                } else {
+                    return repositoryIds;
+                }
             }
         }
 
