@@ -21,7 +21,7 @@
         <span th:if="${#bools.isFalse(delegatedAuthenticationDynamicProviderSelection) && #bools.isFalse(delegatedAuthenticationDisabled)}">
             <section id="loginProviders" class="login-section login-providers card-body"
                     th:if="${delegatedAuthenticationProviderConfigurations} OR ${wsfedUrls}">
-                <a th:href="${local_url}">AUTRES PUBLICS</a>
+                <a id="LOCAL_AUTH" th:href="${local_url}">AUTRES PUBLICS</a>
                 <div th:replace="~{fragments/loginProviders :: loginProviders}">
                     <a href="fragments/loginProviders.html">loginProviders</a>
                 </div>

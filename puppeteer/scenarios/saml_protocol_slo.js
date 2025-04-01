@@ -13,6 +13,7 @@ const assert = require("assert");
 
         // Login to cas
         await page.goto(service+"/?sso");
+        await page.click("#LOCAL_AUTH");
         await cas.typeCredentialsAndEnter(page, "test1", "test");
         await page.waitForNavigation();
 
