@@ -7,7 +7,6 @@ const assert = require("assert");
 
     try {
         const page = await browser.newPage();
-        const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
         const service = "http://localhost:8022/test"
 

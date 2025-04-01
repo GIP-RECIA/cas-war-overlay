@@ -12,10 +12,7 @@ const assert = require("assert");
         const service = "http://localhost:8031"
 
         // Login to cas
-        await page.goto(service+"/oidc/protected");
-        await page.click("#LOCAL_AUTH");
-        await cas.typeCredentialsAndEnter(page, "test1", "test");
-        await page.waitForNavigation();
+        await cas.goToPageAndEnterLocalCredentials(page, service+"/oidc/protected", "test1", "test")
 
         // Assert that TGC exists
         await cas.verifyTGC(client)

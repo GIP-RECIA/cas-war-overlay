@@ -10,11 +10,8 @@ const assert = require("assert");
         const client = await page.createCDPSession();
 
         // Login to cas
-        await page.goto("http://localhost:8018/oidc/protected");
-        await page.click("#LOCAL_AUTH");
-        await cas.typeCredentialsAndEnter(page, "test1", "test");
-        await page.waitForNavigation();
-
+        await cas.goToPageAndEnterLocalCredentials(page, "http://localhost:8018/oidc/protected", "test1", "test")
+        
         // Assert that TGC exists
         await cas.verifyTGC(client)
 
