@@ -3,7 +3,7 @@
     "serviceId" : "^https:\/\/localhost:8443\/cas\/rcvdl",
     "name" : "CAS de test vu par l'IDP rcvdl",
     "id" : 4,
-    "metadataLocation" : "https://localhost:8443/cas/sp/RCVDL/metadata",
+    "metadataLocation" : "https://localhost:8443/cas/sp/RCVL-IdP/metadata",
     "attributeReleasePolicy" : {
         "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
         "allowedAttributes" : {

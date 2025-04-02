@@ -90,8 +90,10 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
                         // TODO : better encoding and decoding of urls
                         if(webContext.getFullRequestURL().contains("?")){
                             context.getRequestScope().put(providerSelectionWebflowUrlParameter, webContext.getFullRequestURL()+"&"+delegationIdpIdParameter+"="+delegationIdpIdLocalAuth);
+                            context.getRequestScope().put("cas_base_url", webContext.getFullRequestURL());
                         } else {
                             context.getRequestScope().put(providerSelectionWebflowUrlParameter, webContext.getFullRequestURL()+"?"+delegationIdpIdParameter+"="+delegationIdpIdLocalAuth);
+                            context.getRequestScope().put("cas_base_url", webContext.getFullRequestURL()+"?");
                         }
                         DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
                         DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.FALSE);

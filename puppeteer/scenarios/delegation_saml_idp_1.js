@@ -15,7 +15,10 @@ const assert = require("assert");
         await page.goto(`${casHost}/cas/login?service=${service}`);
 
         // Click on external idp for profile selection button
-        await page.click("#AGRI");
+        const rWayf = await page.$("r-wayf");
+        const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
+        const idpLink = await shadowRoot.$("#eleves-parents"); 
+        await idpLink.click();
 
         // Enter credentials and validate
         await cas.typeCredentialsAndEnter(page, "test7", "test");

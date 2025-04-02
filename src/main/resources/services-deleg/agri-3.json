@@ -3,7 +3,7 @@
     "serviceId" : "^https:\/\/localhost:8443\/cas\/agri",
     "name" : "CAS de test vu par l'IDP agri",
     "id" : 3,
-    "metadataLocation" : "https://localhost:8443/cas/sp/AGRI/metadata",
+    "metadataLocation" : "https://localhost:8443/cas/sp/eleves-parents/metadata",
     "attributeReleasePolicy" : {
         "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
         "allowedAttributes" : {

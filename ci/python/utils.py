@@ -44,15 +44,17 @@ def validate_ticket_to_cas_and_return_attributes(request_handler, service_url, c
         response = requests.get(request_url, verify=False)
         # Si on a cas:authenticationSuccess alors c'est OK
         if ('cas:authenticationSuccess' in response.text) and (response.status_code==200):
+            response_text = response.text
+            response_text += f"\nSUCCESS SERVICE={service_url}"
             request_handler.send_response(200)
-            request_handler.send_header("Content-type", "application/xml")
-            request_handler.send_header("Content-Length", str(len(response.text.encode('utf-8'))))
+            request_handler.send_header("Content-type", "text/html")
+            request_handler.send_header("Content-Length", str(len(response_text.encode('utf-8'))))
             request_handler.end_headers()
-            request_handler.wfile.write(response.text.encode('utf-8'))
+            request_handler.wfile.write(response_text.encode('utf-8'))
         # Sinon on a eu un problème donc on retourne le problème
         else:
             request_handler.send_response(response.status_code)
-            request_handler.send_header("Content-type", "application/xml")
+            request_handler.send_header("Content-type", "text/html")
             request_handler.send_header("Content-Length", str(len(response.text.encode('utf-8'))))
             request_handler.end_headers()
             request_handler.wfile.write(response.text.encode('utf-8'))
