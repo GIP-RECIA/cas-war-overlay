@@ -41,7 +41,10 @@ exports.loge = async (text) => {
 exports.goToPageAndEnterLocalCredentials = async (page, url, username, password) => {
     // Go to requested page
     await page.goto(url);
-    await page.click("#LOCAL_AUTH");
+    const rWayf = await page.$("r-wayf");
+    const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
+    const idpLink = await shadowRoot.$("#autres-publics"); 
+    await idpLink.click();
     await this.typeCredentialsAndEnter(page, username, password);
     return page.waitForNavigation();
 };
@@ -49,7 +52,10 @@ exports.goToPageAndEnterLocalCredentials = async (page, url, username, password)
 exports.loginWith = async (page, casHost, service, username, password) => {
     // Go to CAS login page
     await page.goto(`${casHost}/cas/login?service=${service}`);
-    await page.click("#LOCAL_AUTH");
+    const rWayf = await page.$("r-wayf");
+    const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
+    const idpLink = await shadowRoot.$("#autres-publics"); 
+    await idpLink.click();
     await this.typeCredentialsAndEnter(page, username, password);
     return page.waitForNavigation();
 };
@@ -57,7 +63,10 @@ exports.loginWith = async (page, casHost, service, username, password) => {
 exports.loginWithoutService = async (page, casHost, username, password) => {
     // Go to CAS login page
     await page.goto(`${casHost}/cas/login`);
-    await page.click("#LOCAL_AUTH");
+    const rWayf = await page.$("r-wayf");
+    const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
+    const idpLink = await shadowRoot.$("#autres-publics"); 
+    await idpLink.click();
     await this.typeCredentialsAndEnter(page, username, password);
     return page.waitForNavigation();
 };

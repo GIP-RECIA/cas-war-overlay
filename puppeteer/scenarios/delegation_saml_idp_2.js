@@ -13,9 +13,12 @@ const assert = require("assert");
 
         // Goto CAS login page
         await page.goto(`${casHost}/cas/login?service=${service}`);
-
+       
         // Click on external idp for profile selection button
-        await page.click("#RCVDL");
+        const rWayf = await page.$("r-wayf");
+        const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
+        const idpLink = await shadowRoot.$("#RCVL-IdP"); 
+        await idpLink.click();
 
         // Enter credentials and validate
         await cas.typeCredentialsAndEnter(page, "test8", "test");

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <title>loginProviders Fragment</title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
+</head>
+
+<body>
+<main class="container">
+    <div th:fragment="loginProviders" th:remove="tag" class="login-providers">
+        <r-wayf
+            th:cas-url="${cas_base_url}"
+            idp-ids='["parentEleveEN-IdP", "eleves-parents", "RCVL-IdP", "autres-publics"]'
+            svg-url="/images/icones/wayf.spritemap.svg"
+        />
+    </div>
+</main>
+</body>
+
+</html>

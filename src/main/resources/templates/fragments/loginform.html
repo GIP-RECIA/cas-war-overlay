@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+    <title>Login Form Fragment</title>
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag"/>
+</head>
+
+<body>
+<main class="container">
+
+    <div th:fragment="loginform" class="d-flex flex-column justify-content-between m-auto"
+         th:with="loginFormEnabled=${#strings.defaultString(#themes.code('cas.login-form.enabled'), 'true') == 'true'},
+                loginFormViewable=${@casThymeleafTemplatesDirector.isLoginFormViewable(#vars)}">
+
+        <div class="test-cas-login">
+            <div class="test-cas-login-card">
+                <h1>Connexion</h1>
+                <p>
+                Pour des raisons de sécurité, veuillez vous déconnecter
+                et fermer votre navigateur lorsque vous avez fini d’accéder
+                aux services authentifiés.
+                </p>
+                <form method="post" id="fm1" th:object="${credential}" action="login" onsubmit="loginFormSubmission();">
+                    <div class="field">
+                        <div class="field-layout">
+                        <div class="field-container">
+                            <div class="middle">
+                            <label for="login">Identifiant</label>
+                            <input type="text" name="login" id="username" size="25" autocomplete="username" spellcheck="false" 
+                                th:accesskey="#{screen.welcome.label.netid.accesskey}" th:field="*{username}" 
+                                th:readonly="!${@casThymeleafTemplatesDirector.isLoginFormUsernameInputVisible(#vars)}" 
+                                placeholder required>
+                            </div>
+                        </div>
+                        <div class="active-indicator"></div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="field-layout">
+                        <div class="field-container">
+                            <div class="middle">
+                            <label for="password">Mot de passe</label>
+                            <input type="password" name="password" id="password" th:accesskey="#{screen.welcome.label.password.accesskey}" th:field="*{password}" autocomplete="off" placeholder required>
+                            </div>
+                            <div class="end">
+                            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="active-indicator"></div>
+                        </div>
+                    </div>
+                    <a href="#" id="password-forgotten">Mot de passe oublié ?</a>
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-lock-open" aria-hidden="true"></i>Connexion
+                    </button>
+                    <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+                    <input type="hidden" name="_eventId" value="submit"/>
+                    <input type="hidden" name="geolocation"/>
+                    <input type="hidden" name="deviceFingerprint"/>
+                </form>
+            </div>
+            <div class="test-cas-login-actions">
+                <button class="">
+                <i class="fa-solid fa-bolt" aria-hidden="true"></i>Activer mon compte
+                </button>
+                <button class="">
+                <i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i>Mon compte a été réinitialisé
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+
+</html>
