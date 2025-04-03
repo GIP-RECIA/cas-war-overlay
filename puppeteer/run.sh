@@ -106,6 +106,8 @@ python3 service_test39.py &
 pid_python_service_test39=$!
 python3 service_test40.py &
 pid_python_service_test40=$!
+python3 service_test41.py &
+pid_python_service_test41=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
