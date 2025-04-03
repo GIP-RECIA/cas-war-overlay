@@ -11,6 +11,8 @@ This CAS server uses the following modules :
 - **cas-server-support-oidc** to enable the OIDC protocol
 - **cas-server-support-saml-idp** to act as an SAML2 identity provider
 - **cas-server-support-pac4j-webflow** to enable delegated authentication
+- **cas-server-support-pac4j-cas** to enable CAS delegated authentication
+- **cas-server-support-pac4j-saml** to enable SAML delegated authentication
 - **cas-server-core-scripting** for groovy scripting
 - **cas-server-support-gauth** and **cas-server-support-gauth-redis** for TOTP MFA 
 - **cas-server-support-trusted-mfa** and **cas-server-support-trusted-mfa-redis** to enable trusted devices for MFA
@@ -32,6 +34,9 @@ And has a number of custom enhancements :
 - Expiration alignement between trusted device cookie and registry
 - Modified otp token field for better compatibility with url token parameters
 - Custom UI for gauth mfa
+- Association between delegated IdP and attribute repository
+- Custom WAYF with local login page at another place
+- Custom LDAP filter based on all principal attributes for profile selection
 
 Current CAS Base version : **7.2.1**
 
@@ -76,6 +81,11 @@ All the important parts of the project are listed below:
 │       │   └── org
 │       │       └── apereo
 │       │           └── cas
+│       │               ├── authentication
+│       │               │   └── principal
+│       │               │       ├── ldap
+│       │               │       │   └── LdapDelegatedClientAuthenticationCredentialResolver.java
+│       │               │       └── BaseDelegatedClientAuthenticationCredentialResolver.java
 │       │               ├── config
 │       │               │   ├── CasCoreLogoutAutoConfiguration.java
 │       │               │   └── CustomInterruptConfiguration.java
@@ -91,6 +101,8 @@ All the important parts of the project are listed below:
 │       │               │   │   └── OidcSingleLogoutMessageCreator.java
 │       │               │   └── token
 │       │               │       └── OidcIdTokenGeneratorService.java
+│       │               ├── persondir
+│       │               │   └── DefaultAttributeRepositoryResolver.java
 │       │               ├── services
 │       │               │   ├── mgmt
 │       │               │   │   └── AbstractServicesManager.java
@@ -108,6 +120,8 @@ All the important parts of the project are listed below:
 │       │               │       └── TargetedIdSamlRegisteredServiceAttributeReleasePolicy.java
 │       │               ├── trusted/web/flow
 │       │               │   └── MultifactorAuthenticationSetTrustAction.java
+│       │               ├── util
+│       │               │   └── LdapUtils.java
 │       │               └── web
 │       │                   ├── flow
 │       │                   │   ├── actions
@@ -116,7 +130,8 @@ All the important parts of the project are listed below:
 │       │                   │   │   └── DefaultDelegatedClientAuthenticationFailureEvaluator.java
 │       │                   │   ├── resolver/impl
 │       │                   │   │   └── DefaultCasDelegatingWebflowEventResolver.java
-│       │                   │   └── BaseServiceAuthorizationCheckAction.java
+│       │                   │   ├── BaseServiceAuthorizationCheckAction.java
+│       │                   │   └── DefaultDelegatedClientIdentityProviderConfigurationProducer.java
 │       │                   └── idp/profile/builders/response
 │       │                       └── SamlProfileSaml2ResponseBuilder.java
 |       | 

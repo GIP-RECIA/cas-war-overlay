@@ -263,4 +263,4 @@ cas.custom.properties.token.domain-mapping-startswith: "DOMAIN-RED:"
 cas.custom.properties.profile-selection.client-name: parentEleveEN-IdP
 cas.custom.properties.delegation.idp-id.parameter: idpId
 cas.custom.properties.delegation.idp-id.local-auth: autres-publics
-cas.custom.properties.delegation.provider-selection.webflow-url.parameter: local_url
+cas.custom.properties.delegation.provider-selection.webflow-url.parameter: cas_base_url
