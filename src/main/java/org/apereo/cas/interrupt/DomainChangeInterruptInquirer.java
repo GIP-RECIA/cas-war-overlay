@@ -102,9 +102,8 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
                     final String requestURL = nativeRequest.getRequestURL().toString();
                     // If service.getId() does not contain the user domain, that means we need to redirect the user
                     if (!service.getId().contains(domain)) {
-                        LOGGER.debug("Redirecting user [{}]: Old URL is [{}]", authentication.getPrincipal().getId(), requestURL);
                         final String newURL = requestURL + replaceServiceDomain(domain, "?service="+service.getOriginalUrl());
-                        LOGGER.debug("Redirecting user [{}]: New URL is [{}]", authentication.getPrincipal().getId(), newURL);
+                        LOGGER.debug("Multidomain : redirecting user [{}] from [{}] to [{}]", authentication.getPrincipal().getId(), service.getOriginalUrl(), newURL);
                         InterruptResponse interrupt = new InterruptResponse("Changement de domaine", Map.of("Continuer", newURL), false, true);
                         interrupt.setAutoRedirect(true);
                         LOGGER.trace("Returning an interrupt response to redirect the user to [{}]", newURL);

@@ -114,6 +114,8 @@ python3 service_test39.py &
 pid_python_service_test39=$!
 python3 service_test40.py &
 pid_python_service_test40=$!
+python3 service_test41.py &
+pid_python_service_test41=$!
 python3 service_test46.py &
 pid_python_service_test46=$!
 python3 service_test47.py &

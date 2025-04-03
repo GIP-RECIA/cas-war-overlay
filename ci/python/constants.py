@@ -9,7 +9,7 @@ CAS_BASE_URL = "https://localhost:8443/cas"
 SERVICE_VALIDATE_ST_URL = "http://localhost:8001/test"
 
 # Url du service sur lequel on est redirigé quand on test le multidomaine
-SERVICE_REDIRECT_URL = "http://localhost:8002/test"
+SERVICE_REDIRECT_URL = "http://localhost:8002/test?param1=valeur2"
 
 # Url du service utilisé pour tester la release de l'externalid en tant que principal
 SERVICE_ATTRIBUTE_RELEASE_URL = "http://localhost:8010/test"
@@ -64,3 +64,6 @@ SERVICE_REDIRECT_DELEGATION_URL = "http://localhost:8039/test"
 
 # Url du service sur lequel on est redirigé quand on test le multidomaine avec la délégation et profile selection
 SERVICE_REDIRECT_DELEGATION_PROFILE_SELECTION_URL = "http://localhost:8040/test"
+
+# Url du service sur lequel on est redirigé quand on test le multidomaine avec un paramètre d'url
+SERVICE_REDIRECT_WITH_PARAMS_URL = "http://localhost:8041/test?param1=valeur2"
