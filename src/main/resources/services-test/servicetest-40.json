@@ -1,0 +1,7 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8040\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour redirection avec délégation et profile selection",
+    "id": 40
+}
