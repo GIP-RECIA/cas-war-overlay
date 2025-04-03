@@ -23,6 +23,7 @@ const assert = require("assert");
         assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
         assert(pageContent.includes("<cas:ENTPersonLogin>test3</cas:ENTPersonLogin>"))
         assert(pageContent.includes("<cas:givenName>Test</cas:givenName>"))
+        assert(pageContent.includes("SERVICE=http://localhost:8001/test"))
 
         process.exit(0)
 
