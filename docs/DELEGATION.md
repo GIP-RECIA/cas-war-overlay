@@ -1,0 +1,253 @@
+# Délégation d'authentification
+ 
+Le schéma ci-dessous résume le flot de la délégation d'authentification :
+
+![Délégation](flot_delegation_authentification.png)
+ 
+## Principe
+
+### WAYF
+
+La page de login du CAS (`casLoginView.html`) a été modifiée pour acceuillir un WAYF : sans modification, on a le choix entre login/password et les différents IDP externes. Or, dans notre cas, on a d'abord une page avec tous les IDP (le login/password étant remplacé par un IDP, un peu comme si on se déléguait l'authentification à soi-même). Si on clique sur l'authentification locale, on est redirigé sur la page de login/password (sans aucun IDP affiché). L'astuce pour avoir ce comportement est la suivante :
+
+Premièrement, on rajoute une condition sur l'apparition de la mire login/password, de sorte à ce que la mire ne s'affiche que quand il n'y a aucun IDP externe fourni au template :
+```
+${#bools.isFalse(delegatedAuthenticationProviderConfigurations)}
+```
+
+Ensuite, on rajoute en plus des IDP un autre lien un idpId unique qui correspond à l'authentification locale (par exemple `autre-publics`) : 
+```html
+<a th:href="${cas_base_url}?idpId=autres-publics">Authentification locale</a>
+```
+
+Au niveau du webflow, il faut faire en sorte de ne fournir aucun IDP dans le cas où on arrive l'idpId qui correspond à l'authentification locale. Il faut aussi renvoyer l'url de redirection demandée par le composant web qui affiche le WAYF, car le composant va uniquement compléter avec l'idpId, il faut donc lui envoyer le reste de l'url. Cela se fait dans le `DefaultDelegatedClientIdentityProviderConfigurationProducer` :
+```java
+if(request.getParameterMap().containsKey(delegationIdpIdParameter)){
+	if(request.getParameterMap().get(delegationIdpIdParameter)[0].equals(delegationIdpIdLocalAuth)){
+		DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, null);
+	} else {
+		DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
+		DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.FALSE);
+	}
+} else {
+	if(webContext.getFullRequestURL().contains("?")){
+		context.getRequestScope().put(providerSelectionWebflowUrlParameter, webContext.getFullRequestURL());
+	} else {
+		context.getRequestScope().put(providerSelectionWebflowUrlParameter, webContext.getFullRequestURL()+"?");
+	}
+	DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
+	DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.FALSE);
+}
+```
+
+Enfin, pour rediriger sur les autres IDP quand on clique sur les boutons (où quand on arrive avec une URL en direct avec un idpId prédéfini), on utilise un script groovy. Le principe est de faire une présélection des IDP autorisés et de ne choisir que l'IDP correspondant à l'idpId tout en le passant en mode redirection automatique, ce qui aura pour conséquence de forcer CAS à choisir automatiquement cet IDP :
+
+```groovy
+def run(Object[] args) {
+	def (requestContext,service,registeredService,providers,applicationContext,logger) = args
+	providers.forEach(provider -> {
+		logger.info("Checking ${provider.name}...")
+		if (provider.name.equals(requestContext.getRequestParameters().get("idpId"))) {
+			provider.autoRedirectType =  DelegationAutoRedirectTypes.SERVER
+			return provider
+		}
+	})
+	return null
+}
+```
+
+### Authentification sur les IDP externes et mapping LDAP
+
+Une fois l'utilisateur authentifié sur l'IDP externe, un principal est créé à partir des attributs renvoyés. L'étape suivante est de pouvoir associer un compte dans le LDAP à ce principal afin de compléter la liste de ces attributs pour que les services connectés au CAS puissent disposer de ces attributs (indépendamment de quel IDP on a utilisé). 
+
+On récupère ces attributs à l'aide du système d'attribute repository en définissant un attribute repository par IDP externe, car même si on récupère les mêmes attributs, ce ne sera pas forcément le même filtre LDAP qui sera utilisé pour récupérer l'utilisateur (et un attribute repository ne dispose que d'un seul filtre LDAP). Ces attributes repository seront donc activés conditionnellement en fonction de l'IDP qui a été utilisé pour authentifier le principal.
+
+La seule modification à faire est dans le `DefaultAttributeRepositoryResolver` pour faire en sorte de choisir l'attribute repository associé au nom unique de l'IDP (sauf dans le cas ou on passe par la profile selection, car les attributs sont récupérés d'une autre manière) :
+
+```java
+if(query.getAuthenticationHandler().getName().equals("DelegatedClientAuthenticationHandler")){
+	if(!query.getPrincipal().getAttributes().get("clientName").getFirst().toString().equals("NOMUNIQUE")){
+		repositoryIds.add(query.getPrincipal().getAttributes().get("clientName").getFirst().toString());
+		return repositoryIds;
+	} else {
+		return repositoryIds;
+	}
+}
+```
+
+### Profile selection
+
+Le flot de profile selection ne s'active que lorsqu'on s'authentifie via un IDP externe spécifique. Pour obtenir ce comportement, il faut faire une modification dans le `BaseDelegatedClientAuthenticationCredentialResolver`  :
+```java
+@Override
+public boolean supports(final ClientCredential credentials) {
+	if(credentials.getClientName().equals("NOMUNIQUE")){
+		return  credentials  !=  null;
+	} else {
+		return false;
+	}
+}
+```
+
+Ici, on n'a pas de notion d'attribute repository car les attributs sont récupérés au moment où on fait la requête LDAP pour trouver les profils. Le filtre LDAP pour trouver le/les profils correspondants et retourner les attributs est généré dynamiquement par un script groovy.
+
+Une modification en deux étapes a été faite pour fournir au script groovy tous les attributs du principal (et pas seulement le principal id). La modification se fait d'abord dans `LdapDelegatedClientAuthenticationCredentialResolver` pour passer les paramètres au constructeur de filtre LDAP : 
+
+```java
+List<String> paramNames = new ArrayList<>();
+List<String> values = new ArrayList<>();
+for(String key : profile.getAttributes().keySet()){
+	if(profile.getAttributes().get(key) instanceof List){
+		List<Object> key_values = (List<Object>) profile.getAttributes().get(key);
+		for(int  i=0; i<key_values.size(); i++){
+			paramNames.add(key);
+			values.add(key_values.get(i).toString());
+		}
+	} else {
+		paramNames.add(key);
+		values.add(profile.getAttributes().get(key).toString());
+	}
+}
+val filter = LdapUtils.newLdaptiveSearchFilter(ldap.getSearchFilter(), paramNames, values);
+```
+
+
+Puis aussi dans `LdapUtils` pour passer les paramètres au script groovy :
+```java
+val parameters = IntStream.range(0, values.size())
+	.boxed()
+	.collect(Collectors.toMap(
+		paramName::get,
+		i -> new ArrayList<>(List.of(values.get(i))),
+		(list1, list2) -> {
+			list1.addAll(list2);
+			return list1;
+		},
+		LinkedHashMap::new
+	));
+val args = CollectionUtils.<String, Object>wrap("filter", filter,
+	"parameters", parameters,
+	"applicationContext", ApplicationContextProvider.getApplicationContext(),
+	"logger", LOGGER);
+script.setBinding(args);
+script.execute(args.values().toArray(), FilterTemplate.class);
+```
+
+
+## Configuration 
+
+### WAYF
+
+Paramètre d'url utilisé pour identifier l'IDP vers lequel on doit rediriger :
+```
+cas.custom.properties.delegation.idp-id.parameter: idpId
+```
+
+Identifiant unique de l'IDP qui redirige vers l'authentification locale :
+```
+cas.custom.properties.delegation.idp-id.local-auth: autres-publics
+```
+
+Nom du paramètre du webflow utilisé pour passer l'url de redirection au template :
+```
+cas.custom.properties.delegation.provider-selection.webflow-url.parameter: cas_base_url
+```
+
+### Déclaration des IDP externes
+
+La déclaration des IDP se fait via configuration. Pour chaque IDP il faut incrémenter l'index tout en mettant les bonnes valeurs dans les champs correspondants.
+
+Conf SP (le serveur CAS agit comme SP auprès des IDP externes) :
+```
+cas.authn.pac4j.saml[X].service-provider-entity-id: https://localhost:8443/cas/azertyuiop
+cas.authn.pac4j.saml[X].keystore-password: pac4j-demo-passwd
+cas.authn.pac4j.saml[X].keystore-path: /etc/cas/AZERTYUIOP-keystore.jks
+cas.authn.pac4j.saml[X].private-key-password: pac4j-demo-passwd
+cas.authn.pac4j.saml[X].metadata.service-provider.file-system.location: /etc/cas/AZERTYUIOP-metadata.xml
+```
+
+L'URL des métadonnées de l'IDP (ou le chemin si local):
+```
+cas.authn.pac4j.saml[X].metadata.identity-provider-metadata-path: URL_METADATA
+```
+
+Il est important de donner un nom unique à l'IDP (il sera réutilisé ailleurs dans la configuration) :
+```
+cas.authn.pac4j.saml[X].client-name: NOMUNIQUE
+```
+
+Principal ID avant d'arriver dans les attributes repositories (utile car le filtre plus tard ne se base que sur le principal id) :
+```
+cas.authn.pac4j.saml[X].principal-id-attribute: xxx
+```
+
+Pour la profile selection c'est le même principe sauf qu'il n'y a pas besoin de déclarer de `principal-id-attribute` car le filtre LDAP se base sur tous les attributs du principal.  Il faut juste déclarer ce paramètre supplémentaire pour activer la profile selection quand on utilise cet IDP spéficiquementIl faut juste déclarer ce paramètre supplémentaire pour activer la profile selection quand on utilise cet IDP : :
+```
+cas.custom.properties.profile-selection.client-name: NOMUNIQUE
+```
+
+### Attribute repositories
+
+**Paramètres communs aux attributes repositories**
+
+Attribut principal en sortie des attributes repositories (le principal id en sortie de la chaîne) :
+```
+cas.person-directory.principal-attribute: uid
+cas.person-directory.principal-resolution-conflict-strategy: first
+```
+
+Il y a un paramétrage similaire dans le cas de l'authentification locale :
+```
+cas.person-directory.use-existing-principal-id: true
+```
+
+**Conf repository par repository**
+
+Au niveau des attributs repositories c'est le même principe, il faut incrémenter l'index pour chaque IDP. La seule valeur autre à changer devrait être le filtre de recherche. Par défaut les attribute repositories sont désactivés en ne sont activés qui conditionnellement. A noter qu'un attribute repository correspond à un IDP et qu'il doit avoir le **même** nom que l'IDP.
+```
+cas.authn.attribute-repository.ldap[X].id: NOMUNIQUE
+cas.authn.attribute-repository.ldap[X].state: STANDBY
+cas.authn.attribute-repository.ldap[X].search-filter: ATTRIBUT_LDAP={0}
+cas.authn.attribute-repository.ldap[X].attribute.xxx : xxx
+cas.authn.attribute-repository.ldap[X].attribute.yyy : yyy
+...
+```
+
+**Cas spécial pour la profile selection**
+
+La récupération des attributs se fait directement dans la phase de profile selection (il n'y a pas d'appel aux repositories après)  :
+```
+cas.authn.pac4j.profile-selection.ldap[X].search-filter: classpath:/groovy-test/multi-profile-filter.groovy
+cas.authn.pac4j.profile-selection.ldap[X].attributes: xxx, yyy
+```
+
+Principal id en sortie de la profile selection :
+```
+cas.authn.pac4j.profile-selection.ldap[X].profile-id-attribute: uid
+```
+
+Le filtre LDAP est un chemin vers un script groovy de ce genre :
+```gradle
+def run(Object[] args) {
+	def (filter,parameters,applicationContext,logger) = args
+	// Parameters est une map contenant les attributs du principal {attr1 : [value1], ...}
+
+	// Construire le filtre en fonction des paramètres d'éntrée
+	String finalFilter = ""
+
+	// Définir le filtre final utilisé pour la recherche
+	filter.setFilter(finalFilter)
+}
+```
+
+### Authentification locale
+
+L'authentification locale se fait via LDAP, la configuration est très ressemblante à celle des attribute repositories :
+```
+cas.authn.ldap[0].search-filter: ATTRIBUT_LDAP={0}
+cas.authn.ldap[0].type: AUTHENTICATED
+cas.authn.ldap[0].principal-attribute-id: zzz
+cas.authn.ldap[0].principal-attribute-list: xxx, yyy
+```
+
+Dans ce cas il n'y a pas non plus de passage par les attribute repositories.
