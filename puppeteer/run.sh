@@ -110,6 +110,10 @@ python3 service_test37.py &
 pid_python_service_test37=$!
 python3 service_test38.py &
 pid_python_service_test38=$!
+python3 service_test39.py &
+pid_python_service_test39=$!
+python3 service_test40.py &
+pid_python_service_test40=$!
 python3 service_test46.py &
 pid_python_service_test46=$!
 python3 service_test47.py &
@@ -180,6 +184,8 @@ exit_ci () {
     kill -9 "$pid_python_service_test36"
     kill -9 "$pid_python_service_test37"
     kill -9 "$pid_python_service_test38"
+    kill -9 "$pid_python_service_test39"
+    kill -9 "$pid_python_service_test40"
     kill -9 "$pid_python_service_test46"
     kill -9 "$pid_python_service_test47"
     kill -9 "$pid_python_service_test48"

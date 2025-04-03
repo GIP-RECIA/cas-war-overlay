@@ -58,3 +58,9 @@ SERVICE_DELEGATION_SAML_1 = "http://localhost:8037/test"
 
 # Url du second service pour tester la délégation d'authentication vers un IDP SAML
 SERVICE_DELEGATION_SAML_2 = "http://localhost:8038/test"
+
+# Url du service sur lequel on est redirigé quand on test le multidomaine avec la délégation
+SERVICE_REDIRECT_DELEGATION_URL = "http://localhost:8039/test"
+
+# Url du service sur lequel on est redirigé quand on test le multidomaine avec la délégation et profile selection
+SERVICE_REDIRECT_DELEGATION_PROFILE_SELECTION_URL = "http://localhost:8040/test"
