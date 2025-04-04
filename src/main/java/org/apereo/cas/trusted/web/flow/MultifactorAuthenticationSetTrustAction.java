@@ -10,6 +10,7 @@ import org.apereo.cas.trusted.util.MultifactorAuthenticationTrustUtils;
 import org.apereo.cas.trusted.web.flow.fingerprint.DeviceFingerprintStrategy;
 import org.apereo.cas.web.flow.CasWebflowConstants;
 import org.apereo.cas.web.flow.actions.BaseCasWebflowAction;
+import org.apereo.cas.web.support.CookieUtils;
 import org.apereo.cas.web.support.WebUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -99,8 +100,9 @@ public class MultifactorAuthenticationSetTrustAction extends BaseCasWebflowActio
             record.setName(deviceRecord.getDeviceName());
             record.setMultifactorAuthenticationProvider(requestContext.getFlowScope().get(CasWebflowConstants.VAR_ID_MFA_PROVIDER_ID, String.class));
             // Customization : auto assign device time to cookie max age if defined
-            if (trustedProperties.getDeviceFingerprint().getCookie().getMaxAge() != -1){
-                record.expireIn(trustedProperties.getDeviceFingerprint().getCookie().getMaxAge(), ChronoUnit.SECONDS);
+            val cookieMaxAge = CookieUtils.getCookieMaxAge(trustedProperties.getDeviceFingerprint().getCookie().getMaxAge());
+            if (cookieMaxAge != -1){
+                record.expireIn(cookieMaxAge, ChronoUnit.SECONDS);
             } else {
                 if (deviceRecord.getTimeUnit() != ChronoUnit.FOREVER && deviceRecord.getExpiration() > 0) {
                     record.expireIn(deviceRecord.getExpiration(), deviceRecord.getTimeUnit());
