@@ -7,14 +7,6 @@ cas.server.name: https://localhost:9443
 cas.server.prefix: https://localhost:9443/cas
 cas.server.scope: cas-ci.git
 
-# Monitoring endpoints
-# Health
-management.endpoints.web.exposure.include: health,prometheus           
-management.endpoint.health.enabled: true
-management.health.redis.enabled: true
-management.endpoint.health.show-details: always
-cas.monitor.endpoints.endpoint.health.access: ANONYMOUS
-
 # Service ticket registry
 cas.authn.accept.enabled: false
 cas.ticket.registry.redis.host: localhost
@@ -92,3 +84,19 @@ cas.authn.oidc.id-token.include-id-token-claims: false
 
 # Attribute definition
 cas.authn.attribute-repository.attribute-definition-store.json.location: classpath:attribute-definition-deleg.json
+
+# Crypto
+cas.tgc.crypto.signing.key: W5lfIvRZKzr-vY1C4TAFUPXyBd6PteelKtUA_KlD_gJIUs312PyI8bB5qj-LOm6Tjc0O3nWNruTsxQPAyn-WWA
+cas.tgc.crypto.encryption.key: 0c7NHTXuLesnQF1NlaQDJ-QxQ4vxF4NUtTF2YKUZdh9DAAufXN2BlAU3Nig5f08yG8uWn_9FF10xQ054ZQecnQ
+cas.authn.oauth.crypto.signing.key: z7acHfkKoUad3Uef3xBABdVSXha5aUmtlXS4oQkci2B3OWhuSfOfs1RAuGL7eJ0ZeokPfXWZBrVqQaeRr2JDCw
+cas.authn.oauth.crypto.encryption.key: uecrFRK3CKyTv2h4Z2fiAJ6XKZnsI-7ruLC6zRIyYSpRdRfSpjSNmXU4LIENIDlTvdxW8jKmpaQLTjnas2e1Tg
+cas.interrupt.cookie.crypto.signing.key: 6aYk01fhZj7eJ969yXAvRl86JayHkJJR3wcmJACWoN62br-jceZqBXc8lhKAF0ul_QxP51EODwcMwTNnd8yO2A
+cas.interrupt.cookie.crypto.encryption.key: sg_hRT8xK-HlnfBYxlYCCkP1v6G6QST6f1W574SZCH-tAfTr1d-Zwui6d0lxOkBtmRagyuOhg1wgZ3v6zFTvwA
+cas.authn.oauth.access-token.crypto.encryption.key: ahhqKT4C5-oaKYDwzr0Sko-lUTDTLGQc1TH3KrRqiWmkYOvZLRqtbpdFY-LDwKsqV8as9cYmRrmJHwjGvT_Rxw
+cas.authn.oauth.access-token.crypto.signing.key: RCJVoSWt7fe6RrX_Q18MXXJKCtWUeYj_1trOg4I_4KzIvi8JhHolTe3LQK4Dhhr-2eVHJFlqWD79lMsvDQl44g
+cas.webflow.crypto.signing.key: ryNitDqGwJ_Sk7-RZ1UT1V17nVdV9pemr8BilGjqAvmENX05d1BUGCe4Cv4GDLlHP-fm4ZEIe7PcGM7Cs3nqmg
+cas.webflow.crypto.encryption.key: ohRAyvDRh_QrTnmBScD8UA
+cas.authn.pac4j.core.session-replication.cookie.crypto.signing.key: zVpm0QvVAGixeUAJS8euRsefSSvb19bB1b7eppcfuUZy1JXDL8v2PcnqsHlhT23_5L6ffv82ART2umCS0arZJw
+cas.authn.pac4j.core.session-replication.cookie.crypto.encryption.key: HZ0gAivZQTlnWucW9L5YoqFVJtq7GdL4hZjUxS33jfhiK2j9_jJaTE6CnMC8ApMUwbNPUKGUixOoGHkgXEfKlA
+cas.authn.oauth.session-replication.cookie.crypto.signing.key: 3ykjQEehmU-V_zvJgXqBcXjRiVEVDtoalFoDzt3mDoZwg9oCDUCmGiMukLaRcK2Kl5aOdbS-vyucR4Zssh5bCA
+cas.authn.oauth.session-replication.cookie.crypto.encryption.key: b2m08Llbt9kBR7fStlUdOO2L1OVxZ5XafObZlHljUtAfgoyBa5zUKBdPWo7u6UP2cbZyg7udvw55SZc3s3jvHA

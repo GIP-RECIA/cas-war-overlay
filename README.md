@@ -27,7 +27,7 @@ And has a number of custom enhancements :
 - Change subject in SLO request based on usernameAttributeProvider per service
 - Better compatibility with SAML clients (see `SamlProfileSaml2ResponseBuilder.java`) 
 
-Current CAS Base version : **7.1.4**
+Current CAS Base version : **7.2.0**
 
 # Project Structure
 
