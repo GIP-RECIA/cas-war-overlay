@@ -12,6 +12,8 @@ This CAS server uses the following modules :
 - **cas-server-support-saml-idp** to act as an SAML2 identity provider
 - **cas-server-support-pac4j-webflow** to enable delegated authentication
 - **cas-server-core-scripting** for groovy scripting
+- **cas-server-support-gauth** and **cas-server-support-gauth-redis** for TOTP MFA 
+- **cas-server-support-trusted-mfa** and **cas-server-support-trusted-mfa-redis** to enable trusted devices for MFA
 
 And has a number of custom enhancements :
 - CI pipeline with end-to-end tests using **puppeteer** and **docker**
@@ -26,6 +28,7 @@ And has a number of custom enhancements :
 - Custom SAML attribute generation (pairwise-id and eduPersonTargetedId)
 - Change subject in SLO request based on usernameAttributeProvider per service
 - Better compatibility with SAML clients (see `SamlProfileSaml2ResponseBuilder.java`) 
+- Expiration alignement between trusted device cookie and registry
 
 Current CAS Base version : **7.2.0**
 
@@ -73,6 +76,8 @@ All the important parts of the project are listed below:
 │       │               ├── config
 │       │               │   ├── CasCoreLogoutAutoConfiguration.java
 │       │               │   └── CustomInterruptConfiguration.java
+│       │               ├── gauth/web/flow
+│       │               │   └── GoogleAuthenticatorSaveRegistrationAction.java
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
 │       │               ├── logout
@@ -91,6 +96,8 @@ All the important parts of the project are listed below:
 │       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
 │       │               │   ├── ReturnExternalIDOidcAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
+│       │               ├── trusted/web/flow
+│       │               │   └── MultifactorAuthenticationSetTrustAction.java
 │       │               ├── support/saml/idp/metadata/generator
 │       │               │   ├── idp/metadata/generator
 │       │               │   │   └── BaseSamlIdPMetadataGenerator.java
