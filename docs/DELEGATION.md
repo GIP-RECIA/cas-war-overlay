@@ -77,6 +77,8 @@ if(query.getAuthenticationHandler().getName().equals("DelegatedClientAuthenticat
 
 ### Profile selection
 
+**Activation**
+
 Le flot de profile selection ne s'active que lorsqu'on s'authentifie via un IDP externe spécifique. Pour obtenir ce comportement, il faut faire une modification dans le `BaseDelegatedClientAuthenticationCredentialResolver`  :
 ```java
 @Override
@@ -88,6 +90,9 @@ public boolean supports(final ClientCredential credentials) {
 	}
 }
 ```
+
+
+**Filtre LDAP**
 
 Ici, on n'a pas de notion d'attribute repository car les attributs sont récupérés au moment où on fait la requête LDAP pour trouver les profils. Le filtre LDAP pour trouver le/les profils correspondants et retourner les attributs est généré dynamiquement par un script groovy.
 
@@ -133,6 +138,38 @@ script.setBinding(args);
 script.execute(args.values().toArray(), FilterTemplate.class);
 ```
 
+**UI de choix du profil**
+
+On veut pouvoir présenter les noms des établissements dans l'UI de la séléction de profil, malgré que ce ne soit pas un attribut utilisateur. Pour pouvoir l'ajouter au *candidate profile* (et donc l'afficher), il faut faire appel à une API externe en fonction du SIRENCourant actuel. Cet appel est réalisé dans le `DelegatedClientAuthenticationCredentialSelectionAction`, qui est l'action qui pousse les différents profils dans le webflow avant d'afficher la vue de séléction des profils. L'UI (`casDelegatedAuthnSelectionView.html`) a également été modifiée en conséquence pour afficher ce nouvel attribut. La logique qui a été mise en place afin de ne pas faire d'appel à l'API quand cela n'est pas nécéssaire est la suivante (le système est très similaire à celui de la redirection multidomaine avec son cache):
+
+```java
+if (profiles.size() == 1) {
+	val profile = profiles.getFirst();
+	DelegationWebflowUtils.putDelegatedClientAuthenticationCandidateProfile(requestContext, profile);
+	return new Event(this, CasWebflowConstants.TRANSITION_ID_FINALIZE,
+	new LocalAttributeMap<>("profile", profile));
+}
+
+for(DelegatedAuthenticationCandidateProfile delegatedAuthenticationCandidateProfile: profiles){
+	// Get siren from candidate profile
+	final String siren = ...
+	// Check if name is in cache
+	if(this.nameBySirenCache.containsKey(siren)){
+		final String displayName = this.nameBySirenCache.get(siren);
+		delegatedAuthenticationCandidateProfile.getAttributes().put(structInfoWebflowAttributeName, displayName);
+	}
+	else {
+		// Otherwise call API and extract from displayName from response
+		String displayName = ...
+		// Prepare to put result in webflow for profile selection view
+		delegatedAuthenticationCandidateProfile.getAttributes().put(structInfoWebflowAttributeName, displayName);
+		this.nameBySirenCache.put(siren, displayName);
+	}
+}
+
+DelegationWebflowUtils.putDelegatedClientAuthenticationResolvedCredentials(requestContext, profiles);
+return new Event(this, CasWebflowConstants.TRANSITION_ID_SELECT);
+```
 
 ## Configuration 
 
@@ -251,3 +288,23 @@ cas.authn.ldap[0].principal-attribute-list: xxx, yyy
 ```
 
 Dans ce cas il n'y a pas non plus de passage par les attribute repositories.
+
+
+### Profile selection
+
+Infos par rapport à l'appel API (entrée, url, sortie):
+```
+cas.custom.properties.profile-selection.structinfo-attribute-identifier-name: ESCOSIRENCourant
+cas.custom.properties.profile-selection.structinfo-url: http://localhost:7001/structsinfo
+cas.custom.properties.profile-selection.structinfo-attribute-to-display: displayName
+```
+
+Nom de l'attribut mis dans le webflow :
+```
+cas.custom.properties.profile-selection.structinfo-webflow-attribute-name: ETAB_NAME
+```
+
+Durée du cache :
+```
+cas.custom.properties.profile-selection.structinfo.refresh-cache-interval: PT24H
+```

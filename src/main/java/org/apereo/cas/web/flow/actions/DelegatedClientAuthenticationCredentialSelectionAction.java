@@ -7,7 +7,6 @@ import org.apereo.cas.web.flow.CasWebflowConstants;
 import org.apereo.cas.web.flow.DelegatedClientAuthenticationConfigurationContext;
 import org.apereo.cas.web.flow.DelegationWebflowUtils;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -92,7 +91,7 @@ public class DelegatedClientAuthenticationCredentialSelectionAction extends Base
                     ObjectMapper mapper = new ObjectMapper();
                     JsonNode jsonResponse = mapper.readTree(response.body());
 
-                    // Extract the domain name from the JSON response
+                    // Extract the name from the JSON response
                     String displayName = jsonResponse.path(siren).path(structInfoAttributeToDisplay).asText();
                     LOGGER.debug("Name extracted from json is [{}] for [{}]: putting it in the webflow and in cache", displayName, siren);
 
