@@ -31,6 +31,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             response_map = {
                 siren: {
                     "id":siren,
+                    "displayName": "NOM ETAB NUMERO "+siren,
                     "otherAttributes":{
                         "ESCODomaines": [domain]
                     }

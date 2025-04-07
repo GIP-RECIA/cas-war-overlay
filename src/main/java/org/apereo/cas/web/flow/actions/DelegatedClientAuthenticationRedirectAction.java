@@ -3,7 +3,6 @@ package org.apereo.cas.web.flow.actions;
 import org.apereo.cas.audit.AuditableContext;
 import org.apereo.cas.authentication.principal.provision.DelegatedAuthenticationFailureException;
 import org.apereo.cas.services.RegisteredService;
-import org.apereo.cas.services.RegisteredServiceProperty;
 import org.apereo.cas.services.RegisteredServiceProperty.RegisteredServiceProperties;
 import org.apereo.cas.services.RegisteredServiceProperty.RegisteredServicePropertyGroups;
 import org.apereo.cas.ticket.TransientSessionTicket;

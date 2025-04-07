@@ -19,7 +19,6 @@ import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 import org.apereo.cas.web.support.WebUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.ObjectUtils;
 import org.jooq.lambda.Unchecked;
 import org.springframework.http.HttpStatus;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
