@@ -311,7 +311,7 @@ public class LdapUtils {
      * @return Search filter with parameters applied.
      */
     public static FilterTemplate newLdaptiveSearchFilter(final String filterQuery) {
-        return newLdaptiveSearchFilter(filterQuery, new ArrayList<>(0));
+        return newLdaptiveSearchFilter(filterQuery, new ArrayList<>());
     }
 
     /**
@@ -448,7 +448,7 @@ public class LdapUtils {
      * @return the search executor
      */
     public static SearchOperation newLdaptiveSearchOperation(final String baseDn, final String filterQuery) {
-        return newLdaptiveSearchOperation(baseDn, filterQuery, new ArrayList<>(0));
+        return newLdaptiveSearchOperation(baseDn, filterQuery, new ArrayList<>());
     }
 
     /**
@@ -548,7 +548,6 @@ public class LdapUtils {
                 }
             }
         }
-
         LOGGER.debug("Initializing ldap connection pool for [{}] and bindDn [{}]", props.getLdapUrl(), props.getBindDn());
         pooledCf.initialize();
         return pooledCf;
@@ -627,7 +626,10 @@ public class LdapUtils {
             if (StringUtils.isNotBlank(properties.getTrustManager())) {
                 val manager = properties.getTrustManager().trim().toUpperCase(Locale.ENGLISH);
                 switch (AbstractLdapProperties.LdapTrustManagerOptions.valueOf(manager)) {
-                    case ANY -> sslConfig.setTrustManagers(new AllowAnyTrustManager());
+                    case ANY -> {
+                        sslConfig.setCredentialConfig(null);
+                        sslConfig.setTrustManagers(new AllowAnyTrustManager());
+                    }
                     case DEFAULT -> sslConfig.setTrustManagers(new DefaultTrustManager());
                 }
             }
@@ -1026,7 +1028,7 @@ public class LdapUtils {
         LOGGER.debug("LDAP authentication response handlers configured are: [{}]", responseHandlers);
 
         if (!passwordPolicy.isAccountStateHandlingEnabled()) {
-            cfg.setAccountStateHandler((response, configuration) -> new ArrayList<>(0));
+            cfg.setAccountStateHandler((response, configuration) -> new ArrayList<>());
             LOGGER.trace("Handling LDAP account states is disabled via CAS configuration");
         } else if (StringUtils.isNotBlank(passwordPolicy.getWarningAttributeName()) && StringUtils.isNotBlank(passwordPolicy.getWarningAttributeValue())) {
             val accountHandler = new OptionalWarningLdapAccountStateHandler();
