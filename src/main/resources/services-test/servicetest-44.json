@@ -1,10 +1,10 @@
 {
   "@class": "org.apereo.cas.support.saml.services.SamlRegisteredService",
-  "serviceId": "^http:\/\/localhost:8011.*",
+  "serviceId": "^http:\/\/localhost:8044.*",
   "name": "Service Test",
-  "description": "Service de test pour flow SAML2",
-  "id": 11,
-  "metadataLocation": "http://localhost:8011/metadata",
+  "description": "Service de test pour flow SAML2 avec délégation",
+  "id": 44,
+  "metadataLocation": "http://localhost:8044/metadata",
   "attributeReleasePolicy" : {
     "@class" : "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
     "allowedAttributes" : [ "java.util.ArrayList", ["givenName", "mail", "cn", "uid"]]

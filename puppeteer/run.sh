@@ -141,6 +141,10 @@ python3 index.py --port 8033 --settings "saml/settings33.json" &
 pid_python_saml_client5=$!
 python3 index.py --port 8034 --settings "saml/settings34.json" &
 pid_python_saml_client6=$!
+python3 index.py --port 8044 --settings "saml/settings44.json" &
+pid_python_saml_client7=$!
+python3 index.py --port 8045 --settings "saml/settings45.json" &
+pid_python_saml_client8=$!
 cd "../flask-oidc-client"
 python3 index.py --port 8018 --scopes "openid profile test" --clientid "client-testcas" --clientsecret "secret-testcas" &
 pid_python_oidc_client=$!
@@ -152,6 +156,10 @@ python3 index.py --port 8031 --scopes "openid" --clientid "client4-testcas" --cl
 pid_python_oidc_client4=$!
 python3 index.py --port 8032 --scopes "openid" --clientid "client5-testcas" --clientsecret "secret5-testcas" &
 pid_python_oidc_client5=$!
+python3 index.py --port 8042 --scopes "openid profile test" --clientid "client6-testcas" --clientsecret "secret6-testcas" &
+pid_python_oidc_client6=$!
+python3 index.py --port 8043 --scopes "openid profile test" --clientid "client7-testcas" --clientsecret "secret7-testcas" &
+pid_python_oidc_client7=$!
 rm -r /tmp/oidc
 mkdir /tmp/oidc
 cd "${ROOT_DIRECTORY}"
@@ -200,11 +208,15 @@ exit_ci () {
     kill -9 "$pid_python_saml_client4"
     kill -9 "$pid_python_saml_client5"
     kill -9 "$pid_python_saml_client6"
+    kill -9 "$pid_python_saml_client7"
+    kill -9 "$pid_python_saml_client8"
     kill -9 "$pid_python_oidc_client"
     kill -9 "$pid_python_oidc_client2"
     kill -9 "$pid_python_oidc_client3"
     kill -9 "$pid_python_oidc_client4"
     kill -9 "$pid_python_oidc_client5"
+    kill -9 "$pid_python_oidc_client6"
+    kill -9 "$pid_python_oidc_client7"
     cd "${ROOT_DIRECTORY}/ci/ldap"
     ./stop-ldap.sh
     cd "${ROOT_DIRECTORY}/ci/redis"

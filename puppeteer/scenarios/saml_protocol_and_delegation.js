@@ -9,8 +9,19 @@ const assert = require("assert");
         const page = await browser.newPage();
         const client = await page.createCDPSession();
 
-        // Login to cas
-        await cas.goToPageAndEnterLocalCredentials(page, "http://localhost:8011/?sso", "test1", "test")
+        // Goto CAS login page by service
+        await page.goto("http://localhost:8044/?sso");
+
+        // Click on external idp for profile selection button
+        const rWayf = await page.$("r-wayf");
+        const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
+        const idpLink = await shadowRoot.$("#eleves-parents"); 
+        await idpLink.click();
+
+        // Enter credentials and validate
+        await cas.typeCredentialsAndEnter(page, "test7", "test");
+        await page.waitForNavigation();
+        await page.waitForNetworkIdle();
 
         // Assert that TGC exists
         await cas.verifyTGC(client)
@@ -22,8 +33,8 @@ const assert = require("assert");
         // Assert that user is logged in
         assert(pageContent.includes("authenticationDate"))
         assert(pageContent.includes("Logout"))
-        assert(pageContent.includes("<li>F1abc</li>"))
-        assert(pageContent.includes("<li>test.test@test.com</li>"))
+        assert(pageContent.includes("<li>F7abc</li>"))
+        assert(pageContent.includes("<li>test7.test@idp1.com</li>"))
         assert(pageContent.includes("<li>TEST TEST</li>"))
         assert(pageContent.includes("<li>Test</li>"))
 

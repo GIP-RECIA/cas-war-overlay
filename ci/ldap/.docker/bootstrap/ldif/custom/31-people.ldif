@@ -429,6 +429,13 @@ ESCOUAI: 0000005A
 ESCOUAICourant: 0000005A
 ESCOUAIRattachement: 0000005A
 givenName: Test
+isMemberOf: esco:Applications:Folios:DE L IROISE_0290009C
+isMemberOf: esco:Etablissements:DE L IROISE_0290009C:TERMINALE GENERALE et T
+ ECHNO YC BT:Eleves_TS2
+isMemberOf: esco:Etablissements:DE L IROISE_0290009C:Tous_DE L IROISE
+isMemberOf: esco:Etablissements:DE L IROISE_0290009C:Eleves
+isMemberOf: esco:admin:mediacentre:GAR:UTILISATEUR:DE L IROISE_0290009C
+isMemberOf: esco:Applications:mediacentre:GAR:DE L IROISE_0290009C
 mail: test5.test@test.com
 personalTitle: M
 uid: F5abc
@@ -508,6 +515,13 @@ ESCOUAI: 0000006A
 ESCOUAICourant: 0000006A
 ESCOUAIRattachement: 0000006A
 givenName: Test
+isMemberOf: esco:Applications:Folios:DE L IROISE_0290009C
+isMemberOf: esco:Etablissements:DE L IROISE_0290009C:TERMINALE GENERALE et T
+ ECHNO YC BT:Eleves_TS2
+isMemberOf: esco:Etablissements:DE L IROISE_0290009C:Tous_DE L IROISE
+isMemberOf: esco:Etablissements:DE L IROISE_0290009C:Eleves
+isMemberOf: esco:admin:mediacentre:GAR:UTILISATEUR:DE L IROISE_0290009C
+isMemberOf: esco:Applications:mediacentre:GAR:DE L IROISE_0290009C
 mail: test6.test@test.com
 personalTitle: M
 uid: F6abc
