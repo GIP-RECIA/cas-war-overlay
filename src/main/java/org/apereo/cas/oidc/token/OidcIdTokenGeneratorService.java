@@ -208,7 +208,7 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
         val timeoutInSeconds = Optional.ofNullable(registeredService.getIdTokenExpirationPolicy())
             .map(RegisteredServiceOidcIdTokenExpirationPolicy::getTimeToKill)
             .filter(StringUtils::isNotBlank)
-            .map(ttl -> Beans.newDuration(ttl).getSeconds())
+            .map(ttl -> Beans.newDuration(ttl).toSeconds())
             .orElseGet(expirationPolicy::getTimeToLive);
         LOGGER.debug("ID token expiration policy set to expire the ID token in [{}]", timeoutInSeconds);
 
@@ -228,25 +228,23 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
         val attributes = authentication.getAttributes();
         val mappedAcrValues = org.springframework.util.StringUtils.commaDelimitedListToSet(mfa.getCore().getAuthenticationContextAttribute())
             .stream()
+            .filter(attributes::containsKey)
             .map(attribute -> {
-                if (attributes.containsKey(attribute)) {
-                    val acrValues = CollectionUtils.toCollection(attributes.get(attribute));
-                    val authnContexts = oidc.getCore().getAuthenticationContextReferenceMappings();
-                    val mappings = CollectionUtils.convertDirectedListToMap(authnContexts);
-                    val acrMapped = acrValues
-                        .stream()
-                        .map(acrValue ->
-                            mappings.entrySet()
-                                .stream()
-                                .filter(entry -> entry.getValue().equalsIgnoreCase(acrValue.toString()))
-                                .map(Map.Entry::getKey)
-                                .findFirst()
-                                .orElseGet(acrValue::toString))
-                        .collect(Collectors.joining(" "));
-                    LOGGER.debug("ID token acr claim calculated as [{}]", acrMapped);
-                    return acrMapped;
-                }
-                return null;
+                val acrValues = CollectionUtils.toCollection(attributes.get(attribute));
+                val authnContexts = oidc.getCore().getAuthenticationContextReferenceMappings();
+                val mappings = CollectionUtils.convertDirectedListToMap(authnContexts);
+                val acrMapped = acrValues
+                    .stream()
+                    .map(acrValue ->
+                        mappings.entrySet()
+                            .stream()
+                            .filter(entry -> entry.getValue().equalsIgnoreCase(acrValue.toString()))
+                            .map(Map.Entry::getKey)
+                            .findFirst()
+                            .orElseGet(acrValue::toString))
+                    .collect(Collectors.joining(" "));
+                LOGGER.debug("ID token acr claim calculated as [{}]", acrMapped);
+                return acrMapped;
             })
             .filter(Objects::nonNull)
             .toList();

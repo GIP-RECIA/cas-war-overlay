@@ -32,7 +32,7 @@ And has a number of custom enhancements :
 - Custom WAYF with local login page at another place
 - Custom LDAP filter based on all principal attributes for profile selection 
 
-Current CAS Base version : **7.1.4**
+Current CAS Base version : **7.2.0**
 
 # Project Structure
 

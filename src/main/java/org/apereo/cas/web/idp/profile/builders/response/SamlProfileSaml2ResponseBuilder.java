@@ -33,7 +33,6 @@ import org.opensaml.saml.saml2.core.Status;
 import org.opensaml.saml.saml2.core.StatusCode;
 import org.opensaml.saml.saml2.metadata.IDPSSODescriptor;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
-
 import java.io.Serial;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -157,7 +156,7 @@ public class SamlProfileSaml2ResponseBuilder extends BaseSamlProfileSamlResponse
     @Override
     protected Response encode(final SamlProfileBuilderContext context,
                               final Response samlResponse,
-                              final String relayState) throws Exception {
+                              final String relayState) {
         LOGGER.trace("Constructing encoder based on binding [{}] for [{}]", context.getBinding(), context.getAdaptor().getEntityId());
         if (context.getBinding().equalsIgnoreCase(SAMLConstants.SAML2_ARTIFACT_BINDING_URI)) {
             val encoder = new SamlResponseArtifactEncoder(
