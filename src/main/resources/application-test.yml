@@ -264,3 +264,8 @@ cas.custom.properties.profile-selection.client-name: parentEleveEN-IdP
 cas.custom.properties.delegation.idp-id.parameter: idpId
 cas.custom.properties.delegation.idp-id.local-auth: autres-publics
 cas.custom.properties.delegation.provider-selection.webflow-url.parameter: cas_base_url
+cas.custom.properties.profile-selection.structinfo-attribute-identifier-name: ESCOSIRENCourant
+cas.custom.properties.profile-selection.structinfo-url: http://localhost:7001/structsinfo
+cas.custom.properties.profile-selection.structinfo-attribute-to-display: displayName
+cas.custom.properties.profile-selection.structinfo-webflow-attribute-name: ETAB_NAME
+cas.custom.properties.profile-selection.structinfo.refresh-cache-interval: PT24H

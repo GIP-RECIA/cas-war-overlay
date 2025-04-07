@@ -27,10 +27,8 @@ const assert = require("assert");
 
         // Assert that there is two profiles
         var pageContent = await page.content();
-        assert(pageContent.includes("<code><kbd>F5abc</kbd></code>"));
-        assert(pageContent.includes("<code><kbd>F6abc</kbd></code>"));
-        assert(pageContent.includes("mail=[test5.test@test.com]"));
-        assert(pageContent.includes("mail=[test6.test@test.com]"));
+        assert(pageContent.includes("NOM ETAB NUMERO 55555555555"));
+        assert(pageContent.includes("NOM ETAB NUMERO 6666666666"));
         
         // Select second profile
         const form = await page.$('#form-F6abc');
