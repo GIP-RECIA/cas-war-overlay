@@ -26,6 +26,7 @@ import org.apereo.cas.logout.slo.SingleLogoutRequestExecutor;
 import org.apereo.cas.logout.slo.SingleLogoutServiceLogoutUrlBuilder;
 import org.apereo.cas.logout.slo.SingleLogoutServiceLogoutUrlBuilderConfigurer;
 import org.apereo.cas.logout.slo.SingleLogoutServiceMessageHandler;
+import org.apereo.cas.multitenancy.TenantExtractor;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.ticket.registry.TicketRegistry;
 import org.apereo.cas.ticket.tracking.TicketTrackingPolicy;
@@ -84,7 +85,6 @@ public class CasCoreLogoutAutoConfiguration {
                     return builder;
                 })
                 .filter(BeanSupplier::isNotProxy)
-                .map(SingleLogoutServiceLogoutUrlBuilder.class::cast)
                 .sorted(Comparator.comparing(SingleLogoutServiceLogoutUrlBuilder::getOrder))
                 .collect(Collectors.toList());
             return new ChainingSingleLogoutServiceLogoutUrlBuilder(results);
@@ -240,8 +240,11 @@ public class CasCoreLogoutAutoConfiguration {
         @Bean
         @ConditionalOnMissingBean(name = "logoutWebApplicationServiceFactory")
         @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-        public ServiceFactory<WebApplicationService> logoutWebApplicationServiceFactory(final CasConfigurationProperties casProperties) {
-            return new LogoutWebApplicationServiceFactory(casProperties.getLogout());
+        public ServiceFactory<WebApplicationService> logoutWebApplicationServiceFactory(
+            @Qualifier(TenantExtractor.BEAN_NAME)
+            final TenantExtractor tenantExtractor,
+            final CasConfigurationProperties casProperties) {
+            return new LogoutWebApplicationServiceFactory(tenantExtractor, casProperties.getLogout());
         }
 
         @Bean

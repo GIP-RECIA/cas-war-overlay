@@ -22,11 +22,11 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots'
             mavenContent { snapshotsOnly() }
         }
         maven {
-            url "https://repo.spring.io/milestone"
+            url = "https://repo.spring.io/milestone"
             mavenContent { releasesOnly() }
         }
     }
@@ -38,7 +38,7 @@ buildscript {
         classpath "com.bmuschko:gradle-docker-plugin:${project.gradleDockerPluginVersion}"
         classpath "de.undercouch:gradle-download-task:${project.gradleDownloadTaskVersion}"
         classpath "org.apereo.cas:cas-server-core-api-configuration-model:${project.'cas.version'}"
-        classpath "org.apereo.cas:cas-server-core-configuration-metadata-repository:${project.'cas.version'}"
+        classpath "org.apereo.cas:cas-server-support-configuration-metadata-repository:${project.'cas.version'}"
     }
 }
 
@@ -54,25 +54,25 @@ repositories {
     }
     mavenLocal()
     mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/releases' }
     maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
+        url = 'https://oss.sonatype.org/content/repositories/snapshots'
         mavenContent { snapshotsOnly() }
     }
     maven {
-        url "https://repository.apache.org/content/repositories/snapshots"
+        url = "https://repository.apache.org/content/repositories/snapshots"
         mavenContent { snapshotsOnly() }
     }
     maven {
-        url 'https://build.shibboleth.net/nexus/content/repositories/releases/'
+        url = 'https://build.shibboleth.net/nexus/content/repositories/releases/'
         mavenContent { releasesOnly() }
     }
     maven {
-        url "https://build.shibboleth.net/nexus/content/repositories/snapshots"
+        url = "https://build.shibboleth.net/nexus/content/repositories/snapshots"
         mavenContent { snapshotsOnly() }
     }
     maven {
-        url "https://repo.spring.io/milestone"
+        url = "https://repo.spring.io/milestone"
         mavenContent { releasesOnly() }
     }
 }
@@ -321,11 +321,12 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-api-configuration-model"
     implementation "org.apereo.cas:cas-server-webapp-init"
 
-    if (project.hasProperty("appServer")) {
-        implementation "org.apereo.cas:cas-server-webapp-init${project.appServer}"
+    if (appServer == 'tomcat') {
+        implementation "org.apereo.cas:cas-server-webapp-init-tomcat"
     }
     
     developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
+    // developmentOnly "org.springframework.boot:spring-boot-docker-compose:${project.springBootVersion}"
         
     /**
      * CAS dependencies and modules may be listed here.
@@ -334,9 +335,13 @@ dependencies {
      * since versions are all resolved and controlled by the dependency management
      * plugin via the CAS bom.
      **/
+
+
+    
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     implementation "org.apereo.cas:cas-server-support-ldap"
     implementation "org.apereo.cas:cas-server-support-redis-ticket-registry"
+    implementation "org.apereo.cas:cas-server-support-redis-modules"
     implementation "org.apereo.cas:cas-server-support-json-service-registry"
     implementation "org.apereo.cas:cas-server-support-jmx"
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow"
@@ -344,9 +349,6 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-pac4j-cas"
     implementation "org.apereo.cas:cas-server-support-saml-idp"
     implementation "org.apereo.cas:cas-server-support-oidc"
-    implementation "org.apereo.cas:cas-server-core-monitor"
-    implementation "org.apereo.cas:cas-server-support-reports"
-    implementation "org.apereo.cas:cas-server-support-metrics"
     // Groovy scripting
     implementation "org.apereo.cas:cas-server-core-scripting"
     // Custom interrupt

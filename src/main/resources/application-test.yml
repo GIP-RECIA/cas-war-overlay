@@ -10,14 +10,14 @@ cas.server.scope: cas-ci.git
 # Monitoring endpoints
 # Health
 management.endpoints.web.exposure.include: health,prometheus           
-management.endpoint.health.enabled: true
+management.endpoint.health.access: READ_ONLY
 management.health.redis.enabled: true
 management.endpoint.health.show-details: always
 cas.monitor.endpoints.endpoint.health.access: ANONYMOUS
 # Prometheus
-management.endpoint.prometheus.enabled: true
+management.endpoint.prometheus.access: READ_ONLY
 cas.monitor.endpoints.endpoint.prometheus.access: ANONYMOUS
-management.prometheus.metrics.export.enabled: true
+management.prometheus.metrics.export.access: READ_ONLY
 
 # Audit
 cas.audit.engine.enabled: true
