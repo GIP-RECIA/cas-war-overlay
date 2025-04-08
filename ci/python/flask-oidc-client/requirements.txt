@@ -1,2 +1,4 @@
-flask
-authlib
+flask==3.0.3
+authlib==1.3.2
+urllib3
+requests

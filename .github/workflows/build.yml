@@ -8,12 +8,17 @@ on:
 
 jobs:
   run-script:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Setup python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10' 
+        
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
@@ -32,6 +37,10 @@ jobs:
         ./gradlew createKeystore
         cp /etc/cas/cas.crt /etc/cas/cas.pem
         sudo keytool -importcert -trustcacerts -file /etc/cas/cas.pem -keystore $JAVA_HOME/lib/security/cacerts -storepass changeit -alias cas -noprompt
+        sudo apt install -y libxml2-dev libxmlsec1-dev libxmlsec1-openssl pkg-config
+        pip install --no-binary lxml==5.2.1 lxml==5.2.1 --force-reinstall
+        pip install --no-binary xmlsec==1.3.14 xmlsec==1.3.14
+        pip install --no-binary signxml==3.2.2 signxml==3.2.2
 
     - name: Disable IPv6
       run: |
