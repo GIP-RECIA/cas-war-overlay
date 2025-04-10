@@ -15,3 +15,8 @@
 | SLO par principal | DefaultSingleLogoutMessageCreator + OidcSingleLogoutMessageCreator + CasCoreLogoutAutoConfiguration |
 | IDToken custom acr | OidcIdTokenGeneratorService |
 | Meilleur compatibilité clients SAML | SamlProfileSaml2ResponseBuilder |
+| Lien entre attribute repository et IDP SAML | DefaultAttributeRepositoryResolver |
+| Fonctionnement du WAYF avec préselection des IDP | DefaultDelegatedClientIdentityProviderConfigurationProducer |
+| Activation séléctive de la profile selection | BaseDelegatedClientAuthenticationCredentialResolver |
+| Filtre LDAP custom avec tous les attributs (via script groovy) | LdapDelegatedClientAuthenticationCredentialResolver + LdapUtils |
+| Affichage attribut custom choix du profil | DelegatedClientAuthenticationCredentialSelectionAction |

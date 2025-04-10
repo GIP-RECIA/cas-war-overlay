@@ -2,7 +2,7 @@
  
 Le schéma ci-dessous résume le flot de la délégation d'authentification :
 
-![Délégation](flot_delegation_authentification.png)
+![Délégation](images/flot_delegation_authentification.png)
  
 ## Principe
 
