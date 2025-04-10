@@ -44,15 +44,17 @@ The following tables lists all the properties that are useful in this CAS deploy
 ## LDAP attribute repository
 | Property | Description | Example value |
 |----------|-------------|---------------|
-| cas.person-directory.active-attribute-repository-ids | IDS of enabled attribute repositories | ldap |
-| cas.person-directory.use-existing-principal-id | Use principal id returned by authentication | true |
-| cas.authn.attribute-repository.ldap[0].id | ID of this attribute repository | ldap |
-| cas.authn.ldap[0].ldap-url | LDAP url to the server | ldap://localhost:389 |
-| cas.authn.ldap[0].base-dn | Base DN to use when connecting to LDAP | ou=people,dc=esco-centre,dc=fr |
-| cas.authn.ldap[0].bind-dn | Bind DN to use when connecting to LDAP | cn=admin,ou=administrateurs,dc=esco-centre,dc=fr |
-| cas.authn.ldap[0].bind-credential | Bind credential to use when connecting to LDAP | password |
-| cas.authn.ldap[0].search-filter | User filter to use for searching | `uid={0}` |
-| cas.authn.attribute-repository.ldap[0].attributes.X | Map each attribute in LDAP to attribute in attribute repository | X |
+| cas.person-directory.active-attribute-repository-ids | IDS of enabled attribute repositories | * |
+| cas.person-directory.use-existing-principal-id | Use principal id returned by first authentication to query next repository | true |
+| cas.person-directory.principal-resolution-conflict-strategy | Which principal id is chosen from the chain of resolver principals | first |
+| cas.authn.attribute-repository.ldap[X].id | ID of this attribute repository | UNIQUE_NAME |
+| cas.authn.attribute-repository.ldap[X].state | If this attriute repository is active by default | STANDBY |
+| cas.authn.attribute-repository.ldap[X].ldap-url | LDAP url to the server | ldap://localhost:389 |
+| cas.authn.attribute-repository.ldap[X].base-dn | Base DN to use when connecting to LDAP | ou=people,dc=esco-centre,dc=fr |
+| cas.authn.attribute-repository.ldap[X].bind-dn | Bind DN to use when connecting to LDAP | cn=admin,ou=administrateurs,dc=esco-centre,dc=fr |
+| cas.authn.attribute-repository.ldap[X].bind-credential | Bind credential to use when connecting to LDAP | password |
+| cas.authn.attribute-repository.ldap[X].search-filter | User filter to use for searching | `ATTRIBUT_LDAP={0}` |
+| cas.authn.attribute-repository.ldap[X].attributes.X | Map each attribute in LDAP to attribute in attribute repository | X |
 | cas.authn.attribute-repository.core.expiration-time | Caching duration (0 to disable caching) | 0 |
 
 ## SAML IDP
@@ -104,6 +106,23 @@ The following tables lists all the properties that are useful in this CAS deploy
 | cas.authn.pac4j.cas[0].login-url | The CAS server login url | `https://cas-server.com` |
 | cas.authn.pac4j.cas[0].client-name | Name of the client mostly for UI purposes and uniqueness | CASDELEGCLIENT |
 
+## Delegated authentication (SAML)
+| cas.authn.pac4j.saml[X].service-provider-entity-id | Entity ID of this IDP | https://localhost:8443/cas/azertyuiop |
+| cas.authn.pac4j.saml[X].keystore-password | Password of the keystore for the CAS SP for this IDP | pac4j-demo-passwd |
+| cas.authn.pac4j.saml[X].keystore-path | Path of the keystore for the CAS SP for this IDP | /etc/cas/AZERTYUIOP-keystore.jks |
+| cas.authn.pac4j.saml[X].private-key-password | Password of the private key of the CAS metadata for this IDP | pac4j-demo-passwd |
+| cas.authn.pac4j.saml[X].metadata.service-provider.file-system.location | Where to store the metadata of the CAS SP for this IDP | /etc/cas/AZERTYUIOP-metadata.xml |
+| cas.authn.pac4j.saml[X].metadata.identity-provider-metadata-path | Metadata URL of the IDP | https://URL_METADATA |
+| cas.authn.pac4j.saml[X].client-name | Unique name of the SAML delegated client | UNIQUE_NAME |
+| cas.authn.pac4j.saml[X].principal-id-attribute | Principal id to choose for the built principal | mail |
+
+## Profile Selection
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.authn.pac4j.profile-selection.ldap[X].search-filter | Groovy script used to generate the LDAP filter | `classpath:/groovy-test/multi-profile-filter.groovy` |
+| cas.authn.pac4j.profile-selection.ldap[X].attributes | List of returned attributes to build the principal | xxx, yyy |
+| cas.authn.pac4j.profile-selection.ldap[X].profile-id-attribute | Principal id to choose for the built principal | uid |
+
 ## Crypto
 | Property | Description | Example value |
 |----------|-------------|---------------|
@@ -143,10 +162,8 @@ The following tables lists all the properties that are useful in this CAS deploy
 | Property | Description | Example value |
 |----------|-------------|---------------|
 | management.endpoints.web.exposure.include | List of all exposed monitor endpoints | health, X, Y, ... |
-| management.endpoint.X.enabled | Whether to enable this endpoint | true |
+| management.endpoint.X.access | Whether to enable this endpoint | READ_ONLY |
 | cas.monitor.endpoints.endpoint.X.access | Define the security access level of the endpoint | ANONYMOUS |
-| cas.monitor.endpoints.endpoint.prometheus.required-ip-addresses | Required IP addresses (CIDR ranges are accepted) | W.X.Y.Z/A |
-| management.prometheus.metrics.export.enabled | Enable prometheus metrics export | true |
 
 ## Interrupt
 | Property | Description | Example value |
@@ -209,3 +226,13 @@ There is also a number of custom properties that are defined for some custom enh
 | cas.custom.properties.token.redirect-portal-context | The path of the portal | /portail |
 | cas.custom.properties.token.redirect-unknown-domain | Where to redirect if the domain is unknown | https://exempledomain.fr |
 | cas.custom.properties.token.domain-mapping-startswith | The prefix used for keys in domain mapping | "DOMAIN-RED:" |
+
+### Profile selection
+| Property | Description | Default value |
+|----------|-------------|---------------|
+| cas.custom.properties.profile-selection.client-name | Unique name of the SAML delegated client | UNIQUE NAME |
+| cas.custom.properties.profile-selection.structinfo-attribute-identifier-name | Attribute used to request the structs info API | ESCOSIRENCourant |
+| cas.custom.properties.profile-selection.structinfo-url | URL of the structs info API | http://localhost:7001/structsinfo |
+| cas.custom.properties.profile-selection.structinfo-attribute-to-display | Attribute to display | displayName |
+| cas.custom.properties.profile-selection.structinfo-webflow-attribute-name | Attribute name in webflow that contains displayName of etab | ETAB_NAME |
+| cas.custom.properties.profile-selection.structinfo.refresh-cache-interval | The duration of the cache on structs info | PT24H |
