@@ -17,7 +17,7 @@ cas.monitor.endpoints.endpoint.health.access: ANONYMOUS
 # Prometheus
 management.endpoint.prometheus.access: READ_ONLY
 cas.monitor.endpoints.endpoint.prometheus.access: ANONYMOUS
-management.prometheus.metrics.export.access: READ_ONLY
+management.prometheus.metrics.export.enabled: true
 
 # Audit
 cas.audit.engine.enabled: true
