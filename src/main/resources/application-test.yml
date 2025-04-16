@@ -86,7 +86,7 @@ cas.person-directory.use-existing-principal-id: true
 cas.person-directory.principal-resolution-conflict-strategy: first
 cas.person-directory.principal-attribute: uid
 # First test IDP
-cas.authn.attribute-repository.ldap[0].id: eleves-parents
+cas.authn.attribute-repository.ldap[0].id: agri-IdP
 cas.authn.attribute-repository.ldap[0].state: STANDBY 
 cas.authn.attribute-repository.ldap[0].base-dn: ou=people,dc=esco-centre,dc=fr
 cas.authn.attribute-repository.ldap[0].bind-credential: admin
@@ -216,7 +216,7 @@ cas.authn.pac4j.saml[1].keystore-password: pac4j-demo-passwd
 cas.authn.pac4j.saml[1].keystore-path: /etc/cas/AGRI-keystore.jks
 cas.authn.pac4j.saml[1].private-key-password: pac4j-demo-passwd
 cas.authn.pac4j.saml[1].metadata.service-provider.file-system.location: /etc/cas/AGRI-metadata.xml
-cas.authn.pac4j.saml[1].client-name: eleves-parents
+cas.authn.pac4j.saml[1].client-name: agri-IdP
 cas.authn.pac4j.saml[1].principal-id-attribute: mail
 cas.authn.pac4j.saml[1].metadata.identity-provider-metadata-path: https://localhost:9443/cas/idp/metadata
 cas.authn.pac4j.saml[2].service-provider-entity-id: https://localhost:8443/cas/rcvdl
@@ -263,7 +263,7 @@ cas.custom.properties.token.domain-mapping-startswith: "DOMAIN-RED:"
 # Delegated authn
 cas.custom.properties.profile-selection.client-name: parentEleveEN-IdP
 cas.custom.properties.delegation.idp-id.parameter: idpId
-cas.custom.properties.delegation.idp-id.local-auth: autres-publics
+cas.custom.properties.delegation.idp-id.remote-pattern: -IdP
 cas.custom.properties.delegation.provider-selection.webflow-url.parameter: cas_base_url
 cas.custom.properties.profile-selection.structinfo-attribute-identifier-name: ESCOSIRENCourant
 cas.custom.properties.profile-selection.structinfo-url: http://localhost:7001/structsinfo

@@ -78,10 +78,10 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
                     // Customization : do not put any provider if local auth is requested
                     // and put local_url in webflow in order to generate urls for other providers when necessary
                     val delegationIdpIdParameter = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.parameter");
-                    val delegationIdpIdLocalAuth = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.local-auth");
+                    val delegationIdpIdRemotePattern = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.remote-pattern");
                     val providerSelectionWebflowUrlParameter = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.provider-selection.webflow-url.parameter");
                     if(request.getParameterMap().containsKey(delegationIdpIdParameter)){
-                        if(request.getParameterMap().get(delegationIdpIdParameter)[0].equals(delegationIdpIdLocalAuth)){
+                        if(!request.getParameterMap().get(delegationIdpIdParameter)[0].contains(delegationIdpIdRemotePattern)){
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, null);
                         } else {
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
