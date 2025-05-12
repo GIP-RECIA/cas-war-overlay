@@ -413,4 +413,7 @@ dependencies {
     compileOnly "de.captaingoldfish:scim-sdk-common:1.27.1"
     compileOnly "de.captaingoldfish:scim-sdk-client:1.27.1"
     compileOnly "org.apereo.cas:cas-server-support-scim-core"
+    // Custom TOTP MFA
+    compileOnly "org.apereo.cas:cas-server-support-gauth-core-mfa"
+    compileOnly "org.apereo.cas:cas-server-support-otp-mfa-core"
 }
