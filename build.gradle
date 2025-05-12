@@ -394,4 +394,7 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-saml-idp-web"
     compileOnly "org.apereo.cas:cas-server-support-saml-idp-ticket"
     compileOnly "org.apereo.cas:cas-server-core-cookie-api"
+    // Custom TOTP MFA
+    compileOnly "org.apereo.cas:cas-server-support-gauth-core-mfa"
+    compileOnly "org.apereo.cas:cas-server-support-otp-mfa-core"
 }
