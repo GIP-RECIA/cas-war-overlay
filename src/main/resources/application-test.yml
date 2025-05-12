@@ -137,6 +137,37 @@ cas.authn.attribute-repository.attribute-definition-store.json.location: classpa
 cas.authn.pac4j.cas[0].login-url: https://localhost:9443/cas/login
 cas.authn.pac4j.cas[0].client-name: DELEGTEST
 
+# MFA
+# Gauth
+cas.authn.mfa.gauth.core.multiple-device-registration-enabled: true
+cas.authn.mfa.gauth.core.issuer: CASIssuer
+cas.authn.mfa.gauth.core.label: CASLabel
+cas.authn.mfa.gauth.core.trusted-device-enabled: true
+cas.authn.mfa.gauth.redis.sentinel.master: mymaster
+cas.authn.mfa.gauth.redis.sentinel.node[0]: localhost:26379
+cas.authn.mfa.gauth.redis.sentinel.node[1]: localhost:26380
+cas.authn.mfa.gauth.redis.sentinel.node[2]: localhost:26381
+cas.authn.mfa.gauth.redis.sentinel.password: GWMije5VNMe7avz
+cas.authn.mfa.gauth.redis.password: OZwtXSpJCjZEQ5b
+cas.authn.mfa.gauth.crypto.enabled: true
+cas.authn.mfa.gauth.crypto.signing.key: 6VShVwQOOZ9Uoj7mPhD1zQBcQWOoDeclXn2wjn7rnV5UeKY82G8dbvy1GrLtOfAriNiQYbXW4wgZ4lYqE7SXrQ
+cas.authn.mfa.gauth.crypto.encryption.key: j0cRta1sNWZQxL1b9W_hDPd7zhkBtrppf19HTg9WZvSZ8tSRRVFUjQzS9sYogCp1t69GLmq_ZX5-6hvv2MQ8IQ
+# Trusted Devices
+cas.authn.mfa.trusted.redis.sentinel.master: mymaster
+cas.authn.mfa.trusted.redis.sentinel.node[0]: localhost:26379
+cas.authn.mfa.trusted.redis.sentinel.node[1]: localhost:26380
+cas.authn.mfa.trusted.redis.sentinel.node[2]: localhost:26381
+cas.authn.mfa.trusted.redis.sentinel.password: GWMije5VNMe7avz
+cas.authn.mfa.trusted.redis.password: OZwtXSpJCjZEQ5b
+cas.authn.mfa.trusted.core.auto-assign-device-name: false
+cas.authn.mfa.trusted.core.device-registration-enabled: true
+cas.authn.mfa.trusted.crypto.enabled: true
+cas.authn.mfa.trusted.crypto.encryption.key: pPaZ7OifcHi6ynpxs45DKtbBNq9C-x7xYHDW0AFyJwTiFUtewMw9ggIFfp-1NNPfg66sXKECE16NHqNuaKOuNA
+cas.authn.mfa.trusted.crypto.signing.key: V_0LE8AzAW10KRZwM1k223Z8m178liMi3xfoeWtrUGA_MHzK5FVI2AYEcDiDvghEMOnk1V6VxwBhf7R3bE0upg
+cas.authn.mfa.trusted.device-fingerprint.cookie.crypto.enabled: true
+cas.authn.mfa.trusted.device-fingerprint.cookie.crypto.encryption.key: jpr5n9VU3F9HRZml_TeBHRM-pd5SHu2Q-saCv7CoKtzrjxuxvAdysCSrEDpAtBgF4Yc1yGmi4T8m4KmVp5hEsQ
+cas.authn.mfa.trusted.device-fingerprint.cookie.crypto.signing.key: Jw2xeS-snJRPxp5gdWlw0iPru7g8DnSbLV_LOtmGt70h3JikFLtUv64BUYeD4cL9MhtSvCpCq1Cl2lr6fFkP1w
+
 # Custom Properties
 
 # Interrupt
