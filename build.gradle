@@ -357,6 +357,10 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-trusted-mfa-redis"
     implementation "org.apereo.cas:cas-server-support-pac4j-saml"
     implementation "org.apereo.cas:cas-server-support-ldap-core"
+    implementation "org.apereo.cas:cas-server-support-gauth"
+    implementation "org.apereo.cas:cas-server-support-gauth-redis"
+    implementation "org.apereo.cas:cas-server-support-trusted-mfa"
+    implementation "org.apereo.cas:cas-server-support-trusted-mfa-redis"
     // Groovy scripting
     implementation "org.apereo.cas:cas-server-core-scripting"
     // Custom interrupt
