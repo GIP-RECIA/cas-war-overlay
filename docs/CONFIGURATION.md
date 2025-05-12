@@ -154,6 +154,33 @@ The following tables lists all the properties that are useful in this CAS deploy
 | cas.interrupt.core.force-execution | Whether execution of the interrupt inquiry query should be always forced | true |
 | cas.interrupt.core.trigger-mode | How interrupt notifications should be triggered in the authentication flow | AFTER_SSO |
 
+## MFA
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.authn.mfa.triggers.global.global-provider-id | This setting holds the value of an MFA provider that shall be activated for all requests | mfa-gauth |
+| cas.authn.mfa.triggers.principal.global-principal-attribute-name-triggers | Trigger MFA based on a principal attribute(s) whose value(s) matches a regex pattern | AttributeName |
+| cas.authn.mfa.triggers.principal.global-principal-attribute-value-regex | The regular expression that is cross matches against the principal attribute to determine if the account is qualified for multifactor authentication | AttributeValue |
+| cas.authn.mfa.gauth.core.multiple-device-registration-enabled | Allows the user/system to accept multiple accounts and device registrations per user | true |
+| cas.authn.mfa.gauth.core.issuer | Issuer used in the barcode when dealing with device registration events | CASIssuer |
+| cas.authn.mfa.gauth.core.label | Label used in the barcode when dealing with device registration events | CASLabel |
+| cas.authn.mfa.gauth.redis.sentinel.master | Name of sentinel master | mymaster |
+| cas.authn.mfa.gauth.redis.sentinel.node[i] | List of sentinel adress in the form of host:port | localhost:26379 |
+| cas.authn.mfa.gauth.redis.sentinel.password | Sentinel password | password |
+| cas.authn.mfa.gauth.redis.password | Redis password | password |
+| cas.authn.mfa.gauth.core.trusted-device-enabled | Indicates whether this provider should support trusted devices | true |
+| cas.authn.mfa.trusted.core.auto-assign-device-name | Indicate whether a device name should be automatically selected and assigned by CAS | false |
+| cas.authn.mfa.trusted.core.device-registration-enabled | Indicates whether CAS should ask for device registration consent or execute it automatically | true |
+| cas.authn.mfa.trusted.device-fingerprint.cookie.enabled | Enable device fingerprint cookie (default) | true |
+| cas.authn.mfa.trusted.redis.sentinel.master | Name of sentinel master | mymaster |
+| cas.authn.mfa.trusted.redis.sentinel.node[i] | List of sentinel adress in the form of host:port | localhost:26379 |
+| cas.authn.mfa.trusted.redis.sentinel.password | Sentinel password | password |
+| cas.authn.mfa.trusted.redis.password | Redis password | password |
+
+## Feature activation
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| CasFeatureModule.AccountManagement.enabled | Enable account management page | true |
+
 ## Custom Properties
 
 There is also a number of custom properties that are defined for some custom enhancements:
