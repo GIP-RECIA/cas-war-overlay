@@ -58,6 +58,14 @@ else
     echo "Using existing Puppeteer modules..."
 fi
 
+# Installation de otplib s'il n'est pas enore installé
+if [[ ! -d "${ROOT_DIRECTORY}/puppeteer/node_modules/otpauth" ]]; then
+    echo "Installing otpauth"
+    (cd "${ROOT_DIRECTORY}/puppeteer" && npm install otpauth)
+else
+    echo "Using existing otpauth modules..."
+fi
+
 echo -n "NPM version: " && npm --version
 echo -n "Node version: " && node --version
 
@@ -108,6 +116,10 @@ python3 service_test40.py &
 pid_python_service_test40=$!
 python3 service_test41.py &
 pid_python_service_test41=$!
+python3 service_test46.py &
+pid_python_service_test46=$!
+python3 service_test47.py &
+pid_python_service_test47=$!
 python3 service_test48.py &
 pid_python_service_test48=$!
 python3 service_test49.py &
@@ -186,6 +198,8 @@ exit_ci () {
     kill -9 "$pid_python_service_test38"
     kill -9 "$pid_python_service_test39"
     kill -9 "$pid_python_service_test40"
+    kill -9 "$pid_python_service_test46"
+    kill -9 "$pid_python_service_test47"
     kill -9 "$pid_python_service_test48"
     kill -9 "$pid_python_service_test49"
     kill -9 "$pid_python_structs_info_api"
