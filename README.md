@@ -37,6 +37,7 @@ And has a number of custom enhancements :
 - Association between delegated IdP and attribute repository
 - Custom WAYF with local login page at another place
 - Custom LDAP filter based on all principal attributes for profile selection
+- Expiration alignement between trusted device cookie and registry
 
 Current CAS Base version : **7.2.1**
 
@@ -112,6 +113,8 @@ All the important parts of the project are listed below:
 │       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
 │       │               │   ├── ReturnExternalIDOidcAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
+│       │               ├── trusted/web/flow
+│       │               │   └── MultifactorAuthenticationSetTrustAction.java
 │       │               ├── support/saml/idp/metadata/generator
 │       │               │   ├── idp/metadata/generator
 │       │               │   │   └── BaseSamlIdPMetadataGenerator.java

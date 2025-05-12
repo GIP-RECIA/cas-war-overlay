@@ -39,6 +39,9 @@ FILES=(
     "src/main/java/org/apereo/cas/scim/v2/ScimV2PrincipalProvisioner.java support/cas-server-support-scim-core/src/main/java/org/apereo/cas/scim/v2/ScimV2PrincipalProvisioner.java"
     "src/main/java/org/apereo/cas/web/flow/PrincipalProvisionerAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/PrincipalProvisionerAction.java"
     "src/main/java/org/apereo/cas/config/CasScimAutoConfiguration.java support/cas-server-support-scim/src/main/java/org/apereo/cas/config/CasScimAutoConfiguration.java"
+    "src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java"
+    "src/main/java/org/apereo/cas/trusted/web/flow/MultifactorAuthenticationSetTrustAction.java support/cas-server-support-trusted-mfa-core/src/main/java/org/apereo/cas/trusted/web/flow/MultifactorAuthenticationSetTrustAction.java"
+    "src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorSaveRegistrationAction.java support/cas-server-support-gauth-core/src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorSaveRegistrationAction.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux
