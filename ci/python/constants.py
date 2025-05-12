@@ -53,6 +53,12 @@ SERVICE_TOTP_WITH_TOKEN_PARAMETER_URL = "http://localhost:8051/test&token=aaaaa"
 # Url du service pour tester la profile selection dans le cas d'une auth déléguée
 SERVICE_PROFILE_SELECTION_URL = "http://localhost:8036/test"
 
+# Url du service avec MFA TOTP
+SERVICE_TOTP_URL = "http://localhost:8046/test"
+
+# Url du service pour tester la déconnexion avec redirection forcée pour un service donné
+SERVICE_SLO_REDIRECTION_URL = "http://localhost:8047/test"
+
 # Url du service pour tester la délégation d'authentication vers un IDP SAML
 SERVICE_DELEGATION_SAML_1 = "http://localhost:8037/test"
 
