@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "otpauth": "^9.4.0",
     "pino": "^8.15.1",
     "pino-pretty": "^10.2.0",
     "puppeteer": "^22.11.2"

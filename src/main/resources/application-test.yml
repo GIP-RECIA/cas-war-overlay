@@ -138,8 +138,10 @@ cas.authn.pac4j.cas[0].login-url: https://localhost:9443/cas/login
 cas.authn.pac4j.cas[0].client-name: DELEGTEST
 
 # MFA
+cas.authn.mfa.triggers.principal.global-principal-attribute-name-triggers: uid
+cas.authn.mfa.triggers.principal.global-principal-attribute-value-regex: F1000abc
 # Gauth
-cas.authn.mfa.gauth.core.multiple-device-registration-enabled: true
+cas.authn.mfa.gauth.core.multiple-device-registration-enabled: false
 cas.authn.mfa.gauth.core.issuer: CASIssuer
 cas.authn.mfa.gauth.core.label: CASLabel
 cas.authn.mfa.gauth.core.trusted-device-enabled: true
@@ -159,8 +161,9 @@ cas.authn.mfa.trusted.redis.sentinel.node[1]: localhost:26380
 cas.authn.mfa.trusted.redis.sentinel.node[2]: localhost:26381
 cas.authn.mfa.trusted.redis.sentinel.password: GWMije5VNMe7avz
 cas.authn.mfa.trusted.redis.password: OZwtXSpJCjZEQ5b
-cas.authn.mfa.trusted.core.auto-assign-device-name: false
+cas.authn.mfa.trusted.core.auto-assign-device-name: true
 cas.authn.mfa.trusted.core.device-registration-enabled: true
+cas.authn.mfa.trusted.device-fingerprint.cookie.max-age: 60
 cas.authn.mfa.trusted.crypto.enabled: true
 cas.authn.mfa.trusted.crypto.encryption.key: pPaZ7OifcHi6ynpxs45DKtbBNq9C-x7xYHDW0AFyJwTiFUtewMw9ggIFfp-1NNPfg66sXKECE16NHqNuaKOuNA
 cas.authn.mfa.trusted.crypto.signing.key: V_0LE8AzAW10KRZwM1k223Z8m178liMi3xfoeWtrUGA_MHzK5FVI2AYEcDiDvghEMOnk1V6VxwBhf7R3bE0upg

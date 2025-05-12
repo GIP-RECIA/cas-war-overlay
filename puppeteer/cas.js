@@ -2,6 +2,7 @@ const pino = require('pino');
 const puppeteer = require('puppeteer');
 const assert = require("assert");
 const crypto = require('crypto');
+const OTPAuth = require('otpauth');
 
 const LOGGER = pino({
     level: "debug",
@@ -140,4 +141,15 @@ exports.generateToken = () => {
         }
         return sb;
     }
+}
+
+// Generate TOTP code for given secret
+exports.generateTOTP = (secret) => {
+    const totp = new OTPAuth.TOTP({
+        algorithm: 'SHA1',
+        digits: 6,
+        period: 30,
+        secret: OTPAuth.Secret.fromBase32(secret)
+    });
+    return totp.generate();
 }

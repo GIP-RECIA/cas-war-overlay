@@ -11,5 +11,5 @@
         "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
         "values" : [ "java.util.HashSet", [ true ] ]
     }
-}
+  }
 }

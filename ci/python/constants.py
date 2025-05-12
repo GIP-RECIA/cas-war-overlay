@@ -38,6 +38,9 @@ SERVICE_DELEGATION_CAS_NO_REDIRECT_URL = "http://localhost:8029/test"
 # Url du service pour tester la déconnexion globale avec principal different
 SERVICE_SLO_CUSTOM_PRINCIPAL_URL = "http://localhost:8035/test"
 
+# Url du service avec MFA TOTP
+SERVICE_TOTP_URL = "http://localhost:8046/test"
+
 # Url du service pour tester la déconnexion avec redirection forcée pour un service donné
 SERVICE_SLO_REDIRECTION_URL = "http://localhost:8047/test"
 
