@@ -82,6 +82,20 @@ cas.authn.oidc.discovery.scopes: openid,profile,test
 cas.authn.oidc.discovery.claims: sub,name,nickname,usual_name,uid,isMemberOf,email,given_name,family_name
 cas.authn.oidc.id-token.include-id-token-claims: false
 
+# MFA Redis
+cas.authn.mfa.gauth.redis.sentinel.master: mymaster
+cas.authn.mfa.gauth.redis.sentinel.node[0]: localhost:26379
+cas.authn.mfa.gauth.redis.sentinel.node[1]: localhost:26380
+cas.authn.mfa.gauth.redis.sentinel.node[2]: localhost:26381
+cas.authn.mfa.gauth.redis.sentinel.password: GWMije5VNMe7avz
+cas.authn.mfa.gauth.redis.password: OZwtXSpJCjZEQ5b
+cas.authn.mfa.trusted.redis.sentinel.master: mymaster
+cas.authn.mfa.trusted.redis.sentinel.node[0]: localhost:26379
+cas.authn.mfa.trusted.redis.sentinel.node[1]: localhost:26380
+cas.authn.mfa.trusted.redis.sentinel.node[2]: localhost:26381
+cas.authn.mfa.trusted.redis.sentinel.password: GWMije5VNMe7avz
+cas.authn.mfa.trusted.redis.password: OZwtXSpJCjZEQ5b
+
 # Attribute definition
 cas.authn.attribute-repository.attribute-definition-store.json.location: classpath:attribute-definition-deleg.json
 
