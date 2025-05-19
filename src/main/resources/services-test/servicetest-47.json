@@ -1,0 +1,20 @@
+{
+  "@class": "org.apereo.cas.services.CasRegisteredService",
+  "serviceId": "^http:\/\/localhost:8047\/.*",
+  "name": "Service Test",
+  "description": "Service de test pour SLO avec redirect custom via service property",
+  "id": 47,
+  "bypassApprovalPrompt": true,
+  "logoutUrl" : "http://localhost:8047/logout",
+  "properties" : {
+    "@class" : "java.util.HashMap",
+    "skipDomainRedirect" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    },
+    "redirectLogoutURL" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ "http://localhost:8047/redirection" ] ]
+    }    
+  }
+}

@@ -13,5 +13,6 @@
 | Remontée d'erreur flot délégation | DefaultDelegatedClientAuthenticationFailureEvaluator + DefaultCasDelegatingWebflowEventResolver |
 | Pairwise-id/eduPersonTargetedId | PairwiseIdSamlRegisteredServiceAttributeReleasePolicy + TargetedIdSamlRegisteredServiceAttributeReleasePolicy |
 | SLO par principal | DefaultSingleLogoutMessageCreator + OidcSingleLogoutMessageCreator + CasCoreLogoutAutoConfiguration |
+| Logout URL par service | DefaultLogoutRedirectionStrategy |
 | IDToken custom acr | OidcIdTokenGeneratorService |
 | Meilleur compatibilité clients SAML | SamlProfileSaml2ResponseBuilder |

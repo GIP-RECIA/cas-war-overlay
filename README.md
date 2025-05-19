@@ -25,9 +25,10 @@ And has a number of custom enhancements :
 - Custom parameter in url for delegation depending on service
 - Custom SAML attribute generation (pairwise-id and eduPersonTargetedId)
 - Change subject in SLO request based on usernameAttributeProvider per service
+- Custom logout redirection URL per service
 - Better compatibility with SAML clients (see `SamlProfileSaml2ResponseBuilder.java`) 
 
-Current CAS Base version : **7.2.0**
+Current CAS Base version : **7.2.1**
 
 # Project Structure
 
@@ -76,6 +77,7 @@ All the important parts of the project are listed below:
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
 │       │               ├── logout
+│       │               │   ├── DefaultLogoutRedirectionStrategy.java
 │       │               │   └── DefaultSingleLogoutMessageCreator.java
 │       │               ├── oidc
 │       │               │   └── slo

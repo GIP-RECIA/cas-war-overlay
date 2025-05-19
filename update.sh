@@ -21,6 +21,7 @@ FILES=(
     "src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java core/cas-server-core-logout/src/main/java/org/apereo/cas/config/CasCoreLogoutAutoConfiguration.java"
     "src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultSingleLogoutMessageCreator.java"
     "src/main/java/org/apereo/cas/web/idp/profile/builders/response/SamlProfileSaml2ResponseBuilder.java support/cas-server-support-saml-idp-web/src/main/java/org/apereo/cas/support/saml/web/idp/profile/builders/response/SamlProfileSaml2ResponseBuilder.java"
+    "src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

@@ -96,6 +96,10 @@ python3 service_test29.py &
 pid_python_service_test29=$!
 python3 service_test35.py &
 pid_python_service_test35=$!
+python3 service_test47.py &
+pid_python_service_test47=$!
+python3 service_test48.py &
+pid_python_service_test48=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
@@ -155,6 +159,8 @@ exit_ci () {
     kill -9 "$pid_python_service_test28"
     kill -9 "$pid_python_service_test29"
     kill -9 "$pid_python_service_test35"
+    kill -9 "$pid_python_service_test47"
+    kill -9 "$pid_python_service_test48"
     kill -9 "$pid_python_structs_info_api"
     kill -9 "$pid_python_externalid_api"
     kill -9 "$pid_python_saml_client"

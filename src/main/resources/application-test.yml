@@ -105,6 +105,10 @@ cas.authn.attribute-repository.ldap[0].attributes.isMemberOf: isMemberOf
 cas.authn.attribute-repository.ldap[0].attributes.ENTPersonLogin: ENTPersonLogin
 cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
 
+# SLO
+cas.logout.follow-service-redirects: true
+cas.logout.redirect-parameter: url
+
 # Login Flow Interrupt
 cas.interrupt.core.force-execution: true
 cas.interrupt.core.trigger-mode: AFTER_SSO
