@@ -3,7 +3,7 @@
     "serviceId" : "^https:\/\/localhost:8443\/cas\/educonnect",
     "name" : "CAS de test vu par l'IDP educonnect",
     "id" : 2,
-    "metadataLocation" : "https://localhost:8443/cas/sp/parentEleveEN-IdP/metadata",
+    "metadataLocation" : "https://localhost:8443/cas/sp/educonnect/metadata",
     "attributeReleasePolicy" : {
         "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
         "allowedAttributes" : {

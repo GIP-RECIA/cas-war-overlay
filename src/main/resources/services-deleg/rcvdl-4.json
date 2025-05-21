@@ -1,9 +1,9 @@
 {
     "@class" : "org.apereo.cas.support.saml.services.SamlRegisteredService",
-    "serviceId" : "^https:\/\/localhost:8443\/cas\/rcvdl",
+    "serviceId" : "^https:\/\/localhost:8443\/cas\/rcvl",
     "name" : "CAS de test vu par l'IDP rcvdl",
     "id" : 4,
-    "metadataLocation" : "https://localhost:8443/cas/sp/RCVL-IdP/metadata",
+    "metadataLocation" : "https://localhost:8443/cas/sp/rcvl/metadata",
     "attributeReleasePolicy" : {
         "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
         "allowedAttributes" : {

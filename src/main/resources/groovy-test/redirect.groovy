@@ -8,9 +8,12 @@ import org.apereo.cas.configuration.model.support.delegation.*
 
 def run(Object[] args) {
     def (requestContext,service,registeredService,providers,applicationContext,logger) = args
+
+    def providersMapping = ['RCVL-IdP': 'rcvl', 'parentEleveEN-IdP': 'educonnect', 'agri-IdP': 'educagri']
+
     providers.forEach(provider -> {
         logger.info("Checking ${provider.name}...")
-        if (provider.name.equals(requestContext.getRequestParameters().get("idpId"))) {
+        if (provider.name.equals(providersMapping[requestContext.getRequestParameters().get("idpId")])){
             provider.autoRedirectType = DelegationAutoRedirectTypes.SERVER
             return provider
         }
