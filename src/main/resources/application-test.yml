@@ -86,7 +86,7 @@ cas.person-directory.use-existing-principal-id: true
 cas.person-directory.principal-resolution-conflict-strategy: first
 cas.person-directory.principal-attribute: uid
 # First test IDP
-cas.authn.attribute-repository.ldap[0].id: agri-IdP
+cas.authn.attribute-repository.ldap[0].id: educagri
 cas.authn.attribute-repository.ldap[0].state: STANDBY 
 cas.authn.attribute-repository.ldap[0].base-dn: ou=people,dc=esco-centre,dc=fr
 cas.authn.attribute-repository.ldap[0].bind-credential: admin
@@ -110,7 +110,7 @@ cas.authn.attribute-repository.ldap[0].attributes.isMemberOf: isMemberOf
 cas.authn.attribute-repository.ldap[0].attributes.ENTPersonLogin: ENTPersonLogin
 cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
 # Second test IDP
-cas.authn.attribute-repository.ldap[1].id: RCVL-IdP
+cas.authn.attribute-repository.ldap[1].id: rcvl
 cas.authn.attribute-repository.ldap[1].state: STANDBY 
 cas.authn.attribute-repository.ldap[1].base-dn: ou=people,dc=esco-centre,dc=fr
 cas.authn.attribute-repository.ldap[1].bind-credential: admin
@@ -205,26 +205,26 @@ cas.authn.mfa.trusted.device-fingerprint.cookie.crypto.signing.key: Jw2xeS-snJRP
 # First provider using multi profile selection
 cas.authn.pac4j.saml[0].service-provider-entity-id: https://localhost:8443/cas/educonnect
 cas.authn.pac4j.saml[0].keystore-password: pac4j-demo-passwd
-cas.authn.pac4j.saml[0].keystore-path: /etc/cas/EDUCONNECT-keystore.jks
+cas.authn.pac4j.saml[0].keystore-path: /etc/cas/educonnect-keystore.jks
 cas.authn.pac4j.saml[0].private-key-password: pac4j-demo-passwd
-cas.authn.pac4j.saml[0].metadata.service-provider.file-system.location: /etc/cas/EDUCONNECT-metadata.xml
-cas.authn.pac4j.saml[0].client-name: parentEleveEN-IdP
+cas.authn.pac4j.saml[0].metadata.service-provider.file-system.location: /etc/cas/educonnect-metadata.xml
+cas.authn.pac4j.saml[0].client-name: educonnect
 cas.authn.pac4j.saml[0].metadata.identity-provider-metadata-path: https://localhost:9443/cas/idp/metadata
 # Two other providers using their custom attribute repositories
-cas.authn.pac4j.saml[1].service-provider-entity-id: https://localhost:8443/cas/agri
+cas.authn.pac4j.saml[1].service-provider-entity-id: https://localhost:8443/cas/educagri
 cas.authn.pac4j.saml[1].keystore-password: pac4j-demo-passwd
-cas.authn.pac4j.saml[1].keystore-path: /etc/cas/AGRI-keystore.jks
+cas.authn.pac4j.saml[1].keystore-path: /etc/cas/educagri-keystore.jks
 cas.authn.pac4j.saml[1].private-key-password: pac4j-demo-passwd
-cas.authn.pac4j.saml[1].metadata.service-provider.file-system.location: /etc/cas/AGRI-metadata.xml
-cas.authn.pac4j.saml[1].client-name: agri-IdP
+cas.authn.pac4j.saml[1].metadata.service-provider.file-system.location: /etc/cas/educagri-metadata.xml
+cas.authn.pac4j.saml[1].client-name: educagri
 cas.authn.pac4j.saml[1].principal-id-attribute: mail
 cas.authn.pac4j.saml[1].metadata.identity-provider-metadata-path: https://localhost:9443/cas/idp/metadata
-cas.authn.pac4j.saml[2].service-provider-entity-id: https://localhost:8443/cas/rcvdl
+cas.authn.pac4j.saml[2].service-provider-entity-id: https://localhost:8443/cas/rcvl
 cas.authn.pac4j.saml[2].keystore-password: pac4j-demo-passwd
-cas.authn.pac4j.saml[2].keystore-path: /etc/cas/RCVDL-keystore.jks
+cas.authn.pac4j.saml[2].keystore-path: /etc/cas/rcvl-keystore.jks
 cas.authn.pac4j.saml[2].private-key-password: pac4j-demo-passwd
-cas.authn.pac4j.saml[2].metadata.service-provider.file-system.location: /etc/cas/RCVDL-metadata.xml
-cas.authn.pac4j.saml[2].client-name: RCVL-IdP
+cas.authn.pac4j.saml[2].metadata.service-provider.file-system.location: /etc/cas/rcvl-metadata.xml
+cas.authn.pac4j.saml[2].client-name: rcvl
 cas.authn.pac4j.saml[2].principal-id-attribute: mail
 cas.authn.pac4j.saml[2].metadata.identity-provider-metadata-path: https://localhost:9443/cas/idp/metadata
 
@@ -261,7 +261,7 @@ cas.custom.properties.token.redirect-unknown-domain: https://pagetoredirectnetoc
 cas.custom.properties.token.domain-mapping-startswith: "DOMAIN-RED:"
 
 # Delegated authn
-cas.custom.properties.profile-selection.client-name: parentEleveEN-IdP
+cas.custom.properties.profile-selection.client-name: educonnect
 cas.custom.properties.delegation.idp-id.parameter: idpId
 cas.custom.properties.delegation.idp-id.remote-pattern: -IdP
 cas.custom.properties.delegation.provider-selection.webflow-url.parameter: cas_base_url

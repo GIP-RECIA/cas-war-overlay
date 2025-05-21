@@ -1,9 +1,9 @@
 {
     "@class" : "org.apereo.cas.support.saml.services.SamlRegisteredService",
-    "serviceId" : "^https:\/\/localhost:8443\/cas\/agri",
+    "serviceId" : "^https:\/\/localhost:8443\/cas\/educagri",
     "name" : "CAS de test vu par l'IDP agri",
     "id" : 3,
-    "metadataLocation" : "https://localhost:8443/cas/sp/eleves-parents/metadata",
+    "metadataLocation" : "https://localhost:8443/cas/sp/educagri/metadata",
     "attributeReleasePolicy" : {
         "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
         "allowedAttributes" : {
