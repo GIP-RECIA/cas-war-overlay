@@ -1,4 +1,4 @@
-package org.apereo.cas.scim.v2;
+package org.apereo.cas.scim.v2.provisioning;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,14 +39,14 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * This is {@link ScimV2PrincipalProvisioner}.
+ * This is {@link ScimPrincipalProvisioner}.
  *
  * @author Misagh Moayyed
  * @since 5.1.0
  */
 @Slf4j
 @RequiredArgsConstructor
-public class ScimV2PrincipalProvisioner implements PrincipalProvisioner {
+public class ScimPrincipalProvisioner implements PrincipalProvisioner {
 
     private final ScimProperties scimProperties;
     private final CasCustomProperties customProperties;
