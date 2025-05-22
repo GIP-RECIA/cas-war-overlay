@@ -247,6 +247,9 @@ cas.authn.pac4j.profile-selection.ldap[0].attributes: uid,cn,sn,mail,ESCOUAICour
 # Delegated IDP selection auto redirection
 cas.authn.pac4j.core.groovy-redirection-strategy.location: classpath:/groovy-test/redirect.groovy
 
+# SCIM
+cas.scim.target: http://localhost:8048/scim/v2
+
 # Custom Properties
 
 # Interrupt
@@ -277,3 +280,10 @@ cas.custom.properties.profile-selection.structinfo-url: http://localhost:7001/st
 cas.custom.properties.profile-selection.structinfo-attribute-to-display: displayName
 cas.custom.properties.profile-selection.structinfo-webflow-attribute-name: ETAB_NAME
 cas.custom.properties.profile-selection.structinfo.refresh-cache-interval: PT24H
+
+# SCIM
+cas.custom.properties.scim.regex-etab-class: ":Etablissements:(?:[^:]+)_([^:]+):.*?:(?:Profs|Eleves)_([^:]+$)"
+cas.custom.properties.scim.groups-attribute: isMemberOf
+cas.custom.properties.scim.principal-attribute: ENTPersonLogin
+cas.custom.properties.scim.profile-attribute: ENTPersonProfils
+cas.custom.properties.scim.teacher-attribute-value: National_ENS
