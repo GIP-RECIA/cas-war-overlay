@@ -83,7 +83,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b'Internal server error')
 
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=8036):
+def run(server_class=HTTPServer, handler_class=RequestHandler, port=8048):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f'Starting server on port {port}...')
