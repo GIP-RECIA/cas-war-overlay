@@ -55,3 +55,6 @@ SERVICE_REDIRECT_DELEGATION_PROFILE_SELECTION_URL = "http://localhost:8040/test"
 
 # Url du service sur lequel on est redirigé quand on test le multidomaine avec un paramètre d'url
 SERVICE_REDIRECT_WITH_PARAMS_URL = "http://localhost:8041/test?param1=valeur2"
+
+# Url du service pour tester le SCIM
+SERVICE_SCIM_URL = "http://localhost:8048/test"
