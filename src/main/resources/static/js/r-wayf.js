@@ -526,16 +526,16 @@ let p = class extends se {
   }
   static i18n() {
     return {
-      [l.ParentEleveEN]: u(`Ã‰lÃ¨ves ou parent
-(Ã©ducation nationale)`),
-      [l.ElevesParents]: u(`Ã‰lÃ¨ve ou parent
+      [l.ParentEleveEN]: u(`Élèves ou parent
+(éducation nationale)`),
+      [l.ElevesParents]: u(`Élève ou parent
 (enseignement agricole)`),
       [l.Catel]: u(`Personnel
-(Ã©ducation nationale)`),
+(éducation nationale)`),
       [l.Agri]: u(`Personnel
 (enseignement agricole)`),
       [l.RCVL]: u(`Personnel
-(RÃ©gion Centre-Val de Loire)`),
+(Région Centre-Val de Loire)`),
       [l.AutresPublics]: u(`Autre public
 (utilisateur local, entreprise,...)`)
     };
