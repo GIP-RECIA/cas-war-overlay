@@ -9,7 +9,8 @@ const assert = require("assert");
         const page = await browser.newPage();
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8048/test"
+        const service = "http://localhost:8049/test"
+        const scimServer = "http://localhost:7003"
 
         // Login to cas
         await cas.loginWith(page, casHost, service, "test1", "test")
@@ -18,9 +19,9 @@ const assert = require("assert");
         await cas.verifyTGC(client)
 
         // Get SCIM status
-        await page.goto(service+"/status");
+        await page.goto(scimServer+"/status/49");
         var pageContent = await page.content();
-        assert(pageContent.includes('{"USER_GET": true, "USER_POST": true, "ETAB_GET": true, "ETAB_POST": true, "CLASS_GET": true, "CLASS_POST": true, "ETAB_PATCH": true, "CLASS_PATCH": true}'))
+        assert(pageContent.includes('{"USER_GET": true, "ETAB_GET": true, "CLASS_GET": true, "CLASS_ADD": true, "CLASS_REMOVE": true}'))
 
         process.exit(0)
 

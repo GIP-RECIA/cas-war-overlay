@@ -1,9 +1,9 @@
 {
   "@class": "org.apereo.cas.services.CasRegisteredService",
-  "serviceId": "^http:\/\/localhost:8048\/.*",
+  "serviceId": "^http:\/\/localhost:8049\/.*",
   "name": "Service Test",
-  "description": "Service de test pour SCIM (create)",
-  "id": 48,
+  "description": "Service de test pour SCIM (update)",
+  "id": 49,
   "usernameAttributeProvider" : {
     "@class" : "org.apereo.cas.services.PrincipalAttributeRegisteredServiceUsernameProvider",
     "usernameAttribute" : "mail"
@@ -20,11 +20,11 @@
     },
     "scimUsername" : {
       "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
-      "values" : [ "java.util.HashSet", [ "username1" ] ]
+      "values" : [ "java.util.HashSet", [ "username2" ] ]
     },
     "scimPassword" : {
       "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
-      "values" : [ "java.util.HashSet", [ "password1" ] ]
+      "values" : [ "java.util.HashSet", [ "password2" ] ]
     }
   }
 }
