@@ -140,7 +140,7 @@ public class ScimPrincipalProvisioner implements PrincipalProvisioner {
                 }
             }
 
-            // 2.1 For each user establishment, check if establishment exists
+            // 2.1 For each user establishment in LDAP, check if establishment exists
             for(val currentEtab: classesByEtab.keySet()) {
                 LOGGER.debug("Check if establishment [{}] exists", currentEtab);
                 LOGGER.debug("GET /Groups for establishment [{}]", currentEtab);

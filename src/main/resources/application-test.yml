@@ -248,7 +248,7 @@ cas.authn.pac4j.profile-selection.ldap[0].attributes: uid,cn,sn,mail,ESCOUAICour
 cas.authn.pac4j.core.groovy-redirection-strategy.location: classpath:/groovy-test/redirect.groovy
 
 # SCIM
-cas.scim.target: http://localhost:8048/scim/v2
+cas.scim.target: http://localhost:7003/scim/v2
 
 # Custom Properties
 
