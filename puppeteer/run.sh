@@ -118,12 +118,12 @@ python3 service_test41.py &
 pid_python_service_test41=$!
 python3 service_test46.py &
 pid_python_service_test46=$!
-python3 service_test47.py &
-pid_python_service_test47=$!
 python3 service_test48.py &
 pid_python_service_test48=$!
 python3 service_test49.py &
 pid_python_service_test49=$!
+python3 service_test51.py &
+pid_python_service_test51=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
@@ -199,9 +199,9 @@ exit_ci () {
     kill -9 "$pid_python_service_test39"
     kill -9 "$pid_python_service_test40"
     kill -9 "$pid_python_service_test46"
-    kill -9 "$pid_python_service_test47"
     kill -9 "$pid_python_service_test48"
     kill -9 "$pid_python_service_test49"
+    kill -9 "$pid_python_service_test51"
     kill -9 "$pid_python_structs_info_api"
     kill -9 "$pid_python_externalid_api"
     kill -9 "$pid_python_scim_server"

@@ -1,0 +1,14 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8051\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour MFA TOTP avec paramètre token dans l'url",
+    "id": 51,
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "skipDomainRedirect" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ true ] ]
+        }
+    }
+}
