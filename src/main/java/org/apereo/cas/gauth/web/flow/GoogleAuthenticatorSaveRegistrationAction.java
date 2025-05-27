@@ -27,7 +27,7 @@ public class GoogleAuthenticatorSaveRegistrationAction extends OneTimeTokenAccou
     /**
      * Parameter name indicating token.
      */
-    public static final String REQUEST_PARAMETER_TOKEN = "token";
+    public static final String REQUEST_PARAMETER_TOKEN = "otpToken";
 
     private final OneTimeTokenCredentialValidator<GoogleAuthenticatorTokenCredential, GoogleAuthenticatorToken> validator;
 
