@@ -38,9 +38,6 @@ SERVICE_DELEGATION_CAS_NO_REDIRECT_URL = "http://localhost:8029/test"
 # Url du service pour tester la déconnexion globale avec principal different
 SERVICE_SLO_CUSTOM_PRINCIPAL_URL = "http://localhost:8035/test"
 
-# Url du service avec MFA TOTP
-SERVICE_TOTP_URL = "http://localhost:8046/test"
-
 # Url du service pour tester la déconnexion avec redirection forcée pour un service donné
 SERVICE_SLO_REDIRECTION_URL = "http://localhost:8047/test"
 
@@ -52,12 +49,6 @@ SERVICE_TOTP_WITH_TOKEN_PARAMETER_URL = "http://localhost:8051/test&token=aaaaa"
 
 # Url du service pour tester la profile selection dans le cas d'une auth déléguée
 SERVICE_PROFILE_SELECTION_URL = "http://localhost:8036/test"
-
-# Url du service avec MFA TOTP
-SERVICE_TOTP_URL = "http://localhost:8046/test"
-
-# Url du service pour tester la déconnexion avec redirection forcée pour un service donné
-SERVICE_SLO_REDIRECTION_URL = "http://localhost:8047/test"
 
 # Url du service pour tester la délégation d'authentication vers un IDP SAML
 SERVICE_DELEGATION_SAML_1 = "http://localhost:8037/test"
@@ -76,3 +67,9 @@ SERVICE_REDIRECT_WITH_PARAMS_URL = "http://localhost:8041/test?param1=valeur2"
 
 # Url du service pour tester le SCIM (update)
 SERVICE_SCIM_UPDATE_URL = "http://localhost:8049/test"
+
+# Url du service avec MFA TOTP
+SERVICE_TOTP_URL = "http://localhost:8046/test"
+
+# Url du service avec MFA TOTP, cas spécial ou il y a un paramètre token dans l'url
+SERVICE_TOTP_WITH_TOKEN_PARAMETER_URL = "http://localhost:8051/test&token=aaaaa"

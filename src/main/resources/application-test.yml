@@ -252,7 +252,7 @@ cas.scim.target: http://localhost:7003/scim/v2
 
 # MFA
 cas.authn.mfa.triggers.principal.global-principal-attribute-name-triggers: uid
-cas.authn.mfa.triggers.principal.global-principal-attribute-value-regex: F1000abc
+cas.authn.mfa.triggers.principal.global-principal-attribute-value-regex: F1000abc|F1001abc
 # Gauth
 cas.authn.mfa.gauth.core.multiple-device-registration-enabled: false
 cas.authn.mfa.gauth.core.issuer: CASIssuer
