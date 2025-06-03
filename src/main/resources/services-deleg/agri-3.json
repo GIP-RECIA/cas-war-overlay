@@ -5,10 +5,7 @@
     "id" : 3,
     "metadataLocation" : "https://localhost:8443/cas/sp/educagri/metadata",
     "attributeReleasePolicy" : {
-        "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
-        "allowedAttributes" : {
-            "@class" : "java.util.TreeMap",
-            "mail" : "groovy { return 'test7.test@idp1.com' }"
-        }
+        "@class" : "org.apereo.cas.services.GroovyScriptAttributeReleasePolicy",
+        "groovyScript" : "classpath:/groovy-test/agri-release.groovy"
     }
 }
