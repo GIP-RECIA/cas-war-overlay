@@ -71,6 +71,9 @@ public class LdapDelegatedClientAuthenticationCredentialResolver extends BaseDel
             val result = factory.executeSearchOperation(ldap.getBaseDn(), filter, 0,
                 ldap.getAttributes().toArray(ArrayUtils.EMPTY_STRING_ARRAY));
             LOGGER.debug("Found entries: [{}]", result.getEntries().size());
+            if(result.getEntries().size() < 1){
+                throw new RuntimeException("LDAP query returned no results for filter " + filter);
+            }
             return result
                 .getEntries()
                 .stream()

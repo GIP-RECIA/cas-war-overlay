@@ -1,0 +1,14 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8054\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour profile selection invalide car aucun compte trouvé dans le LDAP",
+    "id": 54,
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "skipDomainRedirect" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ true ] ]
+        }
+    }
+}
