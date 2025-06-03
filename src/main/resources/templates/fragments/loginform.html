@@ -25,7 +25,12 @@
                 et fermer votre navigateur lorsque vous avez fini d’accéder
                 aux services authentifiés.
                 </p>
-                <form method="post" id="fm1" th:object="${credential}" action="login" onsubmit="loginFormSubmission();">
+                <form method="post" id="fm1" th:object="${credential}" onsubmit="loginFormSubmission();">
+                    <div id="login-form-controls" th:unless="${loginFormViewable or loginFormEnabled}">
+                        <div id="loginErrorsPanel" class="alert alert-danger banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
+                            <p th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}">Example error</p>
+                        </div>
+                    </div>
                     <div class="field">
                         <div class="field-layout">
                         <div class="field-container">
