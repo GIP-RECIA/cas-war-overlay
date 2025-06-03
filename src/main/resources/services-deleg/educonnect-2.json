@@ -5,12 +5,7 @@
     "id" : 2,
     "metadataLocation" : "https://localhost:8443/cas/sp/educonnect/metadata",
     "attributeReleasePolicy" : {
-        "@class" : "org.apereo.cas.services.ReturnMappedAttributeReleasePolicy",
-        "allowedAttributes" : {
-            "@class" : "java.util.TreeMap",
-            "FrEduCtRefId" : "groovy { return [ 'AAF5', 'AAF6', 'ECT1', 'ECT-ENT2'] }",
-            "FrEduCtId" : "groovy { return '1' }",
-            "FrEduCtOpaqueId" : "groovy { return '1' }"
-        }
+        "@class" : "org.apereo.cas.services.GroovyScriptAttributeReleasePolicy",
+        "groovyScript" : "classpath:/groovy-test/educonnect-release.groovy"
     }
 }
