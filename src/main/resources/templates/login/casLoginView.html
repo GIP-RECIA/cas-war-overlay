@@ -8,6 +8,15 @@
 
 <body class="login mdc-typography">
 <div layout:fragment="content">
+
+    <form method="post" id="fm1-b" th:object="${credential}">
+        <div id="login-form-controls">
+            <div id="loginErrorsPanel" class="alert alert-danger banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
+                <p th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}">Example error</p>
+            </div>
+        </div>
+    </form>
+
    <div th:with="loginFormEnabled=${#strings.defaultString(#themes.code('cas.login-form.enabled'), 'true') == 'true'},
                   loginFormViewable=${@casThymeleafTemplatesDirector.isLoginFormViewable(#vars)}">
         <section id="loginForm"
