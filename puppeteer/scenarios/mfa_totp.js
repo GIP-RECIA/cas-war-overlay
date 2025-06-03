@@ -28,8 +28,6 @@ const assert = require("assert");
         await page.type("#otp", cas.generateTOTP(token));
         // Click to register device
         await page.click('#registerButton');
-        await page.waitForNavigation();
-        await page.waitForNetworkIdle();
 
         // Step 2 : final login
         // Enter code
