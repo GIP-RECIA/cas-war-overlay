@@ -81,3 +81,10 @@ val googleAuthenticatorToken = new GoogleAuthenticatorToken(token, account.getUs
 validator.getTokenRepository().store(googleAuthenticatorToken);
 ```
 Le comportement reste inchangé pour les codes autres que ceux utiliser pour valider l'enregistrement d'une nouvelle device.
+
+## Modification : Paramètre token changé
+
+CAS utilise le paramètre d'URL token pour transmettre le code qui a été saisi par l'utilisateur : or cela peut poser problème dans le cas ou le service pose lui aussi un paramètre token dans l'url (comme par exemple https://URL_CAS/cas/login?service=URL_SERVICE&token=eb9996ba82b8594e08eaa35e3e753922). Pour résoudre ce problème le paramètre d'URL à été changé à 2 endroits :
+- Pendant la phase de device registration
+- Pendant la phase de login
+Cela correspond à une modification des templates HTML mais aussi des fichiers java pour récupérer la valeur du bon paramètre.
