@@ -38,6 +38,8 @@ And has a number of custom enhancements :
 - Custom WAYF with local login page at another place
 - Custom LDAP filter based on all principal attributes for profile selection
 - Expiration alignement between trusted device cookie and registry
+- Modified otp token field for better compatibility with url token parameters
+- Custom UI for gauth mfa
 
 Current CAS Base version : **7.2.1**
 
