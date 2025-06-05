@@ -16,3 +16,7 @@
 | Logout URL par service | DefaultLogoutRedirectionStrategy |
 | IDToken custom acr | OidcIdTokenGeneratorService |
 | Meilleur compatibilité clients SAML | SamlProfileSaml2ResponseBuilder |
+| Modification paramètre token TOTP | GoogleAuthenticatorTokenCredential + GoogleAuthenticatorMultifactorWebflowConfigurer + GoogleAuthenticatorSaveRegistrationAction.java + templates html |
+| Modifications UI TOTP | casGoogleAuthenticatorRegistrationView + casGoogleAuthenticatorLoginView + cas.css |
+| Fix expiration trusted devices | MultifactorAuthenticationSetTrustAction |
+| Fix TOTP registration réutilisable | GoogleAuthenticatorSaveRegistrationAction |

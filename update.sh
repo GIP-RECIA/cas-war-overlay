@@ -24,6 +24,11 @@ FILES=(
     "src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java"
     "src/main/java/org/apereo/cas/trusted/web/flow/MultifactorAuthenticationSetTrustAction.java support/cas-server-support-trusted-mfa-core/src/main/java/org/apereo/cas/trusted/web/flow/MultifactorAuthenticationSetTrustAction.java"
     "src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorSaveRegistrationAction.java support/cas-server-support-gauth-core/src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorSaveRegistrationAction.java"
+    "src/main/resources/static/css/cas.css support/cas-server-support-thymeleaf/src/main/resources/static/css/cas.css"
+    "src/main/resources/templates/fragments/header.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/header.html"
+    "src/main/resources/templates/fragments/footer.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/footer.html"
+    "src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorTokenCredential.java support/cas-server-support-gauth-core-mfa/src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorTokenCredential.java"
+    "src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorMultifactorWebflowConfigurer.java support/cas-server-support-gauth-core/src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorMultifactorWebflowConfigurer.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

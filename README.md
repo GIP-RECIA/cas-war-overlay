@@ -30,6 +30,8 @@ And has a number of custom enhancements :
 - Custom logout redirection URL per service
 - Better compatibility with SAML clients (see `SamlProfileSaml2ResponseBuilder.java`) 
 - Expiration alignement between trusted device cookie and registry
+- Modified otp token field for better compatibility with url token parameters
+- Custom UI for gauth mfa
 
 Current CAS Base version : **7.2.1**
 
@@ -98,14 +100,14 @@ All the important parts of the project are listed below:
 │       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
 │       │               │   ├── ReturnExternalIDOidcAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
-│       │               ├── trusted/web/flow
-│       │               │   └── MultifactorAuthenticationSetTrustAction.java
 │       │               ├── support/saml/idp/metadata/generator
 │       │               │   ├── idp/metadata/generator
 │       │               │   │   └── BaseSamlIdPMetadataGenerator.java
 │       │               │   └── services
 │       │               │       ├── PairwiseIdSamlRegisteredServiceAttributeReleasePolicy.java
 │       │               │       └── TargetedIdSamlRegisteredServiceAttributeReleasePolicy.java
+│       │               ├── trusted/web/flow
+│       │               │   └── MultifactorAuthenticationSetTrustAction.java
 │       │               └── web
 │       │                   ├── flow
 │       │                   │   ├── actions
@@ -122,11 +124,22 @@ All the important parts of the project are listed below:
 |           ├── META-INF
 |           |   └── spring
 |           |       └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
+|           ├── services-deleg
+|           |   └── ...
 |           ├── services-test
 |           |   └── ...
+|           ├── static
+|           |   └── css
+|           |       └── cas.css
 |           ├── templates
 |           |   ├── delegated-authn
 |           |   |   └── casDelegatedAuthnStopWebflow.html
+|           |   ├── fragments
+|           |   |   ├── footer.html
+|           |   |   └── header.html
+|           |   ├── gauth
+|           |   |   ├── casGoogleAuthenticatorLoginView.html
+|           |   |   └── casGoogleAuthenticatorRegistrationView.html
 |           |   ├── interrupt
 |           |   |   └── casInterruptView.html
 |           |   └── login
