@@ -140,7 +140,9 @@ script.execute(args.values().toArray(), FilterTemplate.class);
 
 **UI de choix du profil**
 
-On veut pouvoir présenter les noms des établissements dans l'UI de la séléction de profil, malgré que ce ne soit pas un attribut utilisateur. Pour pouvoir l'ajouter au *candidate profile* (et donc l'afficher), il faut faire appel à une API externe en fonction du SIRENCourant actuel. Cet appel est réalisé dans le `DelegatedClientAuthenticationCredentialSelectionAction`, qui est l'action qui pousse les différents profils dans le webflow avant d'afficher la vue de séléction des profils. L'UI (`casDelegatedAuthnSelectionView.html`) a également été modifiée en conséquence pour afficher ce nouvel attribut. La logique qui a été mise en place afin de ne pas faire d'appel à l'API quand cela n'est pas nécéssaire est la suivante (le système est très similaire à celui de la redirection multidomaine avec son cache):
+On veut pouvoir présenter les noms des établissements dans l'UI de la séléction de profil, malgré que ce ne soit pas un attribut utilisateur. Pour pouvoir l'ajouter au *candidate profile* (et donc l'afficher), il faut faire appel à une API externe en fonction du SIRENCourant actuel.Cet appel est réalisé dans le `DelegatedClientAuthenticationCredentialSelectionAction`, qui est l'action qui pousse les différents profils dans le webflow avant d'afficher la vue de séléction des profils.
+
+L'UI (`casDelegatedAuthnSelectionView.html`) a également été modifiée en conséquence pour afficher ce nouvel attribut. La logique qui a été mise en place afin de ne pas faire d'appel à l'API quand cela n'est pas nécéssaire est la suivante (le système est très similaire à celui de la redirection multidomaine avec son cache):
 
 ```java
 if (profiles.size() == 1) {
@@ -170,6 +172,48 @@ for(DelegatedAuthenticationCandidateProfile delegatedAuthenticationCandidateProf
 DelegationWebflowUtils.putDelegatedClientAuthenticationResolvedCredentials(requestContext, profiles);
 return new Event(this, CasWebflowConstants.TRANSITION_ID_SELECT);
 ```
+
+### Remontée des erreurs de délégation
+
+**En mode auth déléguée**
+
+Il faut pouvoir afficher un message d'erreur lorsqu'il y a une erreur dans le flot d'authentification déléguée (pas de compte correspondant dans le LDAP par exemple).
+
+Pour cela, deux modifications ont été réalisées afin de lever une exception si aucun compte n'est trouvé (`result.getEntries().size() < 1`) : 
+- Dans `LdaptivePersonAttributeDao` pour les attributes repositories classique ;
+- Dans `LdapDelegatedClientAuthenticationCredentialResolver` pour la partie profile selection.
+
+Il faut ensuite paramétrer correctement le CAS pour qu'il termine en erreur l'authentification si une partie de la chaîne est en erreur (sinon il peut continuer avec une erreur partielle) :
+
+```
+cas.person-directory.principal-resolution-failure-fatal: true
+cas.authn.attribute-repository.core.recover-exceptions: false
+cas.authn.attribute-repository.core.require-all-repository-sources: true
+```
+
+Il est aussi important de désaciver tous les attribute repositories par défaut, car sinon il retournera une erreur pour l'authentification locale pour lequel il ne trouvera aucun compte :
+
+```
+cas.person-directory.active-attribute-repository-ids: none
+```
+
+**En mode auth locale**
+
+Dans le cas d'une authentification locale, il suffit de faire attention à ce que le formulaire de login effectue un POST sur l'url courante complète (et non juste sur `/cas/login`) afin de revenir sur le formulaire de login (sinon on revient sur le WAYF).
+
+L'erreur est affichée dans le template `casLoginView.html` (et pas le fragment du `loginform.html` car elle ne remonte pas jusque là) :
+
+```html
+<form method="post" id="fm1-b" th:object="${credential}">
+	<div id="login-form-controls">
+		<div id="loginErrorsPanel" class="alert alert-danger banner banner-danger banner-dismissible" th:if="${#fields.hasErrors('*')}">
+			<p th:each="err : ${#fields.errors('*')}" th:utext="${err + ' '}">Example error</p>
+		</div>
+	</div>
+</form>
+```
+
+Ici on réutilise ce qui était prévu de base par CAS.
 
 ## Configuration 
 
