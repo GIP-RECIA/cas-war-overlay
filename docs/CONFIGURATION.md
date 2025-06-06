@@ -44,7 +44,7 @@ The following tables lists all the properties that are useful in this CAS deploy
 ## LDAP attribute repository
 | Property | Description | Example value |
 |----------|-------------|---------------|
-| cas.person-directory.active-attribute-repository-ids | IDS of enabled attribute repositories | * |
+| cas.person-directory.active-attribute-repository-ids | IDS of enabled attribute repositories | none |
 | cas.person-directory.use-existing-principal-id | Use principal id returned by first authentication to query next repository | true |
 | cas.person-directory.principal-resolution-conflict-strategy | Which principal id is chosen from the chain of resolver principals | first |
 | cas.authn.attribute-repository.ldap[X].id | ID of this attribute repository | UNIQUE_NAME |
@@ -56,6 +56,9 @@ The following tables lists all the properties that are useful in this CAS deploy
 | cas.authn.attribute-repository.ldap[X].search-filter | User filter to use for searching | `ATTRIBUT_LDAP={0}` |
 | cas.authn.attribute-repository.ldap[X].attributes.X | Map each attribute in LDAP to attribute in attribute repository | X |
 | cas.authn.attribute-repository.core.expiration-time | Caching duration (0 to disable caching) | 0 |
+| cas.person-directory.principal-resolution-failure-fatal | Throws an error back indicating that principal resolution has failed or logs the condition as an error but without raising a catastrophic error | true |
+| cas.authn.attribute-repository.core.recover-exceptions | Recover from LDAP exceptions and continue with partial results. Otherwise, die and do not allow to log in | false |
+| cas.authn.attribute-repository.core.require-all-repository-sources | Forces all repositories to produce a person object | true |
 
 ## SAML IDP
 | Property | Description | Example value |
@@ -192,6 +195,12 @@ The following tables lists all the properties that are useful in this CAS deploy
 | cas.authn.mfa.trusted.redis.sentinel.node[i] | List of sentinel adress in the form of host:port | localhost:26379 |
 | cas.authn.mfa.trusted.redis.sentinel.password | Sentinel password | password |
 | cas.authn.mfa.trusted.redis.password | Redis password | password |
+
+## SCIM
+| Property | Description | Example value |
+|----------|-------------|---------------|
+| cas.scim.target | SCIM provisioning target URI | http://SERVER_URL/scim/v2 |
+| cas.scim.oauth-token | Authenticate into the SCIM server/service via a pre-generated OAuth token | token |
 
 ## Feature activation
 | Property | Description | Example value |

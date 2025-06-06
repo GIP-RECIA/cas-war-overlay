@@ -11,6 +11,8 @@ This CAS server uses the following modules :
 - **cas-server-support-oidc** to enable the OIDC protocol
 - **cas-server-support-saml-idp** to act as an SAML2 identity provider
 - **cas-server-support-pac4j-webflow** to enable delegated authentication
+- **cas-server-support-pac4j-cas** to enable delegated authentication to CAS identity providers
+- **cas-server-support-pac4j-saml** to enable delegated authentication to SAML2 identity providers
 - **cas-server-core-scripting** for groovy scripting
 - **cas-server-support-gauth** and **cas-server-support-gauth-redis** for TOTP MFA 
 - **cas-server-support-trusted-mfa** and **cas-server-support-trusted-mfa-redis** to enable trusted devices for MFA
@@ -20,7 +22,7 @@ And has a number of custom enhancements :
 - Multidomain and dynamic redirection on a specific domain
 - Portal forced redirection with token check
 - Time and attribute service access strategy chaining
-- Dynamic attribute username provider and dynamic attribute release(externalid)
+- Dynamic attribute username provider and dynamic attribute release (externalid)
 - Fix for concurrent access to service index map (see [this](https://groups.google.com/a/apereo.org/g/cas-user/c/pI9l9aT1gtU))
 - Soft/Hard timeout expiration policy **per service**
 - Custom <md:Info> SAML idp metadata generation
@@ -32,6 +34,11 @@ And has a number of custom enhancements :
 - Expiration alignement between trusted device cookie and registry
 - Modified otp token field for better compatibility with url token parameters
 - Custom UI for gauth mfa
+- Custom SCIM provisionning
+- Custom WAYF with delegated and local authentication
+- Mapping between attribute repository and delegated client
+- Custom UI for profile selection
+- Better handling of delegation errors
 
 Current CAS Base version : **7.2.1**
 
@@ -76,11 +83,20 @@ All the important parts of the project are listed below:
 │       │   └── org
 │       │       └── apereo
 │       │           └── cas
+│       │               ├── authentication/principal
+│       │               │   ├── ldap
+│       │               │   │   └── LdapDelegatedClientAuthenticationCredentialResolver.java
+│       │               │   └── BaseDelegatedClientAuthenticationCredentialResolver.java
 │       │               ├── config
 │       │               │   ├── CasCoreLogoutAutoConfiguration.java
+│       │               │   ├── CasScimAutoConfiguration.java
 │       │               │   └── CustomInterruptConfiguration.java
 │       │               ├── gauth/web/flow
-│       │               │   └── GoogleAuthenticatorSaveRegistrationAction.java
+│       │               │   ├── credential
+│       │               │   │   └── GoogleAuthenticatorTokenCredential.java
+│       │               │   └── web/flow
+│       │               │       ├── GoogleAuthenticatorMultifactorWebflowConfigurer.java
+│       │               │       └── GoogleAuthenticatorSaveRegistrationAction.java
 │       │               ├── interrupt
 │       │               │   └── DomainChangeInterruptInquirer.java
 │       │               ├── logout
@@ -91,6 +107,11 @@ All the important parts of the project are listed below:
 │       │               │   │   └── OidcSingleLogoutMessageCreator.java
 │       │               │   └── token
 │       │               │       └── OidcIdTokenGeneratorService.java
+│       │               ├── persondir
+│       │               │   ├── DefaultAttributeRepositoryResolver.java
+│       │               │   └── LdaptivePersonAttributeDao.java
+│       │               ├── scim/v2/provisioning
+│       │               │   └── ScimPrincipalProvisioner.java
 │       │               ├── services
 │       │               │   ├── mgmt
 │       │               │   │   └── AbstractServicesManager.java
@@ -108,6 +129,8 @@ All the important parts of the project are listed below:
 │       │               │       └── TargetedIdSamlRegisteredServiceAttributeReleasePolicy.java
 │       │               ├── trusted/web/flow
 │       │               │   └── MultifactorAuthenticationSetTrustAction.java
+│       │               ├── util
+│       │               │   └── LdapUtils.java
 │       │               └── web
 │       │                   ├── flow
 │       │                   │   ├── actions
@@ -121,6 +144,8 @@ All the important parts of the project are listed below:
 │       │                       └── SamlProfileSaml2ResponseBuilder.java
 |       | 
 |       └── resources
+|           ├── groovy-test
+|           |   └── ...
 |           ├── META-INF
 |           |   └── spring
 |           |       └── org.springframework.boot.autoconfigure.AutoConfiguration.imports
@@ -129,14 +154,24 @@ All the important parts of the project are listed below:
 |           ├── services-test
 |           |   └── ...
 |           ├── static
-|           |   └── css
-|           |       └── cas.css
+|           |   ├── css
+|           |   |   ├── cas.css
+|           |   |   └── custom.css
+|           |   └── js
+|           |       ├── custom.js
+|           |       ├── r-wayf.js
+|           |       └── r-wc-config.js
 |           ├── templates
 |           |   ├── delegated-authn
+|           |   |   ├── casDelegatedAuthnSelectionView.html
 |           |   |   └── casDelegatedAuthnStopWebflow.html
 |           |   ├── fragments
 |           |   |   ├── footer.html
-|           |   |   └── header.html
+|           |   |   ├── header.html
+|           |   |   ├── layout.html
+|           |   |   ├── loginform.html
+|           |   |   ├── loginProviders.html
+|           |   |   └── scripts.html
 |           |   ├── gauth
 |           |   |   ├── casGoogleAuthenticatorLoginView.html
 |           |   |   └── casGoogleAuthenticatorRegistrationView.html

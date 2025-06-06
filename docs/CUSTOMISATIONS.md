@@ -20,3 +20,9 @@
 | Modifications UI TOTP | casGoogleAuthenticatorRegistrationView + casGoogleAuthenticatorLoginView + cas.css |
 | Fix expiration trusted devices | MultifactorAuthenticationSetTrustAction |
 | Fix TOTP registration réutilisable | GoogleAuthenticatorSaveRegistrationAction |
+| WAYF | DefaultDelegatedClientIdentityProviderConfigurationProducer + script groovy + casLoginView |
+| Attribute repository par guichet | DefaultAttributeRepositoryResolver |
+| Profile selection | BaseDelegatedClientAuthenticationCredentialResolver + LdapDelegatedClientAuthenticationCredentialResolver + LdapUtils + script groovy |
+| UI choix du profil | DelegatedClientAuthenticationCredentialSelectionAction + casDelegatedAuthnSelectionView |
+| Remontée des erreurs de délégation | LdaptivePersonAttributeDao + LdapDelegatedClientAuthenticationCredentialResolver + casLoginView |
+| SCIM | ScimPrincipalProvisioner + CasScimAutoConfiguration |

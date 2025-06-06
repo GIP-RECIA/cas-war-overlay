@@ -175,15 +175,16 @@ return new Event(this, CasWebflowConstants.TRANSITION_ID_SELECT);
 
 ### Remontée des erreurs de délégation
 
-**En mode auth déléguée**
-
 Il faut pouvoir afficher un message d'erreur lorsqu'il y a une erreur dans le flot d'authentification déléguée (pas de compte correspondant dans le LDAP par exemple).
 
 Pour cela, deux modifications ont été réalisées afin de lever une exception si aucun compte n'est trouvé (`result.getEntries().size() < 1`) : 
 - Dans `LdaptivePersonAttributeDao` pour les attributes repositories classique ;
 - Dans `LdapDelegatedClientAuthenticationCredentialResolver` pour la partie profile selection.
 
-Il faut ensuite paramétrer correctement le CAS pour qu'il termine en erreur l'authentification si une partie de la chaîne est en erreur (sinon il peut continuer avec une erreur partielle) :
+
+**En mode auth déléguée**
+
+Il faut paramétrer correctement le CAS pour qu'il termine en erreur l'authentification si une partie de la chaîne est en erreur (sinon il peut continuer avec une erreur partielle) :
 
 ```
 cas.person-directory.principal-resolution-failure-fatal: true
