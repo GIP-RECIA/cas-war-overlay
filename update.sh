@@ -36,7 +36,7 @@ FILES=(
     "src/main/java/org/apereo/cas/util/LdapUtils.java support/cas-server-support-ldap-core/src/main/java/org/apereo/cas/util/LdapUtils.java"
     "src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationCredentialSelectionAction.java support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationCredentialSelectionAction.java"
     "src/main/resources/templates/login/casLoginView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casLoginView.html"
-    "src/main/java/org/apereo/cas/scim/v2/ScimV2PrincipalProvisioner.java support/cas-server-support-scim-core/src/main/java/org/apereo/cas/scim/v2/ScimV2PrincipalProvisioner.java"
+    "src/main/java/org/apereo/cas/scim/v2/provisionning/ScimPrincipalProvisioner.java support/cas-server-support-scim-core/src/main/java/org/apereo/cas/scim/v2/provisionning/ScimPrincipalProvisioner.java"
     "src/main/java/org/apereo/cas/web/flow/PrincipalProvisionerAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/PrincipalProvisionerAction.java"
     "src/main/java/org/apereo/cas/config/CasScimAutoConfiguration.java support/cas-server-support-scim/src/main/java/org/apereo/cas/config/CasScimAutoConfiguration.java"
     "src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java"
@@ -47,6 +47,12 @@ FILES=(
     "src/main/resources/templates/fragments/footer.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/footer.html"
     "src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorTokenCredential.java support/cas-server-support-gauth-core-mfa/src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorTokenCredential.java"
     "src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorMultifactorWebflowConfigurer.java support/cas-server-support-gauth-core/src/main/java/org/apereo/cas/gauth/web/flow/GoogleAuthenticatorMultifactorWebflowConfigurer.java"
+    "src/main/resources/templates/fragments/layout.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/layout.html"
+    "src/main/resources/templates/fragments/loginform.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/loginform.html"
+    "src/main/resources/templates/fragments/loginProviders.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/loginProviders.html"
+    "src/main/resources/templates/fragments/scripts.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/scripts.html"
+    "src/main/resources/templates/login/casGenericSuccessView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casGenericSuccessView"
+    "src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java cas-server-support-ldap-core/src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

@@ -24,4 +24,9 @@
 | Fonctionnement du WAYF avec préselection des IDP | DefaultDelegatedClientIdentityProviderConfigurationProducer |
 | Activation séléctive de la profile selection | BaseDelegatedClientAuthenticationCredentialResolver |
 | Filtre LDAP custom avec tous les attributs (via script groovy) | LdapDelegatedClientAuthenticationCredentialResolver + LdapUtils |
-| Affichage attribut custom choix du profil | DelegatedClientAuthenticationCredentialSelectionAction |
+| WAYF | DefaultDelegatedClientIdentityProviderConfigurationProducer + script groovy + casLoginView |
+| Attribute repository par guichet | DefaultAttributeRepositoryResolver |
+| Profile selection | BaseDelegatedClientAuthenticationCredentialResolver + LdapDelegatedClientAuthenticationCredentialResolver + LdapUtils + script groovy |
+| UI choix du profil | DelegatedClientAuthenticationCredentialSelectionAction + casDelegatedAuthnSelectionView |
+| Remontée des erreurs de délégation | LdaptivePersonAttributeDao + LdapDelegatedClientAuthenticationCredentialResolver + casLoginView |
+| SCIM | ScimPrincipalProvisioner + CasScimAutoConfiguration |
