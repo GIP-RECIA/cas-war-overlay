@@ -1,5 +1,7 @@
 package org.apereo.cas.web.flow;
 
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.authentication.principal.WebApplicationService;
 import org.apereo.cas.authentication.principal.provision.DelegatedAuthenticationFailureException;
@@ -8,9 +10,6 @@ import org.apereo.cas.util.spring.beans.BeanSupplier;
 import org.apereo.cas.web.DelegatedClientIdentityProviderConfiguration;
 import org.apereo.cas.web.DelegatedClientIdentityProviderConfigurationFactory;
 import org.apereo.cas.web.support.WebUtils;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.jooq.lambda.Unchecked;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.IndirectClient;
@@ -19,12 +18,16 @@ import org.pac4j.jee.context.JEEContext;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.webflow.execution.RequestContext;
+
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -34,12 +37,33 @@ import java.util.stream.Collectors;
  * @since 6.2.0
  */
 @Slf4j
-@RequiredArgsConstructor
 public class DefaultDelegatedClientIdentityProviderConfigurationProducer implements DelegatedClientIdentityProviderConfigurationProducer {
     private final ObjectProvider<DelegatedClientAuthenticationConfigurationContext> configurationContext;
+    private Set<String> authorizedDomains;
+    private final Pattern domainExtractorPattern;
+
+    public DefaultDelegatedClientIdentityProviderConfigurationProducer(ObjectProvider<DelegatedClientAuthenticationConfigurationContext> configurationContext) {
+        this.configurationContext = configurationContext;
+        this.domainExtractorPattern = Pattern.compile("^(https?://[^/]+)");
+        this.authorizedDomains = null;
+    }
 
     @Override
     public Set<DelegatedClientIdentityProviderConfiguration> produce(final RequestContext context) throws Throwable {
+        
+        // Initialize list of domains only once for performance
+        if(authorizedDomains == null){
+            if(configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.cerbere.authorized-domains") == null){
+                LOGGER.error("No authorized domains were provided in configuraiton for cerbere link generation");
+                this.authorizedDomains = new HashSet<>();
+            } else {
+                authorizedDomains = Arrays.stream(configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.cerbere.authorized-domains")
+                    .split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toSet());
+            }
+        }
+
         val currentService = WebUtils.getService(context);
 
         val selectionStrategies = configurationContext.getObject().getAuthenticationRequestServiceSelectionStrategies();
@@ -80,8 +104,27 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
                     val delegationIdpIdParameter = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.parameter");
                     val delegationIdpIdRemotePattern = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.remote-pattern");
                     val providerSelectionWebflowUrlParameter = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.provider-selection.webflow-url.parameter");
-                    if(request.getParameterMap().containsKey(delegationIdpIdParameter)){
-                        if(!request.getParameterMap().get(delegationIdpIdParameter)[0].contains(delegationIdpIdRemotePattern)){
+                    val defaultDomain = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.cerbere.default-domain");
+                    if (request.getParameterMap().containsKey(delegationIdpIdParameter)) {
+                        if (!request.getParameterMap().get(delegationIdpIdParameter)[0].contains(delegationIdpIdRemotePattern)) {
+                            DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, null);
+                            // Customization : put domain name in webflow in local auth context
+                            if (service != null) {
+                                val serviceDomain = extractDomainFromServiceURL(service.getOriginalUrl());
+                                if (authorizedDomains.contains(serviceDomain)) {
+                                    LOGGER.trace("Domain [{}] is in authorized domains [{}], creating cerbere link", serviceDomain, authorizedDomains);
+                                    context.getRequestScope().put("domain_name", serviceDomain);
+                                } else {
+                                    LOGGER.trace("Domain [{}] is not in authorized domains [{}], creating cerbere link with default domain [{}]",
+                                            serviceDomain, authorizedDomains, defaultDomain);
+                                    context.getRequestScope().put("domain_name", defaultDomain);
+                                }
+                            }
+                            // If there is no service, then use CAS domain as url
+                            else {
+                                LOGGER.trace("No domain is provided, creating cerbere link with default domain [{}]", defaultDomain);
+                                context.getRequestScope().put("domain_name", defaultDomain);
+                            }
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, null);
                         } else {
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
@@ -154,5 +197,15 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
     protected List<Client> findAllClients(final WebApplicationService service, final WebContext webContext) {
         val clients = configurationContext.getObject().getIdentityProviders();
         return clients.findAllClients(service, webContext);
+    }
+
+    private String extractDomainFromServiceURL(String serviceUrl) {
+        Matcher matcher = domainExtractorPattern.matcher(serviceUrl);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            LOGGER.warn("No domain was extracted for [{}]", serviceUrl);
+        }
+        return "";
     }
 }

@@ -54,7 +54,7 @@
                         <div class="active-indicator"></div>
                         </div>
                     </div>
-                    <a href="#" id="password-forgotten">Mot de passe oublié ?</a>
+                    <a th:href="@{${domain_name} + '/cerbere2/stylesheets/perdu.xhtml' }" id="password-forgotten">Mot de passe oublié ?</a>
                     <button type="submit" class="btn-primary">
                         <i class="fa-solid fa-lock-open" aria-hidden="true"></i>Connexion
                     </button>
@@ -65,12 +65,12 @@
                 </form>
             </div>
             <div class="test-cas-login-actions">
-                <button class="">
+                <a th:href="@{${domain_name} + '/cerbere2/' }" class="btn">
                 <i class="fa-solid fa-bolt" aria-hidden="true"></i>Activer mon compte
-                </button>
-                <button class="">
+                </a>
+                <a th:href="@{${domain_name} + '/cerbere2/' }" class="btn">
                 <i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i>Mon compte a été réinitialisé
-                </button>
+                </a>
             </div>
         </div>
     </div>
