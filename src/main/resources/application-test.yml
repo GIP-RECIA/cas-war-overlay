@@ -314,6 +314,8 @@ cas.custom.properties.profile-selection.structinfo-url: http://localhost:7001/st
 cas.custom.properties.profile-selection.structinfo-attribute-to-display: displayName
 cas.custom.properties.profile-selection.structinfo-webflow-attribute-name: ETAB_NAME
 cas.custom.properties.profile-selection.structinfo.refresh-cache-interval: PT24H
+cas.custom.properties.delegation.cerbere.authorized-domains: http://localhost:8055,https://authorized_example1_domain,https://authorized_example2_domain
+cas.custom.properties.delegation.cerbere.default-domain: https://default_example_domain
 
 # SCIM
 cas.custom.properties.scim.regex-etab-class: ":Etablissements:(?:[^:]+)_([^:]+):.*?:(?:Profs|Eleves)_([^:]+$)"
