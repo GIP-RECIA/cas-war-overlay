@@ -397,7 +397,7 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-saml-idp-web"
     compileOnly "org.apereo.cas:cas-server-support-saml-idp-ticket"
     compileOnly "org.apereo.cas:cas-server-core-cookie-api"
-    //SCIM
+    // SCIM
     implementation "org.apereo.cas:cas-server-support-scim"
     compileOnly "de.captaingoldfish:scim-sdk-common:1.27.1"
     compileOnly "de.captaingoldfish:scim-sdk-client:1.27.1"
@@ -407,4 +407,7 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-otp-mfa-core"
     compileOnly "org.apereo.cas:cas-server-support-trusted-mfa-core"
     compileOnly "org.apereo.cas:cas-server-core-webflow-mfa-api"
+    // Custom logout for external idp
+    compileOnly "org.apereo.cas:cas-server-support-actions-core"
+    compileOnly "org.apereo.cas:cas-server-support-pac4j-core-clients"
 }
