@@ -73,3 +73,6 @@ SERVICE_TOTP_URL = "http://localhost:8046/test"
 
 # Url du service avec MFA TOTP, cas spécial ou il y a un paramètre token dans l'url
 SERVICE_TOTP_WITH_TOKEN_PARAMETER_URL = "http://localhost:8051/test&token=aaaaa"
+
+# Url du service pour tester la déconnexion globale avec redirection
+SERVICE_SLO_REDIRECTION_URL = "http://localhost:8057/test"

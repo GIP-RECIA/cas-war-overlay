@@ -1,0 +1,47 @@
+const cas = require("../cas.js");
+const puppeteer = require('puppeteer');
+const assert = require("assert");
+
+(async () => {
+    const browser = await puppeteer.launch(cas.browserOptions());
+
+    try {
+        const page = await browser.newPage();
+        const client = await page.createCDPSession();
+        const casHost = "https://localhost:8443";
+        const service = "http://localhost:8058/test"
+
+        // Goto CAS login page
+        await page.goto(`${casHost}/cas/login?service=${service}`);
+
+        // Click on external idp for profile selection button
+        const rWayf = await page.$("r-wayf");
+        const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
+        const idpLink = await shadowRoot.$("#agri-IdP"); 
+        await idpLink.click();
+
+        // Enter credentials and validate
+        await cas.typeCredentialsAndEnter(page, "test7", "test");
+        await page.waitForNavigation();
+        await page.waitForNetworkIdle();
+
+        // Assert that TGC exists
+        var pageContent = await page.content();
+        await cas.verifyTGC(client);
+        
+        // Logout from CAS
+        await page.goto(`${casHost}/cas/logout`);
+
+        // Assert that logout page has the link to disconnect to idp
+        var pageContent = await page.content();
+        assert(pageContent.includes('<a href="https://logout_url_for_idp1.fr/logout" target="_blank"><p>Logout of agricultural authentication system</p></a>'));
+
+        process.exit(0)
+
+    } catch (e) {
+        cas.loge(e);
+        process.exit(1)
+    } finally {
+        await browser.close();
+    }
+})();

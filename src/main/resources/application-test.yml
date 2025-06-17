@@ -25,6 +25,10 @@ cas.audit.slf4j.use-single-line: true
 cas.audit.redis.host: localhost
 cas.audit.redis.port: 6379
 
+# Redirection après déconnexion via le paramètre url
+cas.logout.follow-service-redirects: true
+cas.logout.redirect-parameter: url
+
 # Crypto
 # In-Memory
 cas.ticket.registry.in-memory.crypto.enabled: true
@@ -224,6 +228,7 @@ cas.authn.pac4j.saml[1].keystore-path: /etc/cas/educagri-keystore.jks
 cas.authn.pac4j.saml[1].private-key-password: pac4j-demo-passwd
 cas.authn.pac4j.saml[1].metadata.service-provider.file-system.location: /etc/cas/educagri-metadata.xml
 cas.authn.pac4j.saml[1].client-name: educagri
+cas.authn.pac4j.saml[1].display-name: https://logout_url_for_idp1.fr/logout
 cas.authn.pac4j.saml[1].principal-id-attribute: mail
 cas.authn.pac4j.saml[1].metadata.identity-provider-metadata-path: https://localhost:9443/cas/idp/metadata
 cas.authn.pac4j.saml[2].service-provider-entity-id: https://localhost:8443/cas/rcvl

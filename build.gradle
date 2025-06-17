@@ -400,6 +400,11 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-saml-idp-web"
     compileOnly "org.apereo.cas:cas-server-support-saml-idp-ticket"
     compileOnly "org.apereo.cas:cas-server-core-cookie-api"
+    // SCIM
+    implementation "org.apereo.cas:cas-server-support-scim"
+    compileOnly "de.captaingoldfish:scim-sdk-common:1.27.1"
+    compileOnly "de.captaingoldfish:scim-sdk-client:1.27.1"
+    compileOnly "org.apereo.cas:cas-server-support-scim-core"
     // Custom TOTP MFA
     compileOnly "org.apereo.cas:cas-server-support-gauth-core-mfa"
     compileOnly "org.apereo.cas:cas-server-support-otp-mfa-core"
@@ -408,12 +413,7 @@ dependencies {
     // Fix TOTP scratch code
     compileOnly "org.springframework.data:spring-data-redis"
     compileOnly "org.apereo.cas:cas-server-support-redis-core"
-    //SCIM
-    implementation "org.apereo.cas:cas-server-support-scim"
-    compileOnly "de.captaingoldfish:scim-sdk-common:1.27.1"
-    compileOnly "de.captaingoldfish:scim-sdk-client:1.27.1"
-    compileOnly "org.apereo.cas:cas-server-support-scim-core"
-    // Custom TOTP MFA
-    compileOnly "org.apereo.cas:cas-server-support-gauth-core-mfa"
-    compileOnly "org.apereo.cas:cas-server-support-otp-mfa-core"
+    // Custom logout for external idp
+    compileOnly "org.apereo.cas:cas-server-support-actions-core"
+    compileOnly "org.apereo.cas:cas-server-support-pac4j-core-clients"
 }

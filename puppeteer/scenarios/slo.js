@@ -20,11 +20,16 @@ const assert = require("assert");
         // Logout from CAS
         await page.goto(`${casHost}/cas/logout`);
 
+        var pageContent = await page.content();
+        assert(pageContent.includes("You have successfully logged out of the Central Authentication Service."))
+
+        await new Promise(resolve => setTimeout(resolve, 20000));
+
         // Get logout status from app
         await page.goto(service+"/checkLogout");
 
         // Assert that the user is logged out of the app
-        const pageContent = await page.content();
+        var pageContent = await page.content();
         assert(pageContent.includes("LOGGED IN=False"))
         assert(pageContent.includes("PRINCIPAL=F1abc"))
 
