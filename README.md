@@ -42,6 +42,7 @@ And has a number of custom enhancements :
 - Custom SCIM provisionning
 - Custom UI for profile selection
 - Better handling of delegation errors
+- Custom logout link for external IDP in delegation scenario
 
 Current CAS Base version : **7.2.1**
 
@@ -86,18 +87,15 @@ All the important parts of the project are listed below:
 │       │   └── org
 │       │       └── apereo
 │       │           └── cas
-<<<<<<< HEAD
 │       │               ├── authentication
 │       │               │   └── principal
 │       │               │       ├── ldap
 │       │               │       │   └── LdapDelegatedClientAuthenticationCredentialResolver.java
 │       │               │       └── BaseDelegatedClientAuthenticationCredentialResolver.java
-=======
 │       │               ├── authentication/principal
 │       │               │   ├── ldap
 │       │               │   │   └── LdapDelegatedClientAuthenticationCredentialResolver.java
 │       │               │   └── BaseDelegatedClientAuthenticationCredentialResolver.java
->>>>>>> f9bbcdc (docs: maj README + autres fichiers)
 │       │               ├── config
 │       │               │   ├── CasCoreLogoutAutoConfiguration.java
 │       │               │   ├── CasScimAutoConfiguration.java
@@ -119,14 +117,10 @@ All the important parts of the project are listed below:
 │       │               │   └── token
 │       │               │       └── OidcIdTokenGeneratorService.java
 │       │               ├── persondir
-<<<<<<< HEAD
-│       │               │   └── DefaultAttributeRepositoryResolver.java
-=======
 │       │               │   ├── DefaultAttributeRepositoryResolver.java
 │       │               │   └── LdaptivePersonAttributeDao.java
 │       │               ├── scim/v2/provisioning
 │       │               │   └── ScimPrincipalProvisioner.java
->>>>>>> f9bbcdc (docs: maj README + autres fichiers)
 │       │               ├── services
 │       │               │   ├── mgmt
 │       │               │   │   └── AbstractServicesManager.java
@@ -151,6 +145,9 @@ All the important parts of the project are listed below:
 │       │               └── web
 │       │                   ├── flow
 │       │                   │   ├── actions
+│       │                   │   │   └── logout
+│       │                   │   │   │   ├── DelegatedAuthenticationClientLogoutAction.java
+│       │                   │   │   │   └── FinishLogoutAction.java
 │       │                   │   │   ├── DelegatedClientAuthenticationCredentialSelectionAction.java
 │       │                   │   │   └── DelegatedClientAuthenticationRedirectAction.java
 │       │                   │   ├── error
@@ -196,8 +193,10 @@ All the important parts of the project are listed below:
 |           |   |   └── casGoogleAuthenticatorRegistrationView.html
 |           |   ├── interrupt
 |           |   |   └── casInterruptView.html
-|           |   └── login
-|           |       └── casGenericSuccessView.html
+|           |   ├── login
+|           |   |   └── casGenericSuccessView.html
+|           |   └── logout
+|           |       └── casLogoutView.html
 |           ├── application-test.yml
 |           ├── application.yml
 |           ├── custom_messages_fr.properties

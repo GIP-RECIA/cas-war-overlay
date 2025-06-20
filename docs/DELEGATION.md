@@ -216,6 +216,22 @@ L'erreur est affichée dans le template `casLoginView.html` (et pas le fragment 
 
 Ici on réutilise ce qui était prévu de base par CAS.
 
+### Logout
+
+Pour ce qui est du logout, il faut faire parvenir un message au guichet par lequel l'utilisateur est passé afin qu'il en soit aussi déconnecté (s'il le souhaite). Pour satisfaire cette exigence et gérer les cas où les guichets ne supportent pas bien les `<LogoutRequest>`, un système alternatif a été mis en place.
+
+Le schéma ci-dessous décrit le nouveau flot de logout :
+
+![Logout](images/flot_logout.png)
+
+L'idée est de rendre possible le paramétrage d'une URL de déconnexion spécifique par client SAML. Si cette URL est présente, alors on sort du flot classique de logout et on affiche une page personnalisée avec un bouton qui ouvre cette URL dans un nouvel onglet (en oubliant pas la gestion des url de redirection après logout).
+
+Pour ajouter une URL de déconnexion spécifique, il suffit de remplir le paramètre `displayName` qui n'est pas utilisé ailleurs :
+```
+cas.authn.pac4j.saml[X].display-name: URL_LOGOUT
+```
+
+
 ## Configuration 
 
 ### WAYF

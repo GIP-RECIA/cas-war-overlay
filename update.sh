@@ -36,7 +36,7 @@ FILES=(
     "src/main/java/org/apereo/cas/util/LdapUtils.java support/cas-server-support-ldap-core/src/main/java/org/apereo/cas/util/LdapUtils.java"
     "src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationCredentialSelectionAction.java support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationCredentialSelectionAction.java"
     "src/main/resources/templates/login/casLoginView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casLoginView.html"
-    "src/main/java/org/apereo/cas/scim/v2/provisionning/ScimPrincipalProvisioner.java support/cas-server-support-scim-core/src/main/java/org/apereo/cas/scim/v2/provisionning/ScimPrincipalProvisioner.java"
+    "src/main/java/org/apereo/cas/scim/v2/provisioning/ScimPrincipalProvisioner.java support/cas-server-support-scim-core/src/main/java/org/apereo/cas/scim/v2/provisioning/ScimPrincipalProvisioner.java"
     "src/main/java/org/apereo/cas/web/flow/PrincipalProvisionerAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/PrincipalProvisionerAction.java"
     "src/main/java/org/apereo/cas/config/CasScimAutoConfiguration.java support/cas-server-support-scim/src/main/java/org/apereo/cas/config/CasScimAutoConfiguration.java"
     "src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/DefaultLogoutRedirectionStrategy.java"
@@ -53,6 +53,9 @@ FILES=(
     "src/main/resources/templates/fragments/scripts.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/scripts.html"
     "src/main/resources/templates/login/casGenericSuccessView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casGenericSuccessView"
     "src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java cas-server-support-ldap-core/src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java"
+    "src/main/java/org/apereo/cas/web/flow/actions/logout/DelegatedAuthenticationClientLogoutAction.java support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/logout/DelegatedAuthenticationClientLogoutAction.java"
+    "src/main/java/org/apereo/cas/web/flow/logout/FinishLogoutAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/logout/FinishLogoutAction.java"
+    "src/main/resources/templates/logout/casLogoutView.html support/cas-server-support-thymeleaf/src/main/resources/templates/logout/casLogoutView.html"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

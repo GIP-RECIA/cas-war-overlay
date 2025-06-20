@@ -29,4 +29,5 @@
 | Profile selection | BaseDelegatedClientAuthenticationCredentialResolver + LdapDelegatedClientAuthenticationCredentialResolver + LdapUtils + script groovy |
 | UI choix du profil | DelegatedClientAuthenticationCredentialSelectionAction + casDelegatedAuthnSelectionView |
 | Remontée des erreurs de délégation | LdaptivePersonAttributeDao + LdapDelegatedClientAuthenticationCredentialResolver + casLoginView |
+| Logout custom par IDP delegation | DelegatedAuthenticationClientLogoutAction + FinishLogoutAction + casLogoutView |
 | SCIM | ScimPrincipalProvisioner + CasScimAutoConfiguration |
