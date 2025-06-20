@@ -25,12 +25,12 @@
                 <div th:if="${delegatedAuthenticationClientName}">
                     <div th:if="${logoutLink}">
                         <p th:text="#{screen.logout.delegation.disconnect}"></p>
-                        <a th:href="${logoutLink}" target="_blank"><p th:text="#{${logoutName}}"/></a>
+                        <a id="customLogoutLinkButton" th:href="${logoutLink}" target="_blank" onclick="redirectAfterClick()"><p th:text="#{${logoutName}}"/></a>
                     </div>
                 </div>
                 <div th:if="${logoutRedirect}">
                     <p th:text="#{screen.logout.delegation.redirect}"></p>
-                    <a th:href="${logoutRedirect}"><p th:text="${logoutRedirect}"/></a>
+                    <a id="customLogoutRedirectButton" th:href="${logoutRedirect}" style="display: none;"><p th:text="${logoutRedirect}"/></a>
                 </div>
                 <div th:remove="tag" th:if="${enableProceed}">
                     <p>Logout will continue in a few seconds. Please wait...</p>

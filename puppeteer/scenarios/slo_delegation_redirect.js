@@ -33,9 +33,9 @@ const assert = require("assert");
         await page.goto(`${casHost}/cas/logout?url=http://localhost:8059/redirect_after_slo`);
 
         // Assert that logout page has the link to disconnect to idp and to redirect
-        var pageContent = await page.content();
-        assert(pageContent.includes('<a href="https://logout_url_for_idp1.fr/logout" target="_blank"><p>Logout of agricultural authentication system</p></a>'));
-        assert(pageContent.includes('<a href="http://localhost:8059/redirect_after_slo"><p>http://localhost:8059/redirect_after_slo</p></a>'));
+        pageContent = await page.content();
+        assert(pageContent.includes('<a id="customLogoutLinkButton" href="https://logout_url_for_idp1.fr/logout" target="_blank" onclick="redirectAfterClick()"><p>Logout of agricultural authentication system</p></a>'));
+        assert(pageContent.includes('<a id="customLogoutRedirectButton" href="http://localhost:8059/redirect_after_slo" style="display: none;"><p>http://localhost:8059/redirect_after_slo</p></a>'));
 
         process.exit(0)
 
