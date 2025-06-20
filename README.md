@@ -39,6 +39,7 @@ And has a number of custom enhancements :
 - Mapping between attribute repository and delegated client
 - Custom UI for profile selection
 - Better handling of delegation errors
+- Custom logout link for external IDP in delegation scenario
 
 Current CAS Base version : **7.2.1**
 
@@ -134,6 +135,10 @@ All the important parts of the project are listed below:
 │       │               └── web
 │       │                   ├── flow
 │       │                   │   ├── actions
+│       │                   │   │   └── logout
+│       │                   │   │   │   ├── DelegatedAuthenticationClientLogoutAction.java
+│       │                   │   │   │   └── FinishLogoutAction.java
+│       │                   │   │   ├── DelegatedClientAuthenticationCredentialSelectionAction.java
 │       │                   │   │   └── DelegatedClientAuthenticationRedirectAction.java
 │       │                   │   ├── error
 │       │                   │   │   └── DefaultDelegatedClientAuthenticationFailureEvaluator.java
@@ -177,8 +182,10 @@ All the important parts of the project are listed below:
 |           |   |   └── casGoogleAuthenticatorRegistrationView.html
 |           |   ├── interrupt
 |           |   |   └── casInterruptView.html
-|           |   └── login
-|           |       └── casGenericSuccessView.html
+|           |   ├── login
+|           |   |   └── casGenericSuccessView.html
+|           |   └── logout
+|           |       └── casLogoutView.html
 |           ├── application-test.yml
 |           ├── application.yml
 |           ├── custom_messages_fr.properties

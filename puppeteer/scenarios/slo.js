@@ -23,8 +23,6 @@ const assert = require("assert");
         var pageContent = await page.content();
         assert(pageContent.includes("You have successfully logged out of the Central Authentication Service."))
 
-        await new Promise(resolve => setTimeout(resolve, 20000));
-
         // Get logout status from app
         await page.goto(service+"/checkLogout");
 
