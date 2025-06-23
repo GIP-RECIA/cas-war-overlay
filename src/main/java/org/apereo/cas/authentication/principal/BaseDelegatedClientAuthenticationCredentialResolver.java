@@ -28,7 +28,7 @@ public abstract class BaseDelegatedClientAuthenticationCredentialResolver
 
     @Override
     public boolean supports(final ClientCredential credentials) {
-        if(credentials.getClientName().equals(configContext.getCasProperties().getCustom().getProperties().get("profile-selection.client-name"))){
+        if(credentials.getClientName().contains(configContext.getCasProperties().getCustom().getProperties().get("profile-selection.client-name"))){
             return credentials != null;
         } else {
             return false;

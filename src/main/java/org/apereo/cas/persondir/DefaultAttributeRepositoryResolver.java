@@ -38,7 +38,7 @@ public class DefaultAttributeRepositoryResolver implements AttributeRepositoryRe
         // Customization : select attribute repository based on delegated clientName
         if(query.getAuthenticationHandler() != null){
             if(query.getAuthenticationHandler().getName().equals("DelegatedClientAuthenticationHandler")){
-                if(!query.getPrincipal().getAttributes().get(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME).getFirst().toString().equals(casProperties.getCustom().getProperties().get("profile-selection.client-name"))){
+                if(!query.getPrincipal().getAttributes().get(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME).getFirst().toString().contains(casProperties.getCustom().getProperties().get("profile-selection.client-name"))){
                     repositoryIds.add(query.getPrincipal().getAttributes().get(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME).getFirst().toString());
                     return repositoryIds;
                 } else {

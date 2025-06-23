@@ -76,3 +76,6 @@ SERVICE_TOTP_WITH_TOKEN_PARAMETER_URL = "http://localhost:8051/test&token=aaaaa"
 
 # Url du service pour tester la déconnexion globale avec redirection
 SERVICE_SLO_REDIRECTION_URL = "http://localhost:8057/test"
+
+# Url du service pour tester la profile selection dans le cas d'une auth déléguée (IdP 2)
+SERVICE_PROFILE_2_SELECTION_URL = "http://localhost:8060/test"
