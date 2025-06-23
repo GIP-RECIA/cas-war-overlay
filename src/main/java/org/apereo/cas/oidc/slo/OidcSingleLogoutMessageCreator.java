@@ -79,7 +79,7 @@ public class OidcSingleLogoutMessageCreator implements SingleLogoutMessageCreato
         events.put("http://schemas.openid.net/event/backchannel-logout", new HashMap<>());
         claims.setClaim("events", events);
         claims.setClaim(OidcConstants.CLAIM_SESSION_ID,
-            DigestUtils.sha(DigestUtils.sha512(request.getExecutionRequest().getTicketGrantingTicket().getId())));
+                DigestUtils.sha(DigestUtils.sha512(request.getExecutionRequest().getTicketGrantingTicket().getId())));
 
         return claims;
     }
