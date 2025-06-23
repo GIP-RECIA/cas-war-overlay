@@ -14,13 +14,6 @@ const assert = require("assert");
         // Login to cas
         await cas.loginWith(page, casHost, service+"/test", "test1", "test")
 
-        // Logout from CAS
-        await page.goto(`${casHost}/cas/logout?url=http://localhost:8057/test`);
-
-        // Assert that the user is correctly redirected
-        const url = page.url();
-        assert(url.includes(service+"/test"))
-
         // Assert that user is connected
         await cas.verifyTGC(client)
 

@@ -65,11 +65,14 @@ SERVICE_REDIRECT_DELEGATION_PROFILE_SELECTION_URL = "http://localhost:8040/test"
 # Url du service sur lequel on est redirigé quand on test le multidomaine avec un paramètre d'url
 SERVICE_REDIRECT_WITH_PARAMS_URL = "http://localhost:8041/test?param1=valeur2"
 
-# Url du service pour tester le SCIM (update)
-SERVICE_SCIM_UPDATE_URL = "http://localhost:8049/test"
-
 # Url du service avec MFA TOTP
 SERVICE_TOTP_URL = "http://localhost:8046/test"
+
+# Url du service pour tester le SCIM (create)
+SERVICE_SCIM_CREATE_URL = "http://localhost:8048/test"
+
+# Url du service pour tester le SCIM (update)
+SERVICE_SCIM_UPDATE_URL = "http://localhost:8049/test"
 
 # Url du service avec MFA TOTP, cas spécial ou il y a un paramètre token dans l'url
 SERVICE_TOTP_WITH_TOKEN_PARAMETER_URL = "http://localhost:8051/test&token=aaaaa"

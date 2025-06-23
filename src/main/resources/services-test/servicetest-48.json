@@ -2,15 +2,29 @@
   "@class": "org.apereo.cas.services.CasRegisteredService",
   "serviceId": "^http:\/\/localhost:8048\/.*",
   "name": "Service Test",
-  "description": "Service de test pour SLO avec redirect via url",
+  "description": "Service de test pour SCIM (create)",
   "id": 48,
-  "bypassApprovalPrompt": true,
-  "logoutUrl" : "http://localhost:8048/logout",
+  "usernameAttributeProvider" : {
+    "@class" : "org.apereo.cas.services.PrincipalAttributeRegisteredServiceUsernameProvider",
+    "usernameAttribute" : "mail"
+  },
   "properties" : {
     "@class" : "java.util.HashMap",
     "skipDomainRedirect" : {
         "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
         "values" : [ "java.util.HashSet", [ true ] ]
+    },
+    "scimEnabled" : {
+      "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+      "values" : [ "java.util.HashSet", [ true ] ]
+    },
+    "scimUsername" : {
+      "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+      "values" : [ "java.util.HashSet", [ "username1" ] ]
+    },
+    "scimPassword" : {
+      "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+      "values" : [ "java.util.HashSet", [ "password1" ] ]
     }
   }
 }
