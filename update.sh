@@ -44,7 +44,7 @@ FILES=(
     "src/main/resources/templates/fragments/loginProviders.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/loginProviders.html"
     "src/main/resources/templates/fragments/scripts.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/scripts.html"
     "src/main/resources/templates/login/casGenericSuccessView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casGenericSuccessView.html"
-    "src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java cas-server-support-ldap-core/src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java"
+    "src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java support/cas-server-support-ldap-core/src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java"
     "src/main/java/org/apereo/cas/web/flow/actions/logout/DelegatedAuthenticationClientLogoutAction.java support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/logout/DelegatedAuthenticationClientLogoutAction.java"
     "src/main/java/org/apereo/cas/web/flow/logout/FinishLogoutAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/logout/FinishLogoutAction.java"
     "src/main/resources/templates/logout/casLogoutView.html support/cas-server-support-thymeleaf/src/main/resources/templates/logout/casLogoutView.html"
