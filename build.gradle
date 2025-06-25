@@ -416,4 +416,6 @@ dependencies {
     // Custom logout for external idp
     compileOnly "org.apereo.cas:cas-server-support-actions-core"
     compileOnly "org.apereo.cas:cas-server-support-pac4j-core-clients"
+    // Fix profile selection for one account
+    compileOnly "org.pac4j:pac4j-cas"
 }

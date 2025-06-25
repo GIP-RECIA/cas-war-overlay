@@ -91,7 +91,6 @@ public boolean supports(final ClientCredential credentials) {
 }
 ```
 
-
 **Filtre LDAP**
 
 Ici, on n'a pas de notion d'attribute repository car les attributs sont récupérés au moment où on fait la requête LDAP pour trouver les profils. Le filtre LDAP pour trouver le/les profils correspondants et retourner les attributs est généré dynamiquement par un script groovy.
@@ -172,6 +171,20 @@ for(DelegatedAuthenticationCandidateProfile delegatedAuthenticationCandidateProf
 DelegationWebflowUtils.putDelegatedClientAuthenticationResolvedCredentials(requestContext, profiles);
 return new Event(this, CasWebflowConstants.TRANSITION_ID_SELECT);
 ```
+
+**Erreur si un seul profil retourné**
+
+Pendant le flot d’authentification déléguée, l'action `DelegatedClientAuthenticationAction` nécessite de récupérer le service pour son traitement interne. Pour ce faire, elle utilise la méthode `restoreAuthenticationRequestInContext`, en s’appuyant sur le `requestContext` et le `clientName`.
+
+Cette méthode fait appel à la méthode `retrieve` de `DefaultDelegatedClientAuthenticationWebflowManager` qui essaie de récupérer le TST à partir du clientId avec la méthode `getDelegatedClientId`. Le clientId est en réalité l'id du TST qui est obtenu depuis le paramètre `State` de la requête SAML (voir la méthode `retrieveIdentifier` de la classe `DelegatedClientSaml2SessionManager`). Ce TST contient des informations enrichies sur le processus d’authentification, dont notamment le service cible.
+
+Cependant, lorsque CAS récupère le TST depuis le registry, il le supprime juste après (à la fin de la méthode `retrieve`). Ce comportement est probablement justifié par le fait que, dans la majorité des cas, cette action n’est appelée qu’une seule fois durant le flot d’authentification.
+
+Il y a un problème qui se manifeste dans le cas spécifique de la sélection de profil, où l’action est exécutée deux fois. Lors du premier passage, le TST est récupéré puis supprimé. Lors du second passage, la tentative de récupération échoue puisque le TST n’est plus présent dans le registry, mais est encore présent dans le paramètre `State`.
+
+Lorsqu’il y a plusieurs profils disponibles, le TST n’est pas correctement identifié via le paramètre `State`, ce qui empêche la méthode de tenter une récupération depuis le registry. Par conséquent, aucune erreur n’est levée dans ce cas précis, ce qui explique que l'erreur ne soit levée que lorsque le LDAP ne retourne qu'un seul profil.
+
+Dans la mesure ou le service peut aussi être récupéré directement depuis le `webContext` sans passer par le TST, le fix qui a été appliqué est de ne pas lever d'exception dans le cas ou le ticket ne peut pas être récupéré depuis le registry, en retournant un `Optional` vide. Le fix a été appliqué directement dans la méthode `retrieve`.
 
 ### Remontée des erreurs de délégation
 

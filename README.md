@@ -155,6 +155,7 @@ All the important parts of the project are listed below:
 │       │                   │   ├── resolver/impl
 │       │                   │   │   └── DefaultCasDelegatingWebflowEventResolver.java
 │       │                   │   ├── BaseServiceAuthorizationCheckAction.java
+│       │                   │   ├── DefaultDelegatedClientAuthenticationWebflowManager.java
 │       │                   │   └── DefaultDelegatedClientIdentityProviderConfigurationProducer.java
 │       │                   └── idp/profile/builders/response
 │       │                       └── SamlProfileSaml2ResponseBuilder.java
