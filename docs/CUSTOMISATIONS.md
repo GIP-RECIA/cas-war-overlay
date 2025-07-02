@@ -22,7 +22,7 @@
 | Fix TOTP registration réutilisable | GoogleAuthenticatorSaveRegistrationAction |
 | Filtre LDAP custom avec tous les attributs (via script groovy) | LdapDelegatedClientAuthenticationCredentialResolver + LdapUtils |
 | WAYF | DefaultDelegatedClientIdentityProviderConfigurationProducer + script groovy + casLoginView |
-| Attribute repository par guichet | DefaultAttributeRepositoryResolver |
+| Attribute repository par guichet | DefaultAttributeRepositoryResolver + PersonDirectoryPrincipalResolver |
 | Profile selection | BaseDelegatedClientAuthenticationCredentialResolver + LdapDelegatedClientAuthenticationCredentialResolver + LdapUtils + script groovy |
 | UI choix du profil | DelegatedClientAuthenticationCredentialSelectionAction + casDelegatedAuthnSelectionView |
 | Remontée des erreurs de délégation | LdaptivePersonAttributeDao + LdapDelegatedClientAuthenticationCredentialResolver + casLoginView |

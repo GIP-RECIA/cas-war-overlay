@@ -418,4 +418,6 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-pac4j-core-clients"
     // Fix profile selection for one account
     compileOnly "org.pac4j:pac4j-cas"
+    // Custom attribute repository selection
+    compileOnly "org.apereo.cas:cas-server-support-person-directory-core"
 }

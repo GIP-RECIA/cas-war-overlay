@@ -44,9 +44,13 @@ public class DefaultAttributeRepositoryResolver implements AttributeRepositoryRe
                 } else {
                     return repositoryIds;
                 }
+            // Local auth case : do not select any attribute repo
+            } else {
+                return repositoryIds;
             }
         }
 
+        // This is not needed anymore, but kept for update purposes
         determineRegisteredService(query)
             .map(RegisteredService::getAttributeReleasePolicy)
             .map(RegisteredServiceAttributeReleasePolicy::getPrincipalAttributesRepository)

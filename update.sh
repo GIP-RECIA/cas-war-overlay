@@ -49,6 +49,7 @@ FILES=(
     "src/main/java/org/apereo/cas/web/flow/logout/FinishLogoutAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/logout/FinishLogoutAction.java"
     "src/main/resources/templates/logout/casLogoutView.html support/cas-server-support-thymeleaf/src/main/resources/templates/logout/casLogoutView.html"
     "src/main/java/org/apereo/cas/web/flow/DefaultDelegatedClientAuthenticationWebflowManager.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/web/flow/DefaultDelegatedClientAuthenticationWebflowManager.java"
+    "src/main/java/org/apereo/cas/authentication/principal/resolvers/PersonDirectoryPrincipalResolver.java support/cas-server-support-person-directory-core/src/main/java/org/apereo/cas/authentication/principal/resolvers/PersonDirectoryPrincipalResolver.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

@@ -91,6 +91,8 @@ All the important parts of the project are listed below:
 │       │               │   └── principal
 │       │               │       ├── ldap
 │       │               │       │   └── LdapDelegatedClientAuthenticationCredentialResolver.java
+│       │               │       ├── resolvers
+│       │               │       │   └── PersonDirectoryPrincipalResolver.java
 │       │               │       └── BaseDelegatedClientAuthenticationCredentialResolver.java
 │       │               ├── authentication/principal
 │       │               │   ├── ldap
