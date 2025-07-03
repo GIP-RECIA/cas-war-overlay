@@ -244,6 +244,14 @@ Pour ajouter une URL de déconnexion spécifique, il suffit de remplir le param�
 cas.authn.pac4j.saml[X].display-name: URL_LOGOUT
 ```
 
+**Fonctionnement du logout même avec un TST expiré**
+
+De base CAS se sert du TST pour récupérer le client (pac4j) associé à l'utilisateur qui souhaite se déconnecter. Le problème est que le TST est un ticket qui a une durée de vie courte (15 minutes par défaut) et qui n'est pas voué à être persisité. Ce ticket sert surtout à ne pas perdre le flot lors de l'authentification. Ainsi, lorsque l'utilsateur se déconnectait plus de 15 minutes après sa connexion, le client ne pouvait pas être récupéré et la partie délégation de la déconnexion ne pouvait pas être lancée.
+
+Pour pallier à ce problème, un morceau de code a été écrit dans le `DelegatedAuthenticationClientLogoutAction`. L'objectif est de se servir du TGT, qui lui est voué à être persisité et sert déjà pour la récupération des services auxquels il faut envoyer des requêtes de SLO. Avec ce TGT on récupère alors le client (pac4j) et la suite du flot peut continuer normalement, lorsqu'on a une URL de déconnexion spécifique.
+
+Pour ce qui est des clients sans URL de déconnexion spécifique, ce système n'est pas suffisant pour résoudre le problème, car il faut également récupérer le profil de la personne (un objet pac4j) et non seulement le client. Une amélioration future visera à corriger ce soucis.
+
 
 ## Configuration 
 

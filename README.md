@@ -43,6 +43,7 @@ And has a number of custom enhancements :
 - Custom UI for profile selection
 - Better handling of delegation errors
 - Custom logout link for external IDP in delegation scenario
+- Fix delegation logout with expired TST (fallback to TGT)
 
 Current CAS Base version : **7.2.1**
 

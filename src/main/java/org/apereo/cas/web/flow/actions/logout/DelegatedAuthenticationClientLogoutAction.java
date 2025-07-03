@@ -1,8 +1,11 @@
 package org.apereo.cas.web.flow.actions.logout;
 
+import org.apereo.cas.authentication.principal.ClientCredential;
+import org.apereo.cas.authentication.principal.ClientCustomPropertyConstants;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.pac4j.client.DelegatedIdentityProviders;
 import org.apereo.cas.support.pac4j.authentication.DelegatedAuthenticationClientLogoutRequest;
+import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.ticket.registry.TicketRegistry;
 import org.apereo.cas.web.flow.DelegationWebflowUtils;
 import org.apereo.cas.web.flow.actions.BaseCasWebflowAction;
@@ -70,15 +73,29 @@ public class DelegatedAuthenticationClientLogoutAction extends BaseCasWebflowAct
         val context = new JEEContext(request, response);
 
         val currentProfile = findCurrentProfile(context);
-        val clientResult = findCurrentClient(currentProfile);
+        Optional<Client> clientResult = findCurrentClient(currentProfile);
 
-        // Customization : do not logout but put a link to a custom url by external idp in html
+        // Customisation : fallback to TGT to retrieve client if TST is unable to retrieve client
+        if(clientResult.isEmpty() && requestContext.getRequestScope().contains(WebUtils.PARAMETER_TICKET_GRANTING_TICKET_ID)){
+            LOGGER.debug("Could not retrieve the current client by TST. Trying by TGT...");
+            val ticket = (TicketGrantingTicket) ticketRegistry.getTicket((String) requestContext.getRequestScope().get(WebUtils.PARAMETER_TICKET_GRANTING_TICKET_ID));
+            if(ticket.getAuthentication().getAttributes().containsKey(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME)){
+                val clientName = (String) ticket.getAuthentication().getAttributes().get(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME).getFirst();
+                clientResult = identityProviders.findClient(clientName);
+                LOGGER.debug("Current [{}] client found by TGT", clientName);
+            } else {
+                LOGGER.debug("No clientName in TGT : this is not a delegation scenario for logout");
+            }
+        }
+        
+        // Customisation : do not logout but put a link to a custom url by external idp in html
         if(clientResult.isPresent()){
             if(clientResult.get() instanceof BaseClient){
-                if(((BaseClient) clientResult.get()).getCustomProperties().containsKey("displayName")){
+                if(((BaseClient) clientResult.get()).getCustomProperties().containsKey(ClientCustomPropertyConstants.CLIENT_CUSTOM_PROPERTY_DISPLAY_NAME)){
                     LOGGER.debug("Logout is disabled for external idp : using custom link in html view");
-                    requestContext.getFlashScope().put("logoutLink", ((BaseClient) clientResult.get()).getCustomProperties().get("displayName"));
+                    requestContext.getFlashScope().put("logoutLink", ((BaseClient) clientResult.get()).getCustomProperties().get(ClientCustomPropertyConstants.CLIENT_CUSTOM_PROPERTY_DISPLAY_NAME));
                     requestContext.getFlashScope().put("logoutName", "screen.logout.display.button."+clientResult.get().getName());
+                    requestContext.getFlowScope().put("delegatedAuthenticationClientName", clientResult.get().getName());
                     return null;
                 } else {
                     LOGGER.debug("No displayName is defined for external idp : using native method to handle logout");
