@@ -19,18 +19,16 @@
 
         <div class="login-layout">
             <div class="card">
-                <h1>Connexion</h1>
-                <p>
-                Pour des raisons de sécurité, veuillez vous déconnecter
-                et fermer votre navigateur lorsque vous avez fini d’accéder
-                aux services authentifiés.
+                <h1 th:text="#{screen.welcome.login.title}">Login</h1>
+                <p th:text="#{screen.welcome.login.desc}">
+                For safety reasons, please exit your web browser when you have finished your authenticated session.
                 </p>
                 <form method="post" id="fm1" th:object="${credential}" onsubmit="loginFormSubmission();">
                     <div class="field">
                         <div class="field-layout">
                         <div class="field-container">
                             <div class="middle">
-                            <label for="username">Identifiant</label>
+                            <label th:text="#{screen.welcome.login.username.title}" for="username">Username</label>
                             <input type="text" name="login" id="username" size="25" autocomplete="username" spellcheck="false" 
                                 th:accesskey="#{screen.welcome.label.netid.accesskey}" th:field="*{username}" 
                                 th:readonly="!${@casThymeleafTemplatesDirector.isLoginFormUsernameInputVisible(#vars)}" 
@@ -44,7 +42,7 @@
                         <div class="field-layout">
                         <div class="field-container">
                             <div class="middle">
-                            <label for="password">Mot de passe</label>
+                            <label for="password" th:text="#{screen.welcome.login.password.title}">Password</label>
                             <input type="password" name="password" id="password" th:accesskey="#{screen.welcome.label.password.accesskey}" th:field="*{password}" autocomplete="off" placeholder required>
                             </div>
                             <div class="end">
@@ -55,9 +53,9 @@
                         <div class="active-indicator"></div>
                         </div>
                     </div>
-                    <a th:href="@{${domain_name} + '/cerbere2/stylesheets/perdu.xhtml' }" id="password-forgotten">Mot de passe oublié ?</a>
-                    <button type="submit" class="btn-primary">
-                        <i class="fa-solid fa-lock-open" aria-hidden="true"></i>Connexion
+                    <a th:text="#{screen.welcome.login.password.forget}" th:href="@{${domain_name} + '/cerbere2/stylesheets/perdu.xhtml' }" id="password-forgotten">Forgot your password ?</a>
+                    <button th:text="#{screen.welcome.login.button.login}" type="submit" class="btn-primary">
+                        <i class="fa-solid fa-lock-open" aria-hidden="true"></i>Login
                     </button>
                     <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
                     <input type="hidden" name="_eventId" value="submit"/>
@@ -67,10 +65,10 @@
             </div>
             <div class="actions">
                 <a th:href="@{${domain_name} + '/cerbere2/' }" class="btn">
-                <i class="fa-solid fa-bolt" aria-hidden="true"></i>Activer mon compte
+                <i class="fa-solid fa-bolt" aria-hidden="true"></i><span th:remove="tag" th:text="#{screen.welcome.login.activate.account}">Activate my account</span>
                 </a>
                 <a th:href="@{${domain_name} + '/cerbere2/' }" class="btn">
-                <i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i>Mon compte a été réinitialisé
+                <i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i><span th:remove="tag" th:text="#{screen.welcome.login.reset.account}">My account was reset</span>
                 </a>
             </div>
         </div>
