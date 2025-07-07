@@ -15,16 +15,15 @@
         <div class="w-100 m-auto mdc-card card p-4">
             <div id="logoutBody" class="card-body">
                 <h2 class="banner-heading">
-                    <i class="mdi mdi-logout fas fa-sign-out-alt" aria-hidden="true"></i>
                     <span th:utext="#{screen.logout.header}">Logout successful</span>
                 </h2>
 
                 <p id="logoutMessage" class="banner-message" th:utext="#{screen.logout.success}">You have successfully logged out of the Central Authentication
                     Service. You may <a href="login">log in</a> again.</p>
                 <p class="banner-message" th:utext="#{screen.logout.security}">For security reasons, exit your web browser.</p>
-                <div th:if="${delegatedAuthenticationClientName}">
+                <div id="logout-link-container" th:if="${delegatedAuthenticationClientName}">
                     <div th:if="${logoutLink}">
-                        <p th:text="#{screen.logout.delegation.disconnect}"></p>
+                        <h3 id="title-logout-delegation-disconnect" th:text="#{screen.logout.delegation.disconnect}"></h3>
                         <a id="customLogoutLinkButton" th:href="${logoutLink}" target="_blank" onclick="redirectAfterClick()"><p th:text="#{${logoutName}}"/></a>
                     </div>
                 </div>
@@ -39,7 +38,7 @@
                         <input type="hidden" name="_eventId" value="proceed"/>
                     </form>
                     <script type="text/javascript">
-                        setTimeout((() => $("#logoutform").submit()), 100000);
+                        setTimeout((() => $("#logoutform").submit()), 1000);
                     </script>
                 </div>
                 <div th:remove="tag" th:unless="${enableProceed}">

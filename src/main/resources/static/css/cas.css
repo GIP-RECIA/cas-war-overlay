@@ -36,6 +36,30 @@
     text-align: center;
 }
 
+#title-logout-delegation-disconnect {
+    margin-top: 25px;
+}
+
+#logoutBody {
+    text-align: center;
+}
+
+#customLogoutLinkButton {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--cas-theme-primary);
+    color: var(--mdc-text-button-label-text-color);
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    margin-bottom: 15px;
+}
+
+#customLogoutLinkButton:hover {
+    background-color: var(--cas-theme-button-bg-hover);
+}
+
 a, button {
   filter: none !important;
   box-shadow: unset !important;
