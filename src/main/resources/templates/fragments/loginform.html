@@ -17,8 +17,8 @@
          th:with="loginFormEnabled=${#strings.defaultString(#themes.code('cas.login-form.enabled'), 'true') == 'true'},
                 loginFormViewable=${@casThymeleafTemplatesDirector.isLoginFormViewable(#vars)}">
 
-        <div class="test-cas-login">
-            <div class="test-cas-login-card">
+        <div class="login-layout">
+            <div class="card">
                 <h1>Connexion</h1>
                 <p>
                 Pour des raisons de sécurité, veuillez vous déconnecter
@@ -48,7 +48,8 @@
                             <input type="password" name="password" id="password" th:accesskey="#{screen.welcome.label.password.accesskey}" th:field="*{password}" autocomplete="off" placeholder required>
                             </div>
                             <div class="end">
-                            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                                <button type="button" id="toggle-password-visibility" class="btn-tertiary circle" onclick="togglePassword()">
+                                <i class="fa-solid fa-eye" aria-hidden="true"></i>
                             </div>
                         </div>
                         <div class="active-indicator"></div>
@@ -64,7 +65,7 @@
                     <input type="hidden" name="deviceFingerprint"/>
                 </form>
             </div>
-            <div class="test-cas-login-actions">
+            <div class="actions">
                 <a th:href="@{${domain_name} + '/cerbere2/' }" class="btn">
                 <i class="fa-solid fa-bolt" aria-hidden="true"></i>Activer mon compte
                 </a>
