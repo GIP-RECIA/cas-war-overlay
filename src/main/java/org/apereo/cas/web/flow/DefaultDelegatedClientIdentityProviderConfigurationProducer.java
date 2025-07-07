@@ -99,32 +99,31 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
                     DelegationWebflowUtils.putDelegatedAuthenticationDynamicProviderSelection(context, Boolean.TRUE);
                 }
                 case MENU -> {
-                    // Customization : do not put any provider if local auth is requested
-                    // and put local_url in webflow in order to generate urls for other providers when necessary
                     val delegationIdpIdParameter = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.parameter");
                     val delegationIdpIdRemotePattern = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.idp-id.remote-pattern");
                     val providerSelectionWebflowUrlParameter = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.provider-selection.webflow-url.parameter");
                     val defaultDomain = configurationContext.getObject().getCasProperties().getCustom().getProperties().get("delegation.cerbere.default-domain");
+                    // Customization : put domain name in webflow in local auth context (for cerbere and CGU)
+                    if (service != null) {
+                        val serviceDomain = extractDomainFromServiceURL(service.getOriginalUrl());
+                        if (authorizedDomains.contains(serviceDomain)) {
+                            LOGGER.trace("Domain [{}] is in authorized domains [{}], creating cerbere link", serviceDomain, authorizedDomains);
+                            context.getRequestScope().put("domain_name", serviceDomain);
+                        } else {
+                            LOGGER.trace("Domain [{}] is not in authorized domains [{}], creating cerbere link with default domain [{}]",
+                                    serviceDomain, authorizedDomains, defaultDomain);
+                            context.getRequestScope().put("domain_name", defaultDomain);
+                        }
+                    }
+                    // If there is no service, then use CAS domain as url
+                    else {
+                        LOGGER.trace("No domain is provided, creating cerbere link with default domain [{}]", defaultDomain);
+                        context.getRequestScope().put("domain_name", defaultDomain);
+                    }
+                    // Customization : do not put any provider if local auth is requested
+                    // and put local_url in webflow in order to generate urls for other providers when necessary
                     if (request.getParameterMap().containsKey(delegationIdpIdParameter)) {
                         if (!request.getParameterMap().get(delegationIdpIdParameter)[0].contains(delegationIdpIdRemotePattern)) {
-                            DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, null);
-                            // Customization : put domain name in webflow in local auth context
-                            if (service != null) {
-                                val serviceDomain = extractDomainFromServiceURL(service.getOriginalUrl());
-                                if (authorizedDomains.contains(serviceDomain)) {
-                                    LOGGER.trace("Domain [{}] is in authorized domains [{}], creating cerbere link", serviceDomain, authorizedDomains);
-                                    context.getRequestScope().put("domain_name", serviceDomain);
-                                } else {
-                                    LOGGER.trace("Domain [{}] is not in authorized domains [{}], creating cerbere link with default domain [{}]",
-                                            serviceDomain, authorizedDomains, defaultDomain);
-                                    context.getRequestScope().put("domain_name", defaultDomain);
-                                }
-                            }
-                            // If there is no service, then use CAS domain as url
-                            else {
-                                LOGGER.trace("No domain is provided, creating cerbere link with default domain [{}]", defaultDomain);
-                                context.getRequestScope().put("domain_name", defaultDomain);
-                            }
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, null);
                         } else {
                             DelegationWebflowUtils.putDelegatedAuthenticationProviderConfigurations(context, providers);
