@@ -399,4 +399,8 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-otp-mfa-core"
     compileOnly "org.apereo.cas:cas-server-support-trusted-mfa-core"
     compileOnly "org.apereo.cas:cas-server-core-webflow-mfa-api"
+    // Fix TOTP scratch code
+    compileOnly "org.springframework.data:spring-data-redis"
+    compileOnly "org.apereo.cas:cas-server-support-redis-core"
+
 }
