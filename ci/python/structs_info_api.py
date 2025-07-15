@@ -8,9 +8,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 # Dictionnaire mémorisant les domaines spécifiques à renvoyer pour un siren donné
 # Si un siren n'est pas spécifié ici DEFAULT_DOMAIN sera renvoyé
-SIREN_TO_DOMAIN = {"11111111111111": "localhost:8002", "22222222222222":"localhost:8028", "33333333333333":"localhost:8001",
-                   "44444444444444":"localhost:8029", "6666666666":"localhost:8040", "77777777777777": "localhost:8039",
-                   "9999999999999": "localhost:8041"}
+SIREN_TO_DOMAIN = {"11111111111111": ["localhost:8002"], "22222222222222": ["localhost:8028"], "33333333333333": ["localhost:8001"],
+                   "44444444444444": ["localhost:8029"], "6666666666": ["localhost:8040"], "77777777777777": ["localhost:8039"],
+                   "9999999999999": ["localhost:8041"], "123456789": ["localhost:8002", "localhost:8001"]}
 DEFAULT_DOMAIN = "localhost:8001"
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -33,7 +33,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                     "id":siren,
                     "displayName": "NOM ETAB NUMERO "+siren,
                     "otherAttributes":{
-                        "ESCODomaines": [domain]
+                        "ESCODomaines": domain
                     }
                 }
             }

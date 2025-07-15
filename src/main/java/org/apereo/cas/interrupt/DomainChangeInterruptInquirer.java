@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -148,10 +149,23 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
             JsonNode otherAttributes = jsonResponse.path(siren).path("otherAttributes").path("ESCODomaines");
             if (otherAttributes.isArray()) {
                 Iterator<JsonNode> elements = otherAttributes.elements();
-                if (elements.hasNext()) {
-                    final String domain = elements.next().asText();
-                    this.domainBySirenCache.put(siren, domain);
-                    return domain;
+                int count = 0;
+                String firstDomain = null;
+                // Keep first domain name
+                while (elements.hasNext()) {
+                    JsonNode node = elements.next();
+                    count++;
+                    if (count == 1) {
+                        firstDomain = node.asText();
+                    }
+                }
+                // If only one domain, return this domain
+                if (count == 1) {
+                    return firstDomain;
+                }
+                // If multiple domains, return null so the domain will not change
+                else if (count > 1) {
+                    return null;
                 }
             }
         } catch (Exception e) {
