@@ -7,5 +7,9 @@
     "attributeReleasePolicy" : {
         "@class" : "org.apereo.cas.services.GroovyScriptAttributeReleasePolicy",
         "groovyScript" : "classpath:/groovy-test/educonnect-release.groovy"
+    },
+    "webflowInterruptPolicy": {
+        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
+        "enabled": false
     }
 }
