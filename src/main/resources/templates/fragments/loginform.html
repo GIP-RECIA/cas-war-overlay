@@ -54,8 +54,9 @@
                         </div>
                     </div>
                     <a th:text="#{screen.welcome.login.password.forget}" th:href="@{${domain_name} + '/cerbere2/stylesheets/perdu.xhtml' }" id="password-forgotten">Forgot your password ?</a>
-                    <button th:text="#{screen.welcome.login.button.login}" type="submit" class="btn-primary">
-                        <i class="fa-solid fa-lock-open" aria-hidden="true"></i>Login
+                    <button type="submit" class="btn-primary">
+                        <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
+                        <span th:remove="tag" th:text="#{screen.welcome.login.button.login}">Login</span>
                     </button>
                     <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
                     <input type="hidden" name="_eventId" value="submit"/>

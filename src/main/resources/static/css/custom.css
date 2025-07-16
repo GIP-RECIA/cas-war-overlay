@@ -226,7 +226,7 @@ progress {
 
 @font-face {
   font-family: "DM Sans";
-  src: url("/commun/fonts/DM_Sanc/DMSans-Bold.ttf") format("truetype");
+  src: url("/commun/fonts/DM_Sans/static/DMSans-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -234,7 +234,7 @@ progress {
 
 @font-face {
   font-family: "DM Sans";
-  src: url("/commun/fonts/DM_Sans/DMSans-BoldItalic.ttf") format("truetype");
+  src: url("/commun/fonts/DM_Sans/static/DMSans-BoldItalic.ttf") format("truetype");
   font-weight: bold;
   font-style: italic;
   font-display: swap;
@@ -242,7 +242,7 @@ progress {
 
 @font-face {
   font-family: "DM Sans";
-  src: url("/commun/fonts/DM_Sans/DMSans-Italic.ttf") format("truetype");
+  src: url("/commun/fonts/DM_Sans/static/DMSans-Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -250,7 +250,7 @@ progress {
 
 @font-face {
   font-family: "DM Sans";
-  src: url("/commun/fonts/DM_Sans/DMSans-Medium.ttf") format("truetype");
+  src: url("/commun/fonts/DM_Sans/static/DMSans-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -258,7 +258,7 @@ progress {
 
 @font-face {
   font-family: "DM Sans";
-  src: url("/commun/fonts/DM_Sans/DMSans-MediumItalic.ttf") format("truetype");
+  src: url("/commun/fonts/DM_Sans/static/DMSans-MediumItalic.ttf") format("truetype");
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -266,7 +266,7 @@ progress {
 
 @font-face {
   font-family: "DM Sans";
-  src: url("/commun/fonts/DM_Sans/DMSans-Regular.ttf") format("truetype");
+  src: url("/commun/fonts/DM_Sans/static/DMSans-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -274,7 +274,7 @@ progress {
 
 @font-face {
   font-family: "DM Sans";
-  src: url("/commun/fonts/DM_Sans/DMSans-SemiBold.ttf") format("truetype");
+  src: url("/commun/fonts/DM_Sans/static/DMSans-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -282,7 +282,7 @@ progress {
 
 @font-face {
   font-family: "Sora";
-  src: url("/commun/fonts/Sora/Sora-Bold.ttf") format("truetype");
+  src: url("/commun/fonts/Sora/static/Sora-Bold.ttf") format("truetype");
   font-weight: bold;
   font-style: normal;
   font-display: swap;
@@ -290,7 +290,7 @@ progress {
 
 @font-face {
   font-family: "Sora";
-  src: url("/commun/fonts/Sora/Sora-Regular.ttf") format("truetype");
+  src: url("/commun/fonts/Sora/static/Sora-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -298,7 +298,7 @@ progress {
 
 @font-face {
   font-family: "Sora";
-  src: url("/commun/fonts/Sora/Sora-SemiBold.ttf") format("truetype");
+  src: url("/commun/fonts/Sora/static/Sora-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;

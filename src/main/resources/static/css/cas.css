@@ -176,7 +176,6 @@ header > nav .cas-brand .cas-logo {
 }
 
 .login-section {
-    padding: 2rem 2.5rem;
     flex: 1 1 auto;
     /* IE flex fix */
 }
@@ -188,10 +187,7 @@ header > nav .cas-brand .cas-logo {
 @media screen and (max-width: 767.99px) {
     .login-section {
         border-right: none;
-        border-bottom: 1px solid rgba(0, 0, 0, .2);
-        border-bottom: var(--cas-theme-border-light, 1px solid rgba(0, 0, 0, .2));
         max-width: none;
-        padding: 0 1.5rem;
     }
 }
 
