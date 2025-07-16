@@ -43,9 +43,10 @@ public class GoogleAuthenticatorSaveRegistrationAction extends OneTimeTokenAccou
     protected boolean validate(final GoogleAuthenticatorAccount account, final RequestContext requestContext) {
         return FunctionUtils.doAndHandle(__ -> {
             val token = requestContext.getRequestParameters().getRequiredInteger(REQUEST_PARAMETER_TOKEN);
-            if (validator.isTokenAuthorizedFor(token, account)) {
+            // Customisation : validate token but not scratch codes
+            if (validator.isTokenAuthorizedForRegistration(token, account)) {
                 LOGGER.debug("Successfully validated token [{}]", token);
-                //Custom modification here : do not store the code used to validate the device
+                //Custom modification : do not store the code used to validate the device
                 //val googleAuthenticatorToken = new GoogleAuthenticatorToken(token, account.getUsername());
                 //validator.getTokenRepository().store(googleAuthenticatorToken);
                 return true;
