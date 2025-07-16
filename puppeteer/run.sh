@@ -252,7 +252,7 @@ results=()
 # Si on est sûr que le serveur CAS est lancé, alors on éxécute les scénarios puppeteer un par un
 export NODE_TLS_REJECT_UNAUTHORIZED=0
 echo "Executing puppeteer scenarios..."
-for scenario in "${PWD}"/puppeteer/scenarios/*; do
+for scenario in "${PWD}"/puppeteer/${SCENARIO_FOLDER}/*; do
     scenarioName=$(basename "$scenario")
     echo "=========================="
     echo "- Scenario $scenarioName "
