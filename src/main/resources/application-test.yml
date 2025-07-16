@@ -116,6 +116,7 @@ cas.authn.attribute-repository.ldap[0].attributes.ENTPersonJointure: ENTPersonJo
 cas.authn.attribute-repository.ldap[0].attributes.isMemberOf: isMemberOf
 cas.authn.attribute-repository.ldap[0].attributes.ENTPersonLogin: ENTPersonLogin
 cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
+cas.authn.attribute-repository.ldap[0].attributes.ESCOPersonEtatCompte: ESCOPersonEtatCompte
 
 # Second test IDP
 cas.authn.attribute-repository.ldap[1].id: rcvl
@@ -141,6 +142,7 @@ cas.authn.attribute-repository.ldap[1].attributes.ENTPersonJointure: ENTPersonJo
 cas.authn.attribute-repository.ldap[1].attributes.isMemberOf: isMemberOf
 cas.authn.attribute-repository.ldap[1].attributes.ENTPersonLogin: ENTPersonLogin
 cas.authn.attribute-repository.ldap[1].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
+cas.authn.attribute-repository.ldap[1].attributes.ESCOPersonEtatCompte: ESCOPersonEtatCompte
 
 # SLO
 cas.logout.follow-service-redirects: true
@@ -301,3 +303,9 @@ cas.custom.properties.scim.groups-attribute: isMemberOf
 cas.custom.properties.scim.principal-attribute: ENTPersonLogin
 cas.custom.properties.scim.profile-attribute: ENTPersonProfils
 cas.custom.properties.scim.teacher-attribute-value: National_ENS
+
+# Cerbere validation
+cas.custom.properties.cerbere.validation.attribute-to-evaluate: ESCOPersonEtatCompte
+cas.custom.properties.cerbere.validation.value-to-excpect: VALIDE
+cas.custom.properties.cerbere.validation.redirect-url: http://localhost:8062/cerbere
+cas.custom.properties.cerbere.validation.service-id: http://.*:8062
