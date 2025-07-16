@@ -50,14 +50,15 @@
 
 #customLogoutLinkButton {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 0px 20px;
     background-color: var(--cas-theme-primary);
     color: var(--mdc-text-button-label-text-color);
     border-radius: 5px;
     font-weight: bold;
     transition: background-color 0.3s;
     text-decoration: none;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
+    margin-top: 10px;
 }
 
 #customLogoutLinkButton:hover {
