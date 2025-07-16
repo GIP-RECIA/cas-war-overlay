@@ -1,0 +1,14 @@
+{
+  "@class": "org.apereo.cas.services.CasRegisteredService",
+  "serviceId": "^http:\/\/localhost:8062\/.*",
+  "name": "Service Test",
+  "description": "Service de test pour connection avec cerbere et compte invalide",
+  "id": 62,
+  "properties" : {
+    "@class" : "java.util.HashMap",
+    "skipDomainRedirect" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    }
+  }
+}

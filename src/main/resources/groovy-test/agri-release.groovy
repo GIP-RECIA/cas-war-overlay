@@ -7,6 +7,9 @@ def run(final Object... args) {
     if(currentAttributes.get("mail")[0] == "test10.test@idp1.com"){
         return [mail:["invalid.test@nodomain.com"]]
     }
+    if(currentAttributes.get("mail")[0] == "test.test14@test.com"){
+        return [mail:["test.test14@test.com"]]
+    }
     // Dans les autres cas on retourne un mail qui existe vraiment
     return [mail:["test7.test@idp1.com"]]
 }

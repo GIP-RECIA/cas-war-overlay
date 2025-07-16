@@ -2,6 +2,7 @@ package org.apereo.cas.config;
 
 import org.apereo.cas.interrupt.InterruptInquirer;
 import org.apereo.cas.interrupt.InterruptInquiryExecutionPlanConfigurer;
+import org.apereo.cas.interrupt.CerbereValidationInterruptInquirer;
 import org.apereo.cas.interrupt.DomainChangeInterruptInquirer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,9 +25,16 @@ public class CustomInterruptConfiguration {
     }
 
     @Bean
-    public InterruptInquiryExecutionPlanConfigurer customInterruptConfigurer(@Qualifier("domainChangeInterruptInquirer") InterruptInquirer domainChangeInterruptInquirer) {
+    public InterruptInquirer cerbereValidationInterruptInquirer() {
+        return new CerbereValidationInterruptInquirer(casProperties);
+    }
+
+    @Bean
+    public InterruptInquiryExecutionPlanConfigurer customInterruptConfigurer(@Qualifier("domainChangeInterruptInquirer") InterruptInquirer domainChangeInterruptInquirer,
+                                                                             @Qualifier("cerbereValidationInterruptInquirer") InterruptInquirer cerbereValidationInterruptInquirer) {
         return plan -> {
             plan.registerInterruptInquirer(domainChangeInterruptInquirer);
+            plan.registerInterruptInquirer(cerbereValidationInterruptInquirer);
         };
     }
 

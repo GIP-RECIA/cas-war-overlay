@@ -73,3 +73,6 @@ SERVICE_SLO_REDIRECTION_URL = "http://localhost:8057/test"
 
 # Url du service pour tester la profile selection dans le cas d'une auth déléguée (IdP 2)
 SERVICE_PROFILE_2_SELECTION_URL = "http://localhost:8060/test"
+
+# Url du service cerbere pour gérer la validation de la charte
+SERVICE_CERBERE_URL = "http://localhost:8062/test"
