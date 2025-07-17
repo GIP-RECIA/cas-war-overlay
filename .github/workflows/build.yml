@@ -51,4 +51,4 @@ jobs:
       run: |
         mkdir /etc/cas/metadata-deleg
         chmod +x puppeteer/run.sh
-        CAS_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=test" CAS_DELEG_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=deleg" ./puppeteer/run.sh
+        CAS_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=test" CAS_DELEG_ARGS="-Dcom.sun.net.ssl.checkRevocation=false --spring.profiles.active=deleg" SCENARIO_FOLDER="scenarios" ./puppeteer/run.sh
