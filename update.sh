@@ -50,6 +50,9 @@ FILES=(
     "src/main/resources/templates/logout/casLogoutView.html support/cas-server-support-thymeleaf/src/main/resources/templates/logout/casLogoutView.html"
     "src/main/java/org/apereo/cas/web/flow/DefaultDelegatedClientAuthenticationWebflowManager.java support/cas-server-support-pac4j-core/src/main/java/org/apereo/cas/web/flow/DefaultDelegatedClientAuthenticationWebflowManager.java"
     "src/main/java/org/apereo/cas/authentication/principal/resolvers/PersonDirectoryPrincipalResolver.java support/cas-server-support-person-directory-core/src/main/java/org/apereo/cas/authentication/principal/resolvers/PersonDirectoryPrincipalResolver.java"
+    "src/main/java/org/apereo/cas/gauth/credential/RedisGoogleAuthenticatorTokenCredentialRepository.java support/cas-server-support-gauth-redis/src/main/java/org/apereo/cas/gauth/credential/RedisGoogleAuthenticatorTokenCredentialRepository.java"
+    "src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorOneTimeTokenCredentialValidator.java support/cas-server-support-gauth-core/src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorOneTimeTokenCredentialValidator.java"
+    "src/main/java/org/apereo/cas/otp/repository/credentials/OneTimeTokenCredentialValidator.java support/cas-server-support-otp-mfa-core/src/main/java/org/apereo/cas/otp/repository/credentials/OneTimeTokenCredentialValidator.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

@@ -71,7 +71,9 @@ Au niveau du fingerprint, CAS utilise un cookie qu'il place dans le navigateur e
 cas.authn.mfa.trusted.device-fingerprint.cookie.enabled=true
 ```
 
-## Modification : Double validation de code
+## Modifications
+
+### Double validation de code
 
 De base CAS intègre un mécanisme qui sauvegarde les codes utilisés pour éviter qu'ils soient réutilisés pendant leur période de validité. Ce mécanisme pose problème lors de l'enregistrement de la device puisque le code sera demandé 2 fois (une fois pour la validation de l'enregistrement puis une fois pour l'accès au service), ce qui force l'utilisateur à attendre qu'un nouveau code soit régénéré. 
 
@@ -82,9 +84,15 @@ validator.getTokenRepository().store(googleAuthenticatorToken);
 ```
 Le comportement reste inchangé pour les codes autres que ceux utiliser pour valider l'enregistrement d'une nouvelle device.
 
-## Modification : Paramètre token changé
+### Paramètre token
 
 CAS utilise le paramètre d'URL token pour transmettre le code qui a été saisi par l'utilisateur : or cela peut poser problème dans le cas ou le service pose lui aussi un paramètre token dans l'url (comme par exemple https://URL_CAS/cas/login?service=URL_SERVICE&token=eb9996ba82b8594e08eaa35e3e753922). Pour résoudre ce problème le paramètre d'URL à été changé à 2 endroits :
 - Pendant la phase de device registration
 - Pendant la phase de login
 Cela correspond à une modification des templates HTML mais aussi des fichiers java pour récupérer la valeur du bon paramètre.
+
+### Codes de récupération
+
+De base CAS gère mal l'utilisation des codes de récupération : lorsqu'un code de récupération est utilisée, la device associée dans le redis est dupliquée (car il en insère une nouvelle avec le code de récupération en moins mais sans supprimer l'ancienne). Le soucis se présente aussi bien pour chaque nouvelle connexion que pour le premier enregistrement. Un fix a donc été mis en place à deux endroits :
+- Dans le `RedisGoogleAuthenticatorTokenCredentialRepository` pour le login, en supprimant la device d'origine associée avant de la recréer ;
+- Dans un ensemble de fichiers pour l'enregistement, en empêchant l'enregistrement d'une device avec un code de récupération (ajout d'une fonction `isTokenAuthorizedForRegistration`).

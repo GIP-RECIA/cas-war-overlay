@@ -16,7 +16,7 @@
 | Logout URL par service | DefaultLogoutRedirectionStrategy |
 | IDToken custom acr | OidcIdTokenGeneratorService |
 | Meilleur compatibilité clients SAML | SamlProfileSaml2ResponseBuilder |
-| Modification paramètre token TOTP | GoogleAuthenticatorTokenCredential + GoogleAuthenticatorMultifactorWebflowConfigurer + GoogleAuthenticatorSaveRegistrationAction.java + templates html |
+| Modification paramètre token TOTP | GoogleAuthenticatorTokenCredential + GoogleAuthenticatorMultifactorWebflowConfigurer + GoogleAuthenticatorSaveRegistrationAction + templates html |
 | Modifications UI TOTP | casGoogleAuthenticatorRegistrationView + casGoogleAuthenticatorLoginView + cas.css |
 | Fix expiration trusted devices | MultifactorAuthenticationSetTrustAction |
 | Fix TOTP registration réutilisable | GoogleAuthenticatorSaveRegistrationAction |
@@ -28,3 +28,5 @@
 | Remontée des erreurs de délégation | LdaptivePersonAttributeDao + LdapDelegatedClientAuthenticationCredentialResolver + casLoginView |
 | Logout custom par IDP delegation | DelegatedAuthenticationClientLogoutAction + FinishLogoutAction + casLogoutView |
 | SCIM | ScimPrincipalProvisioner + CasScimAutoConfiguration |
+| Fix TOTP scratch code login | RedisGoogleAuthenticatorTokenCredentialRepository |
+| Fix TOTP scratch code registration | GoogleAuthenticatorOneTimeTokenCredentialValidator + OneTimeTokenCredentialValidator + GoogleAuthenticatorSaveRegistrationAction |

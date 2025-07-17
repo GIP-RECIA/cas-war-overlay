@@ -44,8 +44,9 @@ And has a number of custom enhancements :
 - Better handling of delegation errors
 - Custom logout link for external IDP in delegation scenario
 - Fix delegation logout with expired TST (fallback to TGT)
+- Fix device duplication with scratch code use in TOTP MFA
 
-Current CAS Base version : **7.2.1**
+Current CAS Base version : **7.2.3**
 
 # Project Structure
 
@@ -105,7 +106,9 @@ All the important parts of the project are listed below:
 │       │               │   └── CustomInterruptConfiguration.java
 │       │               ├── gauth/web/flow
 │       │               │   ├── credential
-│       │               │   │   └── GoogleAuthenticatorTokenCredential.java
+│       │               │   │   ├── GoogleAuthenticatorOneTimeTokenCredentialValidator.java
+│       │               │   │   ├── GoogleAuthenticatorTokenCredential.java
+│       │               │   │   └── RedisGoogleAuthenticatorTokenCredentialRepository.java
 │       │               │   └── web/flow
 │       │               │       ├── GoogleAuthenticatorMultifactorWebflowConfigurer.java
 │       │               │       └── GoogleAuthenticatorSaveRegistrationAction.java
@@ -119,6 +122,8 @@ All the important parts of the project are listed below:
 │       │               │   │   └── OidcSingleLogoutMessageCreator.java
 │       │               │   └── token
 │       │               │       └── OidcIdTokenGeneratorService.java
+│       │               ├── otp/repository/credentials
+│       │               │   └── OneTimeTokenCredentialValidator.java
 │       │               ├── persondir
 │       │               │   ├── DefaultAttributeRepositoryResolver.java
 │       │               │   └── LdaptivePersonAttributeDao.java
@@ -199,8 +204,9 @@ All the important parts of the project are listed below:
 |           |   |   └── casInterruptView.html
 |           |   ├── login
 |           |   |   └── casGenericSuccessView.html
-|           |   └── logout
-|           |       └── casLogoutView.html
+|           |   ├── logout
+|           |   |   └── casLogoutView.html
+|           |   └── layout.html
 |           ├── application-test.yml
 |           ├── application.yml
 |           ├── custom_messages_fr.properties
