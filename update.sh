@@ -93,12 +93,20 @@ fi
 
 # Comparer les fichiers un par un avec meld
 echo "Comparaison des fichiers avec meld..."
-meld diff/build.gradle diff/build_$VERSION.gradle
-meld diff/gradle.properties diff/gradle_$VERSION.properties
-for file_info in "${FILES[@]}"; do
+meld diff/build.gradle diff/build_$VERSION.gradle &
+sleep 1
+meld -n diff/gradle.properties diff/gradle_$VERSION.properties &
+last_index=$((${#FILES[@]} - 1))
+for i in "${!FILES[@]}"; do
+    file_info="${FILES[$i]}"
     local_path=$(echo "$file_info" | cut -d ' ' -f 1)
     filename=$(basename "$local_path")
-    meld "diff/$filename" "diff/${filename}_$VERSION"
+
+    if [ "$i" -lt "$last_index" ]; then
+        meld -n "diff/$filename" "diff/${filename}_$VERSION" &
+    else
+        meld -n "diff/$filename" "diff/${filename}_$VERSION"
+    fi
 done
 
 # Une fois la comparaison finie remplacer les fichiers dans src/ par ceux modifiés dans diff/
