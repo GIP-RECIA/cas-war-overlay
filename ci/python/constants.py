@@ -26,15 +26,6 @@ SERVICE_EXTERNALID_ERROR_URL = "http://localhost:8022/test"
 # Url du service utilisé pour tester la release de l'externalid en tant qu'attribut
 SERVICE_EXTERNALID_ATTRIBUTE_RELEASE_URL = "http://localhost:8023/test"
 
-# Url du service faisant valider un ST via delegation CAS
-SERVICE_DELEGATION_CAS_URL = "http://localhost:8027/test"
-
-# Url du service faisant valider un ST via delegation CAS après redirection de domaine
-SERVICE_DELEGATION_CAS_REDIRECT_URL = "http://localhost:8028/test"
-
-# Url du service faisant valider un ST via delegation CAS sans redirection de domaine
-SERVICE_DELEGATION_CAS_NO_REDIRECT_URL = "http://localhost:8029/test"
-
 # Url du service pour tester la déconnexion globale avec principal different
 SERVICE_SLO_CUSTOM_PRINCIPAL_URL = "http://localhost:8035/test"
 
