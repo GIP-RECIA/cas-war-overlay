@@ -57,7 +57,7 @@ public class TimeBasedRegisteredServiceAccessStrategy extends BaseRegisteredServ
         final boolean result = doesStartingTimeAllowServiceAccess() && doesEndingTimeAllowServiceAccess();
         if(!authorize){
             if(result){
-                LOGGER.info("Service access not allowed because it starts at [{}] and ends at [{}].", startingDateTime, endingDateTime);
+                LOGGER.debug("Service access not allowed because it starts at [{}] and ends at [{}].", startingDateTime, endingDateTime);
             }
             return !result;
         }
@@ -104,7 +104,7 @@ public class TimeBasedRegisteredServiceAccessStrategy extends BaseRegisteredServ
                 val now = ZonedDateTime.now(ZoneId.of(getZoneId()));
                 if (now.isAfter(et)) {
                     if(authorize){
-                        LOGGER.info("Service access not allowed because it ended at [{}]. Now is [{}]", endDateTime, now);
+                        LOGGER.debug("Service access not allowed because it ended at [{}]. Now is [{}]", endDateTime, now);
                     }
                     return false;
                 }
@@ -114,7 +114,7 @@ public class TimeBasedRegisteredServiceAccessStrategy extends BaseRegisteredServ
                     val now = LocalDateTime.now(ZoneId.of(getZoneId()));
                     if (now.isAfter(etLocal)) {
                         if(authorize) {
-                            LOGGER.info("Service access not allowed because it ended at [{}]. Now is [{}]", endDateTime, now);
+                            LOGGER.debug("Service access not allowed because it ended at [{}]. Now is [{}]", endDateTime, now);
                         }
                         return false;
                     }
@@ -137,7 +137,7 @@ public class TimeBasedRegisteredServiceAccessStrategy extends BaseRegisteredServ
                 val now = ZonedDateTime.now(ZoneId.of(getZoneId()));
                 if (now.isBefore(st)) {
                     if(authorize) {
-                        LOGGER.info("Service access not allowed because it starts at [{}]. Zoned now is [{}]", startDateTime, now);
+                        LOGGER.debug("Service access not allowed because it starts at [{}]. Zoned now is [{}]", startDateTime, now);
                     }
                     return false;
                 }
@@ -147,7 +147,7 @@ public class TimeBasedRegisteredServiceAccessStrategy extends BaseRegisteredServ
                     val now = LocalDateTime.now(ZoneId.of(getZoneId()));
                     if (now.isBefore(stLocal)) {
                         if(authorize) {
-                            LOGGER.info("Service access not allowed because it starts at [{}]. Local now is [{}]", startDateTime, now);
+                            LOGGER.debug("Service access not allowed because it starts at [{}]. Local now is [{}]", startDateTime, now);
                         }
                         return false;
                     }
