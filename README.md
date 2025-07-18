@@ -45,8 +45,9 @@ And has a number of custom enhancements :
 - Custom logout link for external IDP in delegation scenario
 - Fix delegation logout with expired TST (fallback to TGT)
 - Fix device duplication with scratch code use in TOTP MFA
+- Fix when using CAS as an SAML2 IDP (bug introduced by this [commit](https://github.com/apereo/cas/commit/8fa06ae1d366e770916dfd4be9bbd6bca398b4f9))
 
-Current CAS Base version : **7.2.3**
+Current CAS Base version : **7.2.4**
 
 # Project Structure
 
@@ -95,6 +96,7 @@ All the important parts of the project are listed below:
 │       │               │       │   └── LdapDelegatedClientAuthenticationCredentialResolver.java
 │       │               │       ├── resolvers
 │       │               │       │   └── PersonDirectoryPrincipalResolver.java
+│       │               │       ├── AbstractServiceFactory.java
 │       │               │       └── BaseDelegatedClientAuthenticationCredentialResolver.java
 │       │               ├── authentication/principal
 │       │               │   ├── ldap

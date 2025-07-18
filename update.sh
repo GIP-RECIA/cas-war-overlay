@@ -54,6 +54,7 @@ FILES=(
     "src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorOneTimeTokenCredentialValidator.java support/cas-server-support-gauth-core/src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorOneTimeTokenCredentialValidator.java"
     "src/main/java/org/apereo/cas/otp/repository/credentials/OneTimeTokenCredentialValidator.java support/cas-server-support-otp-mfa-core/src/main/java/org/apereo/cas/otp/repository/credentials/OneTimeTokenCredentialValidator.java"
     "src/main/java/org/apereo/cas/services/mgmt/AbstractServicesManager.java core/cas-server-core-services-registry/src/main/java/org/apereo/cas/services/mgmt/AbstractServicesManager.java"
+    "src/main/java/org/apereo/cas/authentication/principal/AbstractServiceFactory.java core/cas-server-core-services-authentication/src/main/java/org/apereo/cas/authentication/principal/AbstractServiceFactory.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

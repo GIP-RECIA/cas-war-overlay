@@ -30,3 +30,4 @@
 | SCIM | ScimPrincipalProvisioner + CasScimAutoConfiguration |
 | Fix TOTP scratch code login | RedisGoogleAuthenticatorTokenCredentialRepository |
 | Fix TOTP scratch code registration | GoogleAuthenticatorOneTimeTokenCredentialValidator + OneTimeTokenCredentialValidator + GoogleAuthenticatorSaveRegistrationAction |
+| Fix SAML2 IDP unauthorized service | AbstractServiceFactory |
