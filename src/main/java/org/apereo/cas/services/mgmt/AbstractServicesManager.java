@@ -29,7 +29,6 @@ import org.springframework.context.ApplicationEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -140,7 +139,7 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
     @Override
     public void deleteAll() {
         lock.tryLock(__ -> {
-            configurationContext.getServicesCache().asMap().forEach((k, v) -> delete(v));
+            configurationContext.getServicesCache().asMap().forEach((key, v) -> delete(v));
             configurationContext.getServicesCache().invalidateAll();
             val clientInfo = ClientInfoHolder.getClientInfo();
             publishEvent(new CasRegisteredServicesDeletedEvent(this, clientInfo));
@@ -210,7 +209,7 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
     @Override
     public Collection<RegisteredService> findServiceBy(final Predicate<RegisteredService> predicate) {
         if (predicate == null) {
-            return new ArrayList<>(0);
+            return new ArrayList<>();
         }
         val results = configurationContext.getServiceRegistry().findServicePredicate(predicate)
             .stream()
@@ -361,10 +360,15 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
             publishEvent(new CasRegisteredServicesLoadedEvent(this, getAllServices(), clientInfo));
             evaluateExpiredServiceDefinitions();
 
-            val results = configurationContext.getServicesCache().asMap();
-            LOGGER.info("Loaded [{}] service(s) from [{}].", results.size(),
-                configurationContext.getServiceRegistry().getName());
-            return results.values();
+            val cachedServices = configurationContext.getServicesCache().asMap();
+            if (cachedServices.isEmpty()) {
+                LOGGER.info("Loaded [{}] service(s) directly from service registry [{}].", servicesMap.size(),
+                        configurationContext.getServiceRegistry().getName());
+                return servicesMap.values();
+            }
+            LOGGER.info("Loaded [{}] service(s) from cache [{}].", cachedServices.size(),
+                    configurationContext.getServiceRegistry().getName());
+            return cachedServices.values();
         });
     }
 
@@ -401,7 +405,7 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
             }
         }
         val subQueries = serviceQueries.subList(2, serviceQueries.size());
-        val query = QueryFactory.and(serviceQueries.getFirst(), serviceQueries.get(1), (List) subQueries);
+        val query = QueryFactory.and(serviceQueries.getFirst(), serviceQueries.get(1), (Collection) subQueries);
         try (val results = indexedRegisteredServices.retrieve(query)) {
             return results.stream();
         }
@@ -518,9 +522,10 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
             .orElse(null);
     }
 
+    @SafeVarargs
     private static Predicate<RegisteredService> getRegisteredServicesFilteringPredicate(
         final Predicate<RegisteredService>... p) {
-        val predicates = Stream.of(p).collect(Collectors.toCollection(ArrayList::new));
+        val predicates = Stream.of(p).toList();
         return predicates.stream().reduce(x -> true, Predicate::and);
     }
 }

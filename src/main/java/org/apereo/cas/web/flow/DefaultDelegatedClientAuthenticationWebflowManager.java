@@ -173,6 +173,7 @@ public class DefaultDelegatedClientAuthenticationWebflowManager implements Deleg
     protected String getDelegatedClientId(final WebContext webContext, final Client client) {
         var clientId = webContext.getRequestParameter(PARAMETER_CLIENT_ID).map(String::valueOf).orElse(StringUtils.EMPTY);
         clientId = getDelegatedClientIdFromSessionStore(webContext, client, clientId, CasClient.class, CAS_CLIENT_ID_SESSION_KEY);
+
         if (StringUtils.isBlank(clientId) && client != null) {
             val builders = getDelegatedClientSessionManagers(client);
             val iterator = builders.iterator();

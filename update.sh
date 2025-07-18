@@ -53,6 +53,7 @@ FILES=(
     "src/main/java/org/apereo/cas/gauth/credential/RedisGoogleAuthenticatorTokenCredentialRepository.java support/cas-server-support-gauth-redis/src/main/java/org/apereo/cas/gauth/credential/RedisGoogleAuthenticatorTokenCredentialRepository.java"
     "src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorOneTimeTokenCredentialValidator.java support/cas-server-support-gauth-core/src/main/java/org/apereo/cas/gauth/credential/GoogleAuthenticatorOneTimeTokenCredentialValidator.java"
     "src/main/java/org/apereo/cas/otp/repository/credentials/OneTimeTokenCredentialValidator.java support/cas-server-support-otp-mfa-core/src/main/java/org/apereo/cas/otp/repository/credentials/OneTimeTokenCredentialValidator.java"
+    "src/main/java/org/apereo/cas/services/mgmt/AbstractServicesManager.java core/cas-server-core-services-registry/src/main/java/org/apereo/cas/services/mgmt/AbstractServicesManager.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

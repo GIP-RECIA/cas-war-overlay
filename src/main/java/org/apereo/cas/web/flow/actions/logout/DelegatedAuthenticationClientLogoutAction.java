@@ -67,7 +67,6 @@ public class DelegatedAuthenticationClientLogoutAction extends BaseCasWebflowAct
 
     @Override
     protected Event doExecuteInternal(final RequestContext requestContext) {
-
         val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
         val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(requestContext);
         val context = new JEEContext(request, response);
@@ -120,7 +119,6 @@ public class DelegatedAuthenticationClientLogoutAction extends BaseCasWebflowAct
         } else {
             LOGGER.debug("The current client cannot be found; No logout action can execute");
         }
-
         return null;
     }
 

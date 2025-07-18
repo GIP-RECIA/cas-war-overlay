@@ -133,7 +133,9 @@ C’est un jeton opaque (pas nécessairement au format JWT) qui permet d'obtenir
 - `generateRefreshToken` à `true`
 - `refresh_token` dans les `supportedGrantTypes`.
 
-A noter qu'on peut faire en sorte que CAS regénère un nouveau RT en même temps que l'AT avec le paramètre `renewRefreshToken` à `true`.
+A noter :
+- Qu'on peut faire en sorte que CAS regénère un nouveau RT en même temps que l'AT avec le paramètre `renewRefreshToken` à `true`.
+- Que si le client demande le claim offline access alors CAS le génerera peut importe la configuration côté serveur
 
 ### 6. SLO
 

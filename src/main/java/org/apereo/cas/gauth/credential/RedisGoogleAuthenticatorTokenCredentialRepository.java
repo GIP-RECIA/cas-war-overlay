@@ -107,6 +107,7 @@ public class RedisGoogleAuthenticatorTokenCredentialRepository extends BaseGoogl
 
         LOGGER.trace("Saving principal [{}] using key [{}]", encodedAccount, redisPrincipalKey);
         casRedisTemplates.getPrincipalsRedisTemplate().boundSetOps(redisPrincipalKey).add(encodedAccount);
+
         return encodedAccount;
     }
 
