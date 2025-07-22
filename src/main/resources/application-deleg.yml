@@ -90,3 +90,6 @@ cas.authn.pac4j.core.session-replication.cookie.crypto.signing.key: zVpm0QvVAGix
 cas.authn.pac4j.core.session-replication.cookie.crypto.encryption.key: HZ0gAivZQTlnWucW9L5YoqFVJtq7GdL4hZjUxS33jfhiK2j9_jJaTE6CnMC8ApMUwbNPUKGUixOoGHkgXEfKlA
 cas.authn.oauth.session-replication.cookie.crypto.signing.key: 3ykjQEehmU-V_zvJgXqBcXjRiVEVDtoalFoDzt3mDoZwg9oCDUCmGiMukLaRcK2Kl5aOdbS-vyucR4Zssh5bCA
 cas.authn.oauth.session-replication.cookie.crypto.encryption.key: b2m08Llbt9kBR7fStlUdOO2L1OVxZ5XafObZlHljUtAfgoyBa5zUKBdPWo7u6UP2cbZyg7udvw55SZc3s3jvHA
+
+# Custom properties : cerbere validation skip
+cas.custom.properties.cerbere.validation.enabled: false
