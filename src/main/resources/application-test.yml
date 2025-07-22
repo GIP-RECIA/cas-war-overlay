@@ -222,7 +222,7 @@ cas.authn.pac4j.profile-selection.ldap[0].bind-dn: cn=admin,ou=administrateurs,d
 cas.authn.pac4j.profile-selection.ldap[0].ldap-url: ldap://localhost:389
 cas.authn.pac4j.profile-selection.ldap[0].search-filter: classpath:/groovy-test/multi-profile-filter.groovy
 cas.authn.pac4j.profile-selection.ldap[0].profile-id-attribute: uid
-cas.authn.pac4j.profile-selection.ldap[0].attributes: uid,cn,sn,mail,ESCOUAICourant,givenName,ENTPersonFonctions,ENTPersonProfils,ESCOPersonProfils,ESCOUAI,ESCOSIRENCourant,ENTPersonGARIdentifiant,ENTPersonJointure,isMemberOf,ENTPersonLogin,ESCOPersonExternalIds
+cas.authn.pac4j.profile-selection.ldap[0].attributes: uid,cn,sn,mail,ESCOUAICourant,givenName,ENTPersonFonctions,ENTPersonProfils,ESCOPersonProfils,ESCOUAI,ESCOSIRENCourant,ENTPersonGARIdentifiant,ENTPersonJointure,isMemberOf,ENTPersonLogin,ESCOPersonExternalIds,ESCOPersonEtatCompte
 
 # Delegated IDP selection auto redirection
 cas.authn.pac4j.core.groovy-redirection-strategy.location: classpath:/groovy-test/redirect.groovy
@@ -305,6 +305,7 @@ cas.custom.properties.scim.profile-attribute: ENTPersonProfils
 cas.custom.properties.scim.teacher-attribute-value: National_ENS
 
 # Cerbere validation
+cas.custom.properties.cerbere.validation.enabled: true
 cas.custom.properties.cerbere.validation.attribute-to-evaluate: ESCOPersonEtatCompte
 cas.custom.properties.cerbere.validation.value-to-excpect: VALIDE
 cas.custom.properties.cerbere.validation.redirect-url: http://localhost:8062/cerbere
