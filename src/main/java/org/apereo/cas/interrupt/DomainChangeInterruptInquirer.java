@@ -93,26 +93,30 @@ public class DomainChangeInterruptInquirer extends BaseInterruptInquirer {
                     return null;
                 }
             }
-            final String sirenCourant = (String) authentication.getPrincipal().getAttributes().get("ESCOSIRENCourant").getFirst();
-            if(sirenCourant != null){
-                final String domain = getUserDomain(sirenCourant);
-                LOGGER.trace("The current domain for [{}] is [{}]", authentication.getPrincipal().getId(), domain);
-                // If there is an error trying to retrieve the domain just skip and don't change the domain
-                if(domain != null){
-                    final HttpServletRequest nativeRequest = (HttpServletRequest) requestContext.getExternalContext().getNativeRequest();
-                    final String requestURL = nativeRequest.getRequestURL().toString();
-                    // If service.getId() does not contain the user domain, that means we need to redirect the user
-                    if (!service.getId().contains(domain)) {
-                        final String newURL = requestURL + replaceServiceDomain(domain, "?service="+service.getOriginalUrl());
-                        LOGGER.debug("Multidomain : redirecting user [{}] from [{}] to [{}]", authentication.getPrincipal().getId(), service.getOriginalUrl(), newURL);
-                        InterruptResponse interrupt = new InterruptResponse("Changement de domaine", Map.of("Continuer", newURL), false, true);
-                        interrupt.setAutoRedirect(true);
-                        LOGGER.trace("Returning an interrupt response to redirect the user to [{}]", newURL);
-                        return interrupt;
+            if(authentication.getPrincipal().getAttributes().containsKey("ESCOSIRENCourant")){
+                final String sirenCourant = (String) authentication.getPrincipal().getAttributes().get("ESCOSIRENCourant").getFirst();
+                if(sirenCourant != null){
+                    final String domain = getUserDomain(sirenCourant);
+                    LOGGER.trace("The current domain for [{}] is [{}]", authentication.getPrincipal().getId(), domain);
+                    // If there is an error trying to retrieve the domain just skip and don't change the domain
+                    if(domain != null){
+                        final HttpServletRequest nativeRequest = (HttpServletRequest) requestContext.getExternalContext().getNativeRequest();
+                        final String requestURL = nativeRequest.getRequestURL().toString();
+                        // If service.getId() does not contain the user domain, that means we need to redirect the user
+                        if (!service.getId().contains(domain)) {
+                            final String newURL = requestURL + replaceServiceDomain(domain, "?service="+service.getOriginalUrl());
+                            LOGGER.debug("Multidomain : redirecting user [{}] from [{}] to [{}]", authentication.getPrincipal().getId(), service.getOriginalUrl(), newURL);
+                            InterruptResponse interrupt = new InterruptResponse("Changement de domaine", Map.of("Continuer", newURL), false, true);
+                            interrupt.setAutoRedirect(true);
+                            LOGGER.trace("Returning an interrupt response to redirect the user to [{}]", newURL);
+                            return interrupt;
+                        }
                     }
+                } else {
+                    LOGGER.warn("ESCOSIRENCourant is null for [{}]", authentication.getPrincipal().getId());
                 }
             } else {
-                LOGGER.error("ESCOSIRENCourant is null for [{}]", authentication.getPrincipal().getId());
+                LOGGER.warn("ESCOSIRENCourant is not in attributes for [{}]", authentication.getPrincipal().getId());
             }
         }
         // Return null if there is no need to interrupt the flow
