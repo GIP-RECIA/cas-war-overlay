@@ -48,7 +48,7 @@ And has a number of custom enhancements :
 - Fix when using CAS as an SAML2 IDP (bug introduced by this [commit](https://github.com/apereo/cas/commit/8fa06ae1d366e770916dfd4be9bbd6bca398b4f9))
 - Account activation check
 
-Current CAS Base version : **7.2.4**
+Current CAS Base version : **7.2.5**
 
 # Project Structure
 

@@ -54,12 +54,12 @@ public class DelegatedClientAuthenticationCredentialSelectionAction extends Base
     @Override
     protected Event doExecuteInternal(final RequestContext requestContext) throws Exception {
         val profiles = DelegationWebflowUtils.getDelegatedClientAuthenticationResolvedCredentials(requestContext,
-                DelegatedAuthenticationCandidateProfile.class);
+            DelegatedAuthenticationCandidateProfile.class);
         if (profiles.size() == 1) {
             val profile = profiles.getFirst();
             DelegationWebflowUtils.putDelegatedClientAuthenticationCandidateProfile(requestContext, profile);
             return new Event(this, CasWebflowConstants.TRANSITION_ID_FINALIZE,
-                    new LocalAttributeMap<>("profile", profile));
+                new LocalAttributeMap<>("profile", profile));
         }
 
         val structInfoAttributeIdentifierName = configContext.getCasProperties().getCustom().getProperties().get("profile-selection.structinfo-attribute-identifier-name");

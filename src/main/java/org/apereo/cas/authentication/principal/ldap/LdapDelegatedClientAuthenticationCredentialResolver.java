@@ -14,7 +14,6 @@ import org.jooq.lambda.Unchecked;
 import org.ldaptive.LdapAttribute;
 import org.pac4j.core.profile.UserProfile;
 import org.springframework.webflow.execution.RequestContext;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
