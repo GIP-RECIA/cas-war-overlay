@@ -1,0 +1,30 @@
+"""
+Serveur python simulant un service web.
+Il n'est pas là pour faire les requêtes (ce sont les scripts de test qui les font) mais pour pour faire valider des ST.
+Utilisé comme service pour simuler le comportement de cerbere (validation de la charte)
+"""
+
+import urllib3
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from constants import CAS_BASE_URL, SERVICE_CERBERE_URL_OTHER_DOMAIN
+from utils import validate_ticket_to_cas_and_return_attributes
+
+urllib3.disable_warnings()
+
+class RequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        print(self.path)
+        if "cerbere" in self.path:
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write(f"CERBERE UI".encode('utf-8'))
+
+def run(server_class=HTTPServer, handler_class=RequestHandler, port=8064):
+    server_address = ('', port)
+    httpd = server_class(server_address, handler_class)
+    print(f'Starting server on port {port}...')
+    httpd.serve_forever()
+
+if __name__ == '__main__':
+    run()

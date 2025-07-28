@@ -46,6 +46,7 @@ And has a number of custom enhancements :
 - Fix delegation logout with expired TST (fallback to TGT)
 - Fix device duplication with scratch code use in TOTP MFA
 - Fix when using CAS as an SAML2 IDP (bug introduced by this [commit](https://github.com/apereo/cas/commit/8fa06ae1d366e770916dfd4be9bbd6bca398b4f9))
+- Account activation check
 
 Current CAS Base version : **7.2.4**
 
@@ -105,6 +106,7 @@ All the important parts of the project are listed below:
 │       │               ├── config
 │       │               │   ├── CasCoreLogoutAutoConfiguration.java
 │       │               │   ├── CasScimAutoConfiguration.java
+│       │               │   ├── CasSupportActionsAutoConfiguration.java
 │       │               │   └── CustomInterruptConfiguration.java
 │       │               ├── gauth/web/flow
 │       │               │   ├── credential
@@ -166,7 +168,8 @@ All the important parts of the project are listed below:
 │       │                   │   │   └── DefaultCasDelegatingWebflowEventResolver.java
 │       │                   │   ├── BaseServiceAuthorizationCheckAction.java
 │       │                   │   ├── DefaultDelegatedClientAuthenticationWebflowManager.java
-│       │                   │   └── DefaultDelegatedClientIdentityProviderConfigurationProducer.java
+│       │                   │   ├── DefaultDelegatedClientIdentityProviderConfigurationProducer.java
+│       │                   │   └── GenerateServiceTicketAction.java
 │       │                   └── idp/profile/builders/response
 │       │                       └── SamlProfileSaml2ResponseBuilder.java
 |       | 

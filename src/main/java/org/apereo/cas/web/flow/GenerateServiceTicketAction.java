@@ -25,9 +25,15 @@ import org.springframework.webflow.action.EventFactorySupport;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
+
+import java.net.URI;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Action to generate a service ticket for a given Ticket Granting Ticket and
@@ -55,6 +61,8 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     private final CasWebflowCredentialProvider casWebflowCredentialProvider;
 
     private final CasConfigurationProperties casConfigurationProperties;
+
+    private Set<String> authorizedDomains;
 
     /**
      * {@inheritDoc}
@@ -111,8 +119,20 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 if(cerbereEnabled){
                     val attributeToEvalute = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.attribute-to-evaluate");
                     val valueToExpect = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.value-to-excpect");
-                    val cerbereRedirectUrl = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.redirect-url");
+                    val cerbereDefaultUrl = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.default-url");
                     val cerbereIdRegex = Pattern.compile(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.service-id"));
+                    val cerberePath = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.redirect-path");
+                    if(authorizedDomains == null){
+                        if(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.authorized-domains") == null){
+                            LOGGER.error("No authorized domains were provided in configuraiton for cerbere link generation");
+                            this.authorizedDomains = new HashSet<>();
+                        } else {
+                            authorizedDomains = Arrays.stream(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.authorized-domains")
+                                .split(","))
+                                .map(String::trim)
+                                .collect(Collectors.toSet());
+                        }
+                    }
                     LOGGER.trace("Login flow was interrupted for [{}] by cerbere check", authentication.getPrincipal().getId());
                     // If local auth don't check account validation
                     if(!authentication.getAttributes().containsKey("clientName")){
@@ -128,7 +148,20 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                                     } else {
                                         // If account is invalid and service is not cerbere, redirect to cerbere
                                         LOGGER.info("Redirecting user [{}] to cerbere for account validation", authentication.getPrincipal().getId());
-                                        context.getExternalContext().requestExternalRedirect(cerbereRedirectUrl);
+
+                                        URI uri = new URI(service.getOriginalUrl());
+                                        String domain = uri.getHost();
+                                        if(uri.getPort() != -1){
+                                            domain += ":"+uri.getPort();
+                                        }
+                                        String finalRedirectUrl = cerbereDefaultUrl;
+                                        if(authorizedDomains.contains(domain)){
+                                            finalRedirectUrl = uri.getScheme() + "://" + domain + cerberePath;
+                                            LOGGER.info("Domain {} is authorized, redirecting to : {}", domain, finalRedirectUrl);
+                                        } else {
+                                            LOGGER.info("Domain {} is not authorized, redirecting to default domain : {}", domain, finalRedirectUrl);
+                                        }
+                                        context.getExternalContext().requestExternalRedirect(finalRedirectUrl);
                                         return result("error");
                                     }
                                 }

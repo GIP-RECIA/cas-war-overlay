@@ -308,5 +308,7 @@ cas.custom.properties.scim.teacher-attribute-value: National_ENS
 cas.custom.properties.cerbere.validation.enabled: true
 cas.custom.properties.cerbere.validation.attribute-to-evaluate: ESCOPersonEtatCompte
 cas.custom.properties.cerbere.validation.value-to-excpect: VALIDE
-cas.custom.properties.cerbere.validation.redirect-url: http://localhost:8062/cerbere
+cas.custom.properties.cerbere.validation.default-url: http://localhost:8062/cerbere
 cas.custom.properties.cerbere.validation.service-id: http://.*:8062
+cas.custom.properties.cerbere.validation.authorized-domains: localhost:8064,other_authorized_domain
+cas.custom.properties.cerbere.validation.redirect-path: /cerbere

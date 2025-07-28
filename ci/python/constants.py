@@ -76,3 +76,6 @@ SERVICE_PROFILE_2_SELECTION_URL = "http://localhost:8060/test"
 
 # Url du service cerbere pour gérer la validation de la charte
 SERVICE_CERBERE_URL = "http://localhost:8062/test"
+
+# Url du service cerbere pour gérer la validation de la charte (autre domaine)
+SERVICE_CERBERE_URL_OTHER_DOMAIN = "http://localhost:8064/test"
