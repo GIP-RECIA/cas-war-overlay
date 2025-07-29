@@ -64,6 +64,18 @@
     margin-top: 10px;
 }
 
+#continuer {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--cas-theme-primary);
+    color: var(--mdc-text-button-label-text-color);
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    margin-top: 5px;
+}
+
 #customLogoutLinkButton:hover {
     background-color: var(--cas-theme-button-bg-hover);
 }
