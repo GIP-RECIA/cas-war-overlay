@@ -202,7 +202,7 @@ public abstract class BaseServiceAuthorizationCheckAction extends BaseCasWebflow
         }
         // Do the redirect
         context.getExternalContext().requestExternalRedirect(redirectUrl);
-        return result(CasWebflowConstants.TRANSITION_ID_REDIRECT);
+        return success();
     }
 
     /**
