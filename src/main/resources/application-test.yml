@@ -206,7 +206,6 @@ cas.authn.pac4j.saml[2].client-name: rcvl
 cas.authn.pac4j.saml[2].principal-id-attribute: mail
 cas.authn.pac4j.saml[2].metadata.identity-provider-metadata-path: https://localhost:9443/cas/idp/metadata
 # Another provider with multi profile selection
-# First provider using multi profile selection
 cas.authn.pac4j.saml[3].service-provider-entity-id: https://localhost:8443/cas/educonnect
 cas.authn.pac4j.saml[3].keystore-password: pac4j-demo-passwd
 cas.authn.pac4j.saml[3].keystore-path: /etc/cas/educonnect-keystore.jks

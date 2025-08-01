@@ -32,3 +32,4 @@
 | Fix TOTP scratch code registration | GoogleAuthenticatorOneTimeTokenCredentialValidator + OneTimeTokenCredentialValidator + GoogleAuthenticatorSaveRegistrationAction |
 | Fix SAML2 IDP unauthorized service | AbstractServiceFactory |
 | Validation charte redirection cerbere | GenerateServiceTicketAction + CasSupportActionsAutoConfiguration |
+| Fix SAML IDP Initiated TGT existant | DefaultSingleSignOnBuildingStrategy |

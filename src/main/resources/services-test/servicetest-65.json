@@ -1,0 +1,10 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8065\/.*",
+    "name": "Service Test",
+    "description": "Service de test pour auth deléguée avec TGT existant",
+    "id": 65,
+    "attributeReleasePolicy" : {
+        "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy"
+    }
+}

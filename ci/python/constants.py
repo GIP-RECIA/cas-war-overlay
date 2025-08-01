@@ -79,3 +79,7 @@ SERVICE_CERBERE_URL = "http://localhost:8062/test"
 
 # Url du service cerbere pour gérer la validation de la charte (autre domaine)
 SERVICE_CERBERE_URL_OTHER_DOMAIN = "http://localhost:8064/test"
+
+# Url du service cerbere pour tester l'authentification déléguée quand un TGT existe déjà
+SERVICE_DELEGATED_AUTHN_EXISTING_TGT = "http://localhost:8065/test"
+

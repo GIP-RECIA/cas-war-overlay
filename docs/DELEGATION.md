@@ -186,6 +186,18 @@ Lorsqu’il y a plusieurs profils disponibles, le TST n’est pas correctement i
 
 Dans la mesure ou le service peut aussi être récupéré directement depuis le `webContext` sans passer par le TST, le fix qui a été appliqué est de ne pas lever d'exception dans le cas ou le ticket ne peut pas être récupéré depuis le registry, en retournant un `Optional` vide. Le fix a été appliqué directement dans la méthode `retrieve`.
 
+**Authentification IDP Initiated avec un TGT déjà existant**
+
+CAS a un comportement particulier quand il reçoit une authentification alors que l'utilisateur a déjà un TGT (dans le cas du protocole SAML en mode IDP initiated lorsque le CAS agit en tant que SP) : il recréé un nouveau TGT en se basant sur la nouvelle authentification, et supprime le TGT existant.
+
+Cela ne pose pas de problème la pluspart du temps car CAS va aller requêter les attributes repositories pour constuire le profil utilisateur : or dans le cas de la profile selection, le profil n'est pas construit à partir des attribute repositories mais à un autre endroit. Le problème ici est qu'on ne passe pas à cet endroit quand CAS détecte qu'il y a déja un TGT existant : ainsi le nouveau TGT est construit sans aucun attribut.
+
+Cela se passe dans le `DelegatedClientAuthenticationAction` :
+- Lorsqu'il y a déjà un TGT CAS rentre à l'intérieur du `if (isSingleSignOnSessionActive)` et ne passe pas par la suite ;
+- A l'inverse, quand on a pas encore de TGT, CAS va récupérer les profils utilisateurs en rentrant dans la méthode `finalizeDelegatedClientAuthentication`.
+
+Le problème a été corrigé en modifiant à un autre endroit, dans le `DefaultSingleSignOnBuildingStrategy`. L'idée ici était de modifier le comportement pour faire en sorte que dans le cas ou il y a déjà un TGT, cas ne recréé pas de nouveau TGT mais se contente de mettre à jour le TGT existant (voir les méthodes `buildTicketGrantingTicket` et `shouldIssueTicketGrantingTicket`).
+
 ### Remontée des erreurs de délégation
 
 Il faut pouvoir afficher un message d'erreur lorsqu'il y a une erreur dans le flot d'authentification déléguée (pas de compte correspondant dans le LDAP par exemple).

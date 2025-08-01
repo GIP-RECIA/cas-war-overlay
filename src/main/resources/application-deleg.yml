@@ -1,4 +1,4 @@
-# Ce fichier contient les properties utilisées par le serveur de délégation utilisé pour les tests avec puppeteer
+# Ce fichier contient les properties utilisées par le serveur de délégation pour les tests avec puppeteer
 
 # Server
 server.port: 9443
@@ -17,6 +17,9 @@ cas.ticket.registry.redis.sentinel.node[1]: localhost:26380
 cas.ticket.registry.redis.sentinel.node[2]: localhost:26381
 cas.ticket.registry.redis.password: OZwtXSpJCjZEQ5b
 cas.ticket.registry.redis.sentinel.password: GWMije5VNMe7avz
+
+# Custom name for TGC cookie because it is on the same domain as the other CAS
+cas.tgc.name: TGC2
 
 # Service registry
 cas.service-registry.core.init-from-json: false

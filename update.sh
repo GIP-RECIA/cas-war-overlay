@@ -57,6 +57,7 @@ FILES=(
     "src/main/java/org/apereo/cas/authentication/principal/AbstractServiceFactory.java core/cas-server-core-services-authentication/src/main/java/org/apereo/cas/authentication/principal/AbstractServiceFactory.java"
     "src/main/java/org/apereo/cas/web/flow/GenerateServiceTicketAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/GenerateServiceTicketAction.java"
     "src/main/java/org/apereo/cas/config/CasSupportActionsAutoConfiguration.java support/cas-server-support-actions/src/main/java/org/apereo/cas/config/CasSupportActionsAutoConfiguration.java"
+    "src/main/java/org/apereo/cas/web/flow/DefaultSingleSignOnBuildingStrategy.java core/cas-server-core-webflow-api/src/main/java/org/apereo/cas/web/flow/DefaultSingleSignOnBuildingStrategy.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux
