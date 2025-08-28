@@ -118,7 +118,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 val cerbereEnabled = Boolean.parseBoolean(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.enabled"));
                 if(cerbereEnabled){
                     val attributeToEvalute = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.attribute-to-evaluate");
-                    val valueToExpect = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.value-to-excpect");
+                    val valueToAvoid = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.value-to-avoid");
                     val cerbereDefaultUrl = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.default-url");
                     val cerbereIdRegex = Pattern.compile(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.service-id"));
                     val cerberePath = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.redirect-path");
@@ -139,7 +139,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                         LOGGER.trace("Local authentication : account validation not checked for [{}]", authentication.getPrincipal().getId());
                     } else {
                         if(authentication.getPrincipal().getAttributes().containsKey(attributeToEvalute)){
-                            if(!authentication.getPrincipal().getAttributes().get(attributeToEvalute).getFirst().equals(valueToExpect)){
+                            if(authentication.getPrincipal().getAttributes().get(attributeToEvalute).getFirst().equals(valueToAvoid)){
                                 if(service != null){
                                     final Matcher matcher = cerbereIdRegex.matcher(service.getId());
                                     // If account is invalid but service is cerbere, do not interrupt the flow
