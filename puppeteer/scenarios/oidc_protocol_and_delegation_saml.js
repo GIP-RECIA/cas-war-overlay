@@ -46,7 +46,7 @@ const assert = require("assert");
         assert(pageContent.includes("attributes"));
         assert(pageContent.includes("isMemberOf")); //Custom claim
         assert(pageContent.includes("\"nickname\":\"test7\"")); //Mapped claim from ENTPersonLogin
-        assert(pageContent.includes("\"uid\":[\"F7abc\"]"));
+        assert(pageContent.includes("\"uid\":\"F7abc\""));
         assert(pageContent.includes("\"family_name\":\"TEST\"")); //Mapped claim from cn
         assert(pageContent.includes("\"given_name\":\"Test\""));
         assert(pageContent.includes("\"usual_name\":\"TEST\"")); //Mapped claim from cn
