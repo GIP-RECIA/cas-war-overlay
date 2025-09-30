@@ -54,7 +54,7 @@
                         </div>
                     </div>
                     <a th:text="#{screen.welcome.login.password.forget}" th:href="@{${domain_name} + '/cerbere2/stylesheets/perdu.xhtml' }" id="password-forgotten">Forgot your password ?</a>
-                    <button type="submit" class="btn-primary">
+                    <button id="localAuthLoginButton" type="submit" class="btn-primary">
                         <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
                         <span th:remove="tag" th:text="#{screen.welcome.login.button.login}">Login</span>
                     </button>
