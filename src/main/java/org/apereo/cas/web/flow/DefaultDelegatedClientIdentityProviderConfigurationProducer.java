@@ -10,6 +10,9 @@ import org.apereo.cas.util.spring.beans.BeanSupplier;
 import org.apereo.cas.web.DelegatedClientIdentityProviderConfiguration;
 import org.apereo.cas.web.DelegatedClientIdentityProviderConfigurationFactory;
 import org.apereo.cas.web.support.WebUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.jooq.lambda.Unchecked;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.IndirectClient;
@@ -37,6 +40,7 @@ import java.util.stream.Collectors;
  * @since 6.2.0
  */
 @Slf4j
+@RequiredArgsConstructor
 public class DefaultDelegatedClientIdentityProviderConfigurationProducer implements DelegatedClientIdentityProviderConfigurationProducer {
     private final ObjectProvider<DelegatedClientAuthenticationConfigurationContext> configurationContext;
     private Set<String> authorizedDomains;
@@ -76,7 +80,7 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
 
         val allClients = findAllClients(service, webContext);
         val providers = allClients
-            .stream()
+            .parallelStream()
             .filter(client -> client instanceof IndirectClient
                 && isDelegatedClientAuthorizedForService(client, service, context))
             .map(IndirectClient.class::cast)
@@ -158,9 +162,7 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
             val webContext = new JEEContext(request, response);
 
             val currentService = WebUtils.getService(requestContext);
-            LOGGER.debug("Initializing client [{}] with request parameters [{}] and service [{}]",
-                client, requestContext.getRequestParameters(), currentService);
-            initializeClientIdentityProvider(client);
+            initializeClientIdentityProvider(client, requestContext);
 
             val customizers = configurationContext.getObject().getDelegatedClientAuthenticationRequestCustomizers();
             if (customizers.isEmpty() || customizers.stream()
@@ -178,9 +180,12 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
         }, throwable -> Optional.<DelegatedClientIdentityProviderConfiguration>empty()).get();
     }
 
-    protected void initializeClientIdentityProvider(final IndirectClient client) throws Throwable {
+    protected void initializeClientIdentityProvider(final IndirectClient client, final RequestContext context) throws Throwable {
         if (!client.isInitialized()) {
-            client.init(true);
+            val currentService = WebUtils.getService(context);
+            LOGGER.trace("Initializing client [{}] with request parameters [{}] and service [{}]",
+                client, context.getRequestParameters(), currentService);
+            client.init();
         }
         FunctionUtils.throwIf(!client.isInitialized(), DelegatedAuthenticationFailureException::new);
     }
@@ -193,7 +198,7 @@ public class DefaultDelegatedClientIdentityProviderConfigurationProducer impleme
             .allMatch(Unchecked.predicate(authz -> authz.isDelegatedClientAuthorizedForService(client, service, context)));
     }
 
-    protected List<Client> findAllClients(final WebApplicationService service, final WebContext webContext) {
+    protected List<? extends Client> findAllClients(final WebApplicationService service, final WebContext webContext) {
         val clients = configurationContext.getObject().getIdentityProviders();
         return clients.findAllClients(service, webContext);
     }

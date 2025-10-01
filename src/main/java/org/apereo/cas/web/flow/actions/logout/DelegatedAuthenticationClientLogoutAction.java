@@ -3,6 +3,8 @@ package org.apereo.cas.web.flow.actions.logout;
 import org.apereo.cas.authentication.principal.ClientCredential;
 import org.apereo.cas.authentication.principal.ClientCustomPropertyConstants;
 import org.apereo.cas.authentication.principal.Service;
+import org.apereo.cas.configuration.CasConfigurationProperties;
+import org.apereo.cas.logout.LogoutConfirmationResolver;
 import org.apereo.cas.pac4j.client.DelegatedIdentityProviders;
 import org.apereo.cas.support.pac4j.authentication.DelegatedAuthenticationClientLogoutRequest;
 import org.apereo.cas.ticket.TicketGrantingTicket;
@@ -16,6 +18,7 @@ import lombok.val;
 import org.pac4j.core.client.BaseClient;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.context.CallContext;
+import org.pac4j.core.context.WebContext;
 import org.pac4j.core.context.session.SessionStore;
 import org.pac4j.core.exception.http.RedirectionAction;
 import org.pac4j.core.exception.http.WithLocationAction;
@@ -49,75 +52,81 @@ public class DelegatedAuthenticationClientLogoutAction extends BaseCasWebflowAct
 
     protected final TicketRegistry ticketRegistry;
 
+    protected final CasConfigurationProperties casProperties;
+
+    protected final LogoutConfirmationResolver logoutConfirmationResolver;
+
     @Override
-    protected Event doPreExecute(final RequestContext requestContext) {
+    protected Event doPreExecute(final RequestContext requestContext) throws Exception {
         val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
         val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(requestContext);
         val context = new JEEContext(request, response);
 
         val currentProfile = findCurrentProfile(context);
-        val clientResult = findCurrentClient(currentProfile);
+        val clientResult = findCurrentClient(currentProfile, context);
         if (clientResult.isPresent()) {
             val client = clientResult.get();
             LOGGER.debug("Handling logout for delegated authentication client [{}]", client);
             DelegationWebflowUtils.putDelegatedAuthenticationClientName(requestContext, client.getName());
         }
-        return null;
+        return super.doPreExecute(requestContext);
     }
 
     @Override
     protected Event doExecuteInternal(final RequestContext requestContext) {
-        val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
-        val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(requestContext);
-        val context = new JEEContext(request, response);
+        if (logoutConfirmationResolver.isLogoutRequestConfirmed(requestContext)) {
+            val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
+            val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(requestContext);
+            val context = new JEEContext(request, response);
 
-        val currentProfile = findCurrentProfile(context);
-        Optional<Client> clientResult = findCurrentClient(currentProfile);
+            val currentProfile = findCurrentProfile(context);
+            Optional<? extends Client> clientResult = findCurrentClient(currentProfile, context);
 
-        // Customisation : fallback to TGT to retrieve client if TST is unable to retrieve client
-        if(clientResult.isEmpty() && requestContext.getRequestScope().contains(WebUtils.PARAMETER_TICKET_GRANTING_TICKET_ID)){
-            LOGGER.debug("Could not retrieve the current client by TST. Trying by TGT...");
-            val ticket = (TicketGrantingTicket) ticketRegistry.getTicket((String) requestContext.getRequestScope().get(WebUtils.PARAMETER_TICKET_GRANTING_TICKET_ID));
-            if(ticket.getAuthentication().getAttributes().containsKey(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME)){
-                val clientName = (String) ticket.getAuthentication().getAttributes().get(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME).getFirst();
-                clientResult = identityProviders.findClient(clientName);
-                LOGGER.debug("Current [{}] client found by TGT", clientName);
-            } else {
-                LOGGER.debug("No clientName in TGT : this is not a delegation scenario for logout");
-            }
-        }
-        
-        // Customisation : do not logout but put a link to a custom url by external idp in html
-        if(clientResult.isPresent()){
-            if(clientResult.get() instanceof BaseClient){
-                if(((BaseClient) clientResult.get()).getCustomProperties().containsKey(ClientCustomPropertyConstants.CLIENT_CUSTOM_PROPERTY_DISPLAY_NAME)){
-                    LOGGER.debug("Logout is disabled for external idp : using custom link in html view");
-                    requestContext.getFlashScope().put("logoutLink", ((BaseClient) clientResult.get()).getCustomProperties().get(ClientCustomPropertyConstants.CLIENT_CUSTOM_PROPERTY_DISPLAY_NAME));
-                    requestContext.getFlashScope().put("logoutName", "screen.logout.display.button."+clientResult.get().getName());
-                    requestContext.getFlowScope().put("delegatedAuthenticationClientName", clientResult.get().getName());
-                    return null;
+            // Customisation : fallback to TGT to retrieve client if TST is unable to retrieve client
+            if(clientResult.isEmpty() && requestContext.getRequestScope().contains(WebUtils.PARAMETER_TICKET_GRANTING_TICKET_ID)){
+                LOGGER.debug("Could not retrieve the current client by TST. Trying by TGT...");
+                val ticket = (TicketGrantingTicket) ticketRegistry.getTicket((String) requestContext.getRequestScope().get(WebUtils.PARAMETER_TICKET_GRANTING_TICKET_ID));
+                if(ticket.getAuthentication().getAttributes().containsKey(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME)){
+                    val clientName = (String) ticket.getAuthentication().getAttributes().get(ClientCredential.AUTHENTICATION_ATTRIBUTE_CLIENT_NAME).getFirst();
+                    clientResult = identityProviders.findClient(clientName, context);
+                    LOGGER.debug("Current [{}] client found by TGT", clientName);
                 } else {
-                    LOGGER.debug("No displayName is defined for external idp : using native method to handle logout");
+                    LOGGER.debug("No clientName in TGT : this is not a delegation scenario for logout");
                 }
             }
-        }
+            
+            // Customisation : do not logout but put a link to a custom url by external idp in html
+            if(clientResult.isPresent()){
+                if(clientResult.get() instanceof BaseClient){
+                    if(((BaseClient) clientResult.get()).getCustomProperties().containsKey(ClientCustomPropertyConstants.CLIENT_CUSTOM_PROPERTY_DISPLAY_NAME)){
+                        LOGGER.debug("Logout is disabled for external idp : using custom link in html view");
+                        requestContext.getFlashScope().put("logoutLink", ((BaseClient) clientResult.get()).getCustomProperties().get(ClientCustomPropertyConstants.CLIENT_CUSTOM_PROPERTY_DISPLAY_NAME));
+                        requestContext.getFlashScope().put("logoutName", "screen.logout.display.button."+clientResult.get().getName());
+                        requestContext.getFlowScope().put("delegatedAuthenticationClientName", clientResult.get().getName());
+                        return null;
+                    } else {
+                        LOGGER.debug("No displayName is defined for external idp : using native method to handle logout");
+                    }
+                }
+            }
 
-        if (clientResult.isPresent()) {
-            val client = clientResult.get();
-            LOGGER.trace("Located client [{}]", client);
-            val service = WebUtils.getService(requestContext);
-            val targetUrl = Optional.ofNullable(service).map(Service::getId).orElse(null);
-            LOGGER.debug("Logout target url based on service [{}] is [{}]", service, targetUrl);
+            if (clientResult.isPresent()) {
+                val client = clientResult.get();
+                LOGGER.trace("Located client [{}]", client);
+                val service = WebUtils.getService(requestContext);
+                val targetUrl = Optional.ofNullable(service).map(Service::getId).orElse(null);
+                LOGGER.debug("Logout target url based on service [{}] is [{}]", service, targetUrl);
 
-            val callContext = new CallContext(context, sessionStore);
-            val actionResult = client.getLogoutAction(callContext, currentProfile, targetUrl);
-            actionResult.ifPresent(action -> {
-                captureDelegatedAuthenticationLogoutRequest(requestContext, action, targetUrl);
-                LOGGER.debug("Adapting logout action [{}] for client [{}]", action, client);
-                JEEHttpActionAdapter.INSTANCE.adapt(action, context);
-            });
-        } else {
-            LOGGER.debug("The current client cannot be found; No logout action can execute");
+                val callContext = new CallContext(context, sessionStore);
+                val actionResult = client.getLogoutAction(callContext, currentProfile, targetUrl);
+                actionResult.ifPresent(action -> {
+                    captureDelegatedAuthenticationLogoutRequest(requestContext, action, targetUrl);
+                    LOGGER.debug("Adapting logout action [{}] for client [{}]", action, client);
+                    JEEHttpActionAdapter.INSTANCE.adapt(action, context);
+                });
+            } else {
+                LOGGER.debug("The current client cannot be found; No logout action can execute");
+            }
         }
         return null;
     }
@@ -142,9 +151,9 @@ public class DelegatedAuthenticationClientLogoutAction extends BaseCasWebflowAct
         return profile.orElse(null);
     }
 
-    protected Optional<Client> findCurrentClient(final UserProfile currentProfile) {
+    protected Optional<? extends Client> findCurrentClient(final UserProfile currentProfile, final WebContext context) {
         return currentProfile == null
             ? Optional.empty()
-            : identityProviders.findClient(currentProfile.getClientName());
+            : identityProviders.findClient(currentProfile.getClientName(), context);
     }
 }

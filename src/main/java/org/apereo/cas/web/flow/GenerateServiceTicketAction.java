@@ -218,6 +218,6 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     }
 
     private Event newEvent(final String id, final Throwable error) {
-        return new EventFactorySupport().event(this, id, new LocalAttributeMap<>("error", error));
+        return eventFactory.event(this, id, new LocalAttributeMap<>("error", error));
     }
 }

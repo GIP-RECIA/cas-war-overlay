@@ -6,11 +6,13 @@ import org.apereo.cas.authentication.principal.ServiceFactoryConfigurer;
 import org.apereo.cas.authentication.principal.WebApplicationService;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.configuration.features.CasFeatureModule;
+import org.apereo.cas.logout.DefaultLogoutConfirmationResolver;
 import org.apereo.cas.logout.DefaultLogoutExecutionPlan;
 import org.apereo.cas.logout.DefaultLogoutManager;
 import org.apereo.cas.logout.DefaultLogoutRedirectionStrategy;
 import org.apereo.cas.logout.DefaultSingleLogoutMessageCreator;
 import org.apereo.cas.logout.DescendantTicketsLogoutPostProcessor;
+import org.apereo.cas.logout.LogoutConfirmationResolver;
 import org.apereo.cas.logout.LogoutExecutionPlan;
 import org.apereo.cas.logout.LogoutExecutionPlanConfigurer;
 import org.apereo.cas.logout.LogoutManager;
@@ -172,6 +174,14 @@ public class CasCoreLogoutAutoConfiguration {
             return new DefaultLogoutManager(casProperties.getSlo().isDisabled(), logoutExecutionPlan);
         }
 
+        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
+        @Bean
+        @ConditionalOnMissingBean(name = LogoutConfirmationResolver.DEFAULT_BEAN_NAME)
+        public LogoutConfirmationResolver logoutConfirmationResolver(
+            final CasConfigurationProperties casProperties) {
+            return new DefaultLogoutConfirmationResolver(casProperties);
+        }
+        
     }
 
     @Configuration(value = "CasCoreLogoutExecutionPlanBaseConfiguration", proxyBeanMethods = false)
@@ -241,10 +251,12 @@ public class CasCoreLogoutAutoConfiguration {
         @ConditionalOnMissingBean(name = "logoutWebApplicationServiceFactory")
         @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
         public ServiceFactory<WebApplicationService> logoutWebApplicationServiceFactory(
+            @Qualifier(UrlValidator.BEAN_NAME)
+            final UrlValidator urlValidator,
             @Qualifier(TenantExtractor.BEAN_NAME)
             final TenantExtractor tenantExtractor,
             final CasConfigurationProperties casProperties) {
-            return new LogoutWebApplicationServiceFactory(tenantExtractor, casProperties.getLogout());
+            return new LogoutWebApplicationServiceFactory(tenantExtractor, urlValidator, casProperties.getLogout());
         }
 
         @Bean

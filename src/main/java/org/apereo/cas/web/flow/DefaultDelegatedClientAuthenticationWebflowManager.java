@@ -1,11 +1,15 @@
 package org.apereo.cas.web.flow;
 
 import org.apereo.cas.authentication.principal.Service;
+import org.apereo.cas.services.UnauthorizedServiceException;
 import org.apereo.cas.support.pac4j.authentication.clients.DelegatedClientSessionManager;
 import org.apereo.cas.ticket.InvalidTicketException;
 import org.apereo.cas.ticket.TransientSessionTicket;
 import org.apereo.cas.ticket.TransientSessionTicketFactory;
+import org.apereo.cas.util.LoggingUtils;
+import org.apereo.cas.util.function.FunctionUtils;
 import org.apereo.cas.util.spring.beans.BeanSupplier;
+import org.apereo.cas.web.support.CookieUtils;
 import org.apereo.cas.web.support.WebUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +55,7 @@ public class DefaultDelegatedClientAuthenticationWebflowManager implements Deleg
             trackSessionIdForCasClient(webContext, ticket, instance);
         } else {
             val builders = getDelegatedClientSessionManagers(client);
-            for (val builder : builders) {
-                builder.trackIdentifier(webContext, ticket, client);
-            }
+            builders.parallelStream().forEach(builder -> builder.trackIdentifier(webContext, ticket, client));
         }
         return ticket;
     }
@@ -125,20 +127,13 @@ public class DefaultDelegatedClientAuthenticationWebflowManager implements Deleg
     protected void rememberSelectedClientIfNecessary(final JEEContext webContext, final Client client) {
         val cookieProps = configContext.getCasProperties().getAuthn().getPac4j().getCookie();
         if (cookieProps.isEnabled()) {
+            val cookieBuilder = configContext.getDelegatedClientCookieGenerator();
             if (cookieProps.isAutoConfigureCookiePath()) {
-                val contextPath = webContext.getNativeRequest().getContextPath();
-                val cookiePath = StringUtils.isNotBlank(contextPath) ? contextPath + '/' : "/";
-                val path = configContext.getDelegatedClientCookieGenerator().getCookiePath();
-                if (StringUtils.isBlank(path)) {
-                    LOGGER.debug("Setting path for cookies for delegated authentication cookie generator to: [{}]", cookiePath);
-                    configContext.getDelegatedClientCookieGenerator().setCookiePath(cookiePath);
-                }
+                CookieUtils.configureCookiePath(webContext.getNativeRequest(), cookieBuilder);
             }
-            configContext.getDelegatedClientCookieGenerator().addCookie(webContext.getNativeRequest(),
-                webContext.getNativeResponse(), client.getName());
+            cookieBuilder.addCookie(webContext.getNativeRequest(), webContext.getNativeResponse(), client.getName());
         }
     }
-
 
     protected Service restoreDelegatedAuthenticationRequest(final RequestContext requestContext,
                                                             final WebContext webContext,

@@ -11,7 +11,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -80,16 +79,23 @@ public class GoogleAuthenticatorMultifactorWebflowConfigurer extends AbstractCas
             googleLoginFormState.getEntryActionList().add(setPrincipalAction);
 
             createTransitionForState(googleLoginFormState, CasWebflowConstants.TRANSITION_ID_SUBMIT,
-                CasWebflowConstants.STATE_ID_REAL_SUBMIT, Map.of("bind", Boolean.TRUE, "validate", Boolean.TRUE));
+                CasWebflowConstants.STATE_ID_AUTHORIZE_TOKEN_ATTEMPT, createTransitionAttributes(true, true));
 
             createTransitionForState(googleLoginFormState, CasWebflowConstants.TRANSITION_ID_REGISTER, CasWebflowConstants.STATE_ID_VIEW_REGISTRATION,
-                Map.of("bind", Boolean.FALSE, "validate", Boolean.FALSE));
+                createTransitionAttributes(false, false));
 
             createTransitionForState(googleLoginFormState, CasWebflowConstants.TRANSITION_ID_CONFIRM, "validateGoogleAccountToken",
-                Map.of("bind", Boolean.FALSE, "validate", Boolean.FALSE));
+                createTransitionAttributes(false, false));
 
             createTransitionForState(googleLoginFormState, CasWebflowConstants.TRANSITION_ID_SELECT, "viewConfirmRegistration",
-                Map.of("bind", Boolean.FALSE, "validate", Boolean.FALSE));
+                createTransitionAttributes(false, false));
+
+            val authorizeTokenState = createActionState(flow, CasWebflowConstants.STATE_ID_AUTHORIZE_TOKEN_ATTEMPT,
+                CasWebflowConstants.ACTION_ID_GOOGLE_ACCOUNT_AUTHORIZE_TOKEN_ATTEMPT);
+            createTransitionForState(authorizeTokenState, CasWebflowConstants.TRANSITION_ID_SUCCESS, CasWebflowConstants.STATE_ID_REAL_SUBMIT);
+            createTransitionForState(authorizeTokenState, CasWebflowConstants.TRANSITION_ID_ERROR, "googleAccountTokenAuthorizationError");
+
+            createViewState(flow, "googleAccountTokenAuthorizationError", "gauth/casGoogleAuthenticatorTokenAuthorizationErrorView");
 
             val regViewState = createViewState(flow, CasWebflowConstants.STATE_ID_VIEW_REGISTRATION, "gauth/casGoogleAuthenticatorRegistrationView");
             regViewState.getEntryActionList().addAll(setPrincipalAction, createEvaluateAction(CasWebflowConstants.ACTION_ID_GOOGLE_ACCOUNT_CREATE_REGISTRATION));
@@ -98,12 +104,12 @@ public class GoogleAuthenticatorMultifactorWebflowConfigurer extends AbstractCas
             val confirmRegViewState = createViewState(flow, "viewConfirmRegistration", "gauth/casGoogleAuthenticatorConfirmRegistrationView");
             confirmRegViewState.getEntryActionList().add(setPrincipalAction);
             confirmRegViewState.getEntryActionList().add(createEvaluateAction(CasWebflowConstants.ACTION_ID_GOOGLE_PREPARE_LOGIN));
-            
-            createTransitionForState(confirmRegViewState, CasWebflowConstants.TRANSITION_ID_REGISTER, CasWebflowConstants.STATE_ID_VIEW_REGISTRATION);
+
+            createTransitionForState(confirmRegViewState, CasWebflowConstants.TRANSITION_ID_REGISTER,
+                CasWebflowConstants.STATE_ID_VIEW_REGISTRATION, CasWebflowConstants.ACTION_ID_GOOGLE_CONFIRM_REGISTRATION);
             createTransitionForState(confirmRegViewState, CasWebflowConstants.TRANSITION_ID_DELETE, "googleAccountDeleteDevice");
-            createTransitionForState(confirmRegViewState, CasWebflowConstants.TRANSITION_ID_SELECT,
-                CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM,
-                createEvaluateAction(CasWebflowConstants.ACTION_ID_GOOGLE_CONFIRM_SELECTION));
+            createTransitionForState(confirmRegViewState, CasWebflowConstants.TRANSITION_ID_SELECT, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM,
+                CasWebflowConstants.ACTION_ID_GOOGLE_CONFIRM_SELECTION);
 
             val deleteDeviceState = createActionState(flow, "googleAccountDeleteDevice", CasWebflowConstants.ACTION_ID_GOOGLE_ACCOUNT_DELETE_DEVICE);
             createTransitionForState(deleteDeviceState, CasWebflowConstants.STATE_ID_SUCCESS, acctRegCheckState.getId());

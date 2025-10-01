@@ -5,6 +5,7 @@ import org.apereo.cas.multitenancy.TenantDefinition;
 import org.apereo.cas.multitenancy.TenantExtractor;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.function.FunctionUtils;
+import org.apereo.cas.web.UrlValidator;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,7 +18,12 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.StringEscapeUtils;
+import org.apache.hc.core5.net.URIBuilder;
+import org.springframework.core.Ordered;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -52,6 +58,7 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
         CasProtocolConstants.PARAMETER_FORMAT);
 
     private final TenantExtractor tenantExtractor;
+    private final UrlValidator urlValidator;
 
     private int order = Ordered.LOWEST_PRECEDENCE;
 

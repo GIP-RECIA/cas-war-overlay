@@ -207,6 +207,13 @@ header > nav .cas-brand .cas-logo {
     }
 }
 
+@media (max-width: 960px) {
+    #casFooter {
+        display: none !important;
+    }
+}
+
+
 .log-trace {
     color: whitesmoke;
     font-weight: bold;
@@ -366,7 +373,7 @@ form button i.mdi {
 }
 
 .banner-dismissible {
-    padding-right: 4rem;
+    padding-right: 1rem;
 }
 
 .banner-dismissible .close {
@@ -513,6 +520,10 @@ form button i.mdi {
 
 .pb-2 {
     padding-bottom: 0.8rem;
+}
+
+.pb-3 {
+    padding-bottom: 1.4rem !important;
 }
 
 .bg-primary {
@@ -946,6 +957,11 @@ select.palantir {
     vertical-align: sub;
 }
 
+#fieldsLegend {
+    font-size: 14px;
+    font-style: italic;
+}
+
 .dataTables_wrapper {
     margin-left: 5px;
     margin-top: 5px;
@@ -958,6 +974,9 @@ select.palantir {
     margin-right: auto;
 }
 
+.login-providers {
+    max-width: 50%;
+}
 
 /** jQuery UI **/
 
@@ -1007,7 +1026,10 @@ select.palantir {
     margin-top: 2px;
 }
 
-/* oddly, the auto right and left margins caused the login form to not be centered in IE */
+main:has(.d-flex > section:only-of-type) {
+    max-width: 560px;
+}
+
 
 @media all and (min-width: 768px) {
     .login-section {
@@ -1115,4 +1137,25 @@ body {
         height: 60em;
         width: 60em;
     }
+}
+
+.nodeLabel,.edgeLabel {
+    font-family: Monaco, monospace !important;
+}
+foreignObject {
+    border-radius: 5px;
+}
+
+pre code.hljs {
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.9);
+}
+
+.fade-in {
+    animation: appear 0.4s ease-in-out forwards;
+}
+
+@keyframes appear {
+    0%   { opacity: 0;   filter: blur(20px); }
+    50%  { opacity: 0.5; filter: blur(10px); }
+    100% { opacity: 1;   filter: blur(0);   }
 }

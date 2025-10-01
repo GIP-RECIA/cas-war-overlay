@@ -33,6 +33,7 @@ import org.apereo.cas.ticket.idtoken.IdTokenGenerationContext;
 import org.apereo.cas.ticket.idtoken.OidcIdToken;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.DigestUtils;
+import org.apereo.cas.util.EncodingUtils;
 import org.apereo.cas.util.function.FunctionUtils;
 import com.google.common.collect.ImmutableSet;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,7 @@ import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.util.Assert;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -90,20 +92,33 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
             return null;
         }
         val claims = buildJwtClaims(context);
+
+        var deviceSecret = StringUtils.EMPTY;
+        if (context.getGrantType() == OAuth20GrantTypes.AUTHORIZATION_CODE
+            && context.getAccessToken().getScopes().contains(OidcConstants.StandardScopes.DEVICE_SSO.getScope())
+            && getConfigurationContext().getDiscoverySettings().isNativeSsoSupported()) {
+            deviceSecret = getConfigurationContext().getDeviceSecretGenerator().generate();
+            claims.setStringClaim(OidcConstants.DS_HASH, getConfigurationContext().getDeviceSecretGenerator().hash(deviceSecret));
+            if (context.getAccessToken().getTicketGrantingTicket() != null) {
+                val encoded = (byte[]) getConfigurationContext().getTicketRegistry().getCipherExecutor()
+                    .encode(context.getAccessToken().getTicketGrantingTicket().getId().getBytes(StandardCharsets.UTF_8));
+                val sessionId = EncodingUtils.encodeUrlSafeBase64(encoded);
+                claims.setStringClaim(OidcConstants.CLAIM_SESSION_REF, sessionId);
+            }
+        }
+
         val finalIdToken = encodeAndFinalizeToken(claims, context);
-        return new OidcIdToken(finalIdToken, claims);
+        return new OidcIdToken(finalIdToken, claims, deviceSecret);
     }
 
     @SuppressWarnings("LongFloatConversion")
     protected JwtClaims buildJwtClaims(final IdTokenGenerationContext context) throws Throwable {
         val accessToken = context.getAccessToken();
-        
-        LOGGER.trace("Attempting to produce claims for the id token [{}]", accessToken);
+        LOGGER.trace("Attempting to produce claims for the ID token [{}]", accessToken);
         val authentication = accessToken.getAuthentication();
         val activePrincipal = buildPrincipalForAttributeFilter(accessToken, context.getRegisteredService());
         val principal = getConfigurationContext().getProfileScopeToAttributesFilter()
-            .filter(accessToken.getService(),
-                activePrincipal, context.getRegisteredService(), accessToken);
+            .filter(accessToken.getService(), activePrincipal, context.getRegisteredService(), accessToken);
         LOGGER.debug("Principal to use to build the ID token is [{}]", principal);
 
         val oidc = getConfigurationContext().getCasProperties().getAuthn().getOidc();
@@ -152,8 +167,7 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
         }
         generateAccessTokenHash(accessToken, oidcRegisteredService, claims);
 
-        val includeClaims = context.getResponseType() != OAuth20ResponseTypes.CODE && context.getGrantType() != OAuth20GrantTypes.AUTHORIZATION_CODE;
-        if (includeClaims || includeClaimsInIdTokenForcefully(context)) {
+        if (includeClaimsInIdToken(context) || includeClaimsInIdTokenForcefully(context)) {
             FunctionUtils.doIf(includeClaimsInIdTokenForcefully(context),
                     __ -> LOGGER.warn("Individual claims requested by OpenID scopes are forced to be included in the ID token. "
                         + "This is a violation of the OpenID Connect specification and a workaround via dedicated CAS configuration. "
@@ -170,8 +184,13 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
         if (context.getGrantType() == OAuth20GrantTypes.CIBA) {
             generateCibaClaims(context, claims);
         }
-
         return claims;
+    }
+
+    protected boolean includeClaimsInIdToken(final IdTokenGenerationContext context) {
+        return context.getResponseType() != OAuth20ResponseTypes.CODE
+            && context.getGrantType() != OAuth20GrantTypes.AUTHORIZATION_CODE
+            && context.getGrantType() != OAuth20GrantTypes.REFRESH_TOKEN;
     }
 
     private boolean includeClaimsInIdTokenForcefully(final IdTokenGenerationContext context) {
@@ -360,27 +379,6 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
         var jwtId = ticket.getId();
         if (ticket.getTicketGrantingTicket() != null) {
             jwtId = ticket.getTicketGrantingTicket().getId();
-        }
-
-        if (ticket instanceof final TicketGrantingTicket tgt) {
-            val oAuthCallbackUrl = getConfigurationContext().getCasProperties().getServer().getPrefix()
-                + OAuth20Constants.BASE_OAUTH20_URL + '/'
-                + OAuth20Constants.CALLBACK_AUTHORIZE_URL_DEFINITION;
-
-            val streamServices = new LinkedHashMap<String, Service>();
-            val services = tgt.getServices();
-            streamServices.putAll(services);
-            streamServices.putAll(tgt.getProxyGrantingTickets());
-            jwtId = streamServices
-                .entrySet()
-                .stream()
-                .filter(e -> {
-                    val service = getConfigurationContext().getServicesManager().findServiceBy(e.getValue());
-                    return service != null && service.getServiceId().equals(oAuthCallbackUrl);
-                })
-                .findFirst()
-                .map(Map.Entry::getKey)
-                .orElseGet(ticket::getId);
         }
         return DigestUtils.sha512(jwtId);
     }

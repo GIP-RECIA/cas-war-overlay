@@ -423,4 +423,7 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-person-directory-core"
     // Cerbere account validation
     compileOnly "org.springframework.security:spring-security-web"
+    // TODO
+    compileOnly "org.apereo.cas:cas-server-core-notifications-api"
+    compileOnly "org.apereo.cas:cas-server-support-token-core-api"
 }

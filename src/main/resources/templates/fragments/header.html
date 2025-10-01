@@ -18,10 +18,12 @@
             <div class="container-fluid container-fluid d-flex align-items-center justify-content-between">
                 <section class="mdc-top-app-bar__section">
                     <div class="cas-brand mx-auto">
-                        <h1 class="visually-hidden" th:text="${#strings.defaultString(#themes.code('cas.theme.name'), 'CAS')}">CAS</h1>
-                            <img id="cas-logo" class="cas-logo"
-                                 th:alt="${#strings.defaultString(#themes.code('cas.theme.name'), 'CAS')}"
-                                 th:src="@{${#strings.defaultString(#themes.code('cas.logo.file'), '/images/cas-logo.png')}}"
+                        <h1 class="visually-hidden" th:text="${#strings.defaultString(#cas.theme('cas.theme.name'), 'CAS')}">CAS</h1>
+                        <a th:href="@{/}" th:if="${#cas.isTrue(#cas.theme('cas.logo.enabled'))}">
+                            <img id="cas-logo"
+                                 class="cas-logo"
+                                 th:alt="${#strings.defaultString(#cas.theme('cas.theme.name'), 'CAS')}"
+                                 th:src="@{${#strings.defaultString(#cas.theme('cas.logo.file'), '/images/cas-logo.png')}}"
                             />
                     </div>
                 </section>
@@ -33,7 +35,7 @@
 
     <script>let countMessages = 0;</script>
     <div
-            th:if="${'true' == #strings.defaultString(#themes.code('cas.notifications-menu.enabled'), 'true')}"
+            th:if="${#cas.isTrue(#cas.theme('cas.notifications-menu.enabled'))}"
             class="mdc-dialog cas-notification-dialog modal"
             id="cas-notification-dialog" role="alertdialog"
             aria-modal="true" aria-labelledby="notif-dialog-title"

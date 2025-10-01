@@ -11,7 +11,6 @@ import org.apereo.cas.web.support.WebUtils;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.webflow.action.EventFactorySupport;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -40,11 +39,11 @@ public class FinishLogoutAction extends AbstractLogoutAction {
             // Customization : for delegated authn, let the user do the redirect with a button on the html
             if(!context.getFlowScope().contains("delegatedAuthenticationClientName")){
                 LOGGER.debug("Redirecting to [{}] with redirectView", logoutRedirect);
-                return new EventFactorySupport().event(this, CasWebflowConstants.TRANSITION_ID_REDIRECT);
+                return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_REDIRECT);
             } else {
                 LOGGER.debug("Redirecting to [{}] with logoutView", logoutRedirect);
                 context.getFlashScope().put("logoutRedirect", logoutRedirect);
-                return new EventFactorySupport().event(this, CasWebflowConstants.TRANSITION_ID_FINISH);
+                return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_FINISH);
             }
         }
         val logoutPostUrl = WebUtils.getLogoutPostUrl(context);
@@ -54,8 +53,8 @@ public class FinishLogoutAction extends AbstractLogoutAction {
             flowScope.put("originalUrl", logoutPostUrl);
             flowScope.put("parameters", logoutPostData);
             LOGGER.debug("Submitting POST logout request to [{}] with parameters [{}]", logoutPostUrl, logoutPostData);
-            return new EventFactorySupport().event(this, CasWebflowConstants.TRANSITION_ID_POST);
+            return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_POST);
         }
-        return new EventFactorySupport().event(this, CasWebflowConstants.TRANSITION_ID_FINISH);
+        return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_FINISH);
     }
 }

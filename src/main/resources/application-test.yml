@@ -154,7 +154,6 @@ cas.interrupt.core.trigger-mode: AFTER_SSO
 
 # SAML
 cas.authn.saml-idp.core.entity-id: https://localhost:8443/cas/idp/metadata
-cas.authn.saml-idp.core.session-storage-type: TICKET_REGISTRY
 cas.saml-core.issuer: https://localhost:8443/cas
 
 # OIDC

@@ -7,6 +7,7 @@ import org.apereo.cas.web.flow.CasWebflowConstants;
 import org.apereo.cas.web.flow.DelegatedClientAuthenticationConfigurationContext;
 import org.apereo.cas.web.flow.DelegationWebflowUtils;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -31,6 +32,7 @@ import java.util.Map;
  */
 @Slf4j
 @EnableScheduling
+@RequiredArgsConstructor
 public class DelegatedClientAuthenticationCredentialSelectionAction extends BaseCasWebflowAction {
 
     protected final DelegatedClientAuthenticationConfigurationContext configContext;
