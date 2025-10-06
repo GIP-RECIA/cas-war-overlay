@@ -44,7 +44,7 @@ FILES=(
     "src/main/resources/templates/fragments/loginProviders.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/loginProviders.html"
     "src/main/resources/templates/fragments/scripts.html support/cas-server-support-thymeleaf/src/main/resources/templates/fragments/scripts.html"
     "src/main/resources/templates/login/casGenericSuccessView.html support/cas-server-support-thymeleaf/src/main/resources/templates/login/casGenericSuccessView.html"
-    "src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java support/cas-server-support-ldap-core/src/main/java/org/apereo/cas/persondir/LdaptivePersonAttributeDao.java"
+    "src/main/java/org/apereo/cas/persondir/LdapPersonAttributeDao.java support/cas-server-support-ldap-core/src/main/java/org/apereo/cas/persondir/LdapPersonAttributeDao.java"
     "src/main/java/org/apereo/cas/web/flow/actions/logout/DelegatedAuthenticationClientLogoutAction.java support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/logout/DelegatedAuthenticationClientLogoutAction.java"
     "src/main/java/org/apereo/cas/web/flow/logout/FinishLogoutAction.java support/cas-server-support-actions-core/src/main/java/org/apereo/cas/web/flow/logout/FinishLogoutAction.java"
     "src/main/resources/templates/logout/casLogoutView.html support/cas-server-support-thymeleaf/src/main/resources/templates/logout/casLogoutView.html"
@@ -119,7 +119,7 @@ done
 
 # Une fois la comparaison finie remplacer les fichiers dans src/ par ceux modifiés dans diff/
 echo "Recopie des fichiers mis à jour dans src"
-cp build.gradle ./
+cp diff/build.gradle ./
 cp diff/gradle.properties ./
 for file_info in "${FILES[@]}"; do
     local_path=$(echo "$file_info" | cut -d ' ' -f 1)

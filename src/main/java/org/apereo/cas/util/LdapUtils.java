@@ -361,41 +361,42 @@ public class LdapUtils {
         val filter = new FilterTemplate();
         if (ResourceUtils.doesResourceExist(filterQuery)) {
             ApplicationContextProvider.getScriptResourceCacheManager()
-                .ifPresentOrElse(cacheMgr -> FunctionUtils.doUnchecked(__ -> {
-                    val cacheKey = cacheMgr.computeKey(filterQuery);
-                    var script = (ExecutableCompiledScript) null;
-                    if (cacheMgr.containsKey(cacheKey)) {
-                        script = cacheMgr.get(cacheKey);
-                        LOGGER.trace("Located cached groovy script [{}] for key [{}]", script, cacheKey);
-                    } else {
-                        val resource = Unchecked.supplier(() -> ResourceUtils.getRawResourceFrom(filterQuery)).get();
-                        LOGGER.trace("Groovy script [{}] for key [{}] is not cached", resource, cacheKey);
-                        val scriptFactory = ExecutableCompiledScriptFactory.getExecutableCompiledScriptFactory();
-                        script = scriptFactory.fromResource(resource);
-                        cacheMgr.put(cacheKey, script);
-                        LOGGER.trace("Cached groovy script [{}] for key [{}]", script, cacheKey);
-                    }
-                    if (script != null) {
-                        // Customization : pass list of values for each key instead of unique value
-                        val parameters = IntStream.range(0, values.size())
-                            .boxed()
-                            .collect(Collectors.toMap(
-                                paramName::get,
-                                i -> new ArrayList<>(List.of(values.get(i))),
-                                (list1, list2) -> {
-                                    list1.addAll(list2);
-                                    return list1;
-                                },
-                                LinkedHashMap::new
-                            ));
-                        val args = CollectionUtils.<String, Object>wrap("filter", filter,
-                            "parameters", parameters,
-                            "applicationContext", ApplicationContextProvider.getApplicationContext(),
-                            "logger", LOGGER);
-                        script.setBinding(args);
-                        script.execute(args.values().toArray(), FilterTemplate.class);
-                    }
-                }),
+                .ifPresentOrElse(cacheMgr ->
+                        FunctionUtils.doUnchecked(__ -> {
+                            val cacheKey = cacheMgr.computeKey(filterQuery);
+                            var script = (ExecutableCompiledScript) null;
+                            if (cacheMgr.containsKey(cacheKey)) {
+                                script = cacheMgr.get(cacheKey);
+                                LOGGER.trace("Located cached groovy script [{}] for key [{}]", script, cacheKey);
+                            } else {
+                                val resource = Unchecked.supplier(() -> ResourceUtils.getRawResourceFrom(filterQuery)).get();
+                                LOGGER.trace("Groovy script [{}] for key [{}] is not cached", resource, cacheKey);
+                                val scriptFactory = ExecutableCompiledScriptFactory.getExecutableCompiledScriptFactory();
+                                script = scriptFactory.fromResource(resource);
+                                cacheMgr.put(cacheKey, script);
+                                LOGGER.trace("Cached groovy script [{}] for key [{}]", script, cacheKey);
+                            }
+                            if (script != null) {
+                                // Customization : pass list of values for each key instead of unique value
+                                val parameters = IntStream.range(0, values.size())
+                                    .boxed()
+                                    .collect(Collectors.toMap(
+                                        paramName::get,
+                                        i -> new ArrayList<>(List.of(values.get(i))),
+                                        (list1, list2) -> {
+                                            list1.addAll(list2);
+                                            return list1;
+                                        },
+                                        LinkedHashMap::new
+                                    ));
+                                val args = CollectionUtils.<String, Object>wrap("filter", filter,
+                                    "parameters", parameters,
+                                    "applicationContext", ApplicationContextProvider.getApplicationContext(),
+                                    "logger", LOGGER);
+                                script.setBinding(args);
+                                script.execute(args.values().toArray(), FilterTemplate.class);
+                            }
+                        }),
                     () -> {
                         throw new RuntimeException("Script cache manager unavailable to handle LDAP filter");
                     });

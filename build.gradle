@@ -82,6 +82,9 @@ apply plugin: "war"
 
 apply plugin: "org.springframework.boot"
 apply plugin: "io.freefair.lombok"
+lombok {
+    version = "${project.lombokVersion}"
+}
 
 apply plugin: "maven-publish"
 
@@ -129,6 +132,7 @@ apply plugin: "com.bmuschko.docker-remote-api"
 apply from: rootProject.file("gradle/tasks.gradle")
 
 def out = services.get(StyledTextOutputFactory).create("cas")
+def configurationCacheRequested = services.get(BuildFeatures).configurationCache.requested.getOrElse(true)
 
 configurations {
     all {
@@ -191,12 +195,10 @@ bootBuildImage {
 
 
 ['jibDockerBuild', 'jibBuildTar', 'jib'].each { taskName ->
-    if (gradle.gradleVersion >= "8.0") {
-        getTasksByName(taskName, true).each(it -> {
-            it.notCompatibleWithConfigurationCache("Jib is not compatible with configuration cache");
-            it.enabled = !gradle.startParameter.isConfigurationCacheRequested()
-        })
-    }
+    getTasksByName(taskName, true).each(it -> {
+        it.notCompatibleWithConfigurationCache("Jib is not compatible with configuration cache");
+        it.enabled = !configurationCacheRequested
+    })
 }
 
 def imagePlatforms = project.dockerImagePlatform.split(",")
@@ -205,7 +207,7 @@ def dockerPassword = providers.systemProperty("dockerPassword").getOrNull()
 def imageTagPostFix = providers.systemProperty("dockerImageTagPostfix").getOrElse("")
 
 jib {
-    if (gradle.gradleVersion >= "8.0" && gradle.startParameter.isConfigurationCacheRequested()) {
+    if (configurationCacheRequested) {
         out.withStyle(Style.Info).println("You are seeing this message because the Gradle configuration cache is turned on")
         out.withStyle(Style.Info).println("Running Jib tasks to produce Docker images will require the command-line option: --no-configuration-cache")
         out.withStyle(Style.Info).println("Jib does not support the Gradle configuration cache; Please see https://github.com/GoogleContainerTools/jib/issues/3132")

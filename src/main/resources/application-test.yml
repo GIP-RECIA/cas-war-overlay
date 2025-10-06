@@ -173,10 +173,6 @@ cas.authn.oidc.id-token.include-id-token-claims: false
 # Attribute definition
 cas.authn.attribute-repository.attribute-definition-store.json.location: classpath:attribute-definition-test.json
 
-# Delegation CAS
-cas.authn.pac4j.cas[0].login-url: https://localhost:9443/cas/login
-cas.authn.pac4j.cas[0].client-name: DELEGTEST
-
 # Delegation SAML
 # First provider using multi profile selection
 cas.authn.pac4j.saml[0].service-provider-entity-id: https://localhost:8443/cas/educonnect
