@@ -7,6 +7,9 @@ cas.server.name: https://localhost:8443
 cas.server.prefix: https://localhost:8443/cas
 cas.server.scope: cas-ci.git
 
+# Fichier de logging
+logging.config: classpath:/log4j2-test.xml
+
 # Monitoring endpoints
 # Health
 management.endpoints.web.exposure.include: health,prometheus           

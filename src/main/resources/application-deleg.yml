@@ -7,6 +7,9 @@ cas.server.name: https://localhost:9443
 cas.server.prefix: https://localhost:9443/cas
 cas.server.scope: cas-ci.git
 
+# Fichier de logging
+logging.config: classpath:/log4j2-deleg.xml
+
 # Service ticket registry
 cas.authn.accept.enabled: false
 cas.ticket.registry.redis.host: localhost

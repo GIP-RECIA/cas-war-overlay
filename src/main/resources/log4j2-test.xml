@@ -6,15 +6,15 @@ Set -Dlog4j2.contextSelector=org.apache.logging.log4j.core.selector.BasicContext
 <!-- Specify the refresh internal in seconds. -->
 <Configuration monitorInterval="5" packages="org.apereo.cas.logging">
     <Properties>
-        <Property name="baseDir">/home/esco/logs</Property>
-        <Property name="cas.log.level">info</Property>
+        <Property name="baseDir">/home/cailbourdin/cas-war-overlay/logs</Property>
+        <Property name="cas.log.level">debug</Property>
         <Property name="spring.webflow.log.level">warn</Property>
         <Property name="spring.security.log.level">info</Property>
         <Property name="spring.cloud.log.level">warn</Property>
         <Property name="spring.web.log.level">warn</Property>
         <Property name="spring.boot.log.level">warn</Property>
         <Property name="ldap.log.level">warn</Property>
-        <Property name="pac4j.log.level">warn</Property>
+        <Property name="pac4j.log.level">debug</Property>
         <Property name="opensaml.log.level">warn</Property>
         <Property name="hazelcast.log.level">warn</Property>
         <Property name="jdbc.log.level">warn</Property>
@@ -34,6 +34,16 @@ Set -Dlog4j2.contextSelector=org.apache.logging.log4j.core.selector.BasicContext
         <CasAppender name="casConsole">
             <AppenderRef ref="console" />
         </CasAppender>
+
+        <File name="file" fileName="${baseDir}/cas-test.log" append="true" immediateFlush="false">
+            <PatternLayout pattern="%highlight{%d %p [%c] - &lt;%m&gt;%n}"
+                        alwaysWriteExceptions="${sys:log.file.stacktraces}" />
+        </File>
+
+        <CasAppender name="casFile">
+            <AppenderRef ref="file" />
+        </CasAppender>
+
     </Appenders>
     <Loggers>
         <Logger name="org.apereo.cas" level="${sys:cas.log.level}" />
@@ -95,6 +105,7 @@ Set -Dlog4j2.contextSelector=org.apache.logging.log4j.core.selector.BasicContext
         <Logger name="org.apache.http" level="warn" />
 
         <Root level="warn" includeLocation="${sys:log.include.location}">
+            <AppenderRef ref="casFile"/>
             <AppenderRef ref="casConsole"/>
         </Root>
     </Loggers>
