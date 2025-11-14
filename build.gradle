@@ -22,7 +22,7 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
         maven {
-            url = 'https://oss.sonatype.org/content/repositories/snapshots'
+            url = 'https://central.sonatype.com/repository/maven-snapshots/'
             mavenContent { snapshotsOnly() }
         }
         maven {
@@ -56,7 +56,7 @@ repositories {
     mavenCentral()
     maven { url = 'https://oss.sonatype.org/content/repositories/releases' }
     maven {
-        url = 'https://oss.sonatype.org/content/repositories/snapshots'
+        url = 'https://central.sonatype.com/repository/maven-snapshots/'
         mavenContent { snapshotsOnly() }
     }
     maven {
@@ -171,14 +171,11 @@ war {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(project.targetCompatibility)
+
         def chosenJvmVendor = null
-        JvmVendorSpec.declaredFields.each { field ->
-            if (field.type == JvmVendorSpec && Modifier.isStatic(field.getModifiers())) {
-                if (field.name == project.jvmVendor?.toUpperCase()) {
-                    chosenJvmVendor = field.get(null)
-                    return
-                }
-            }
+        if (project.jvmVendor != null) {
+            out.withStyle(Style.Info).println("JVM vendor ${project.jvmVendor} is requested for the Java toolchain")
+            chosenJvmVendor = JvmVendorSpec.of(project.jvmVendor?.toUpperCase())
         }
         if (chosenJvmVendor != null) {
             vendor = chosenJvmVendor
@@ -429,3 +426,4 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-core-notifications-api"
     compileOnly "org.apereo.cas:cas-server-support-token-core-api"
 }
+
