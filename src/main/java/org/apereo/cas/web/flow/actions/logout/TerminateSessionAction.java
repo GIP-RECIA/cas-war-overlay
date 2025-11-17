@@ -1,6 +1,7 @@
 package org.apereo.cas.web.flow.logout;
 
 import org.apereo.cas.CentralAuthenticationService;
+import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.configuration.model.core.logout.LogoutProperties;
 import org.apereo.cas.logout.LogoutConfirmationResolver;
 import org.apereo.cas.logout.LogoutManager;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -48,7 +50,10 @@ public class TerminateSessionAction extends BaseCasWebflowAction {
     protected final SingleLogoutRequestExecutor singleLogoutRequestExecutor;
 
     protected final LogoutConfirmationResolver logoutConfirmationResolver;
-    
+
+    @Autowired
+    private CasConfigurationProperties casProperties;
+
     @Override
     protected Event doExecuteInternal(final RequestContext requestContext) throws Exception {
         val terminateSession = logoutConfirmationResolver.isLogoutRequestConfirmed(requestContext);
@@ -89,7 +94,7 @@ public class TerminateSessionAction extends BaseCasWebflowAction {
         }
 
         // Customization : partial logout
-        if(request.getParameter("partialLogout") != null){
+        if(request.getParameter(casProperties.getCustom().getProperties().get("partial-logout.parameter-name")) != null){
             LOGGER.debug("Partial logout : no need to remove CAS cookies");
         } else {
             LOGGER.trace("Removing CAS cookies");

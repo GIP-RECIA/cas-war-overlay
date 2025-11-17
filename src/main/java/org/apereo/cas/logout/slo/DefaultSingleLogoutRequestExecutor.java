@@ -2,6 +2,7 @@ package org.apereo.cas.logout.slo;
 
 import org.apereo.cas.authentication.principal.attribute.PersonAttributeDao;
 import org.apereo.cas.authentication.principal.attribute.PersonAttributes;
+import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.persondir.LdapPersonAttributeDao;
 import org.apereo.cas.logout.LogoutManager;
 import org.apereo.cas.logout.LogoutRequestStatus;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apereo.cas.util.spring.beans.BeanContainer;
 import org.apereo.inspektr.common.web.ClientInfoHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,6 +43,9 @@ public class DefaultSingleLogoutRequestExecutor implements SingleLogoutRequestEx
 
     private final ApplicationContext applicationContext;
 
+    @Autowired
+    private CasConfigurationProperties casProperties;
+
     @Override
     public List<SingleLogoutRequestContext> execute(final String ticketId,
                                                     final HttpServletRequest request,
@@ -63,7 +68,7 @@ public class DefaultSingleLogoutRequestExecutor implements SingleLogoutRequestEx
             }
 
             // Customization : partial logout
-            if(request.getParameter("partialLogout") != null){
+            if(request.getParameter(casProperties.getCustom().getProperties().get("partial-logout.parameter-name")) != null){
                 LOGGER.debug("Partial logout : updating ticket from registry");
                 if (ticket instanceof final TicketGrantingTicket tgt) {
                     // First step : find the correct attribute repository to get attributes from ldap
@@ -72,7 +77,7 @@ public class DefaultSingleLogoutRequestExecutor implements SingleLogoutRequestEx
                     LOGGER.debug("Configured daos are {}", daos);
                     LdapPersonAttributeDao ldapPersonAttributeDao = null;
                     for(PersonAttributeDao dao : daos){
-                        if(Arrays.asList(dao.getId()).getFirst().equals("attributeUpdate")){
+                        if(Arrays.asList(dao.getId()).getFirst().equals(casProperties.getCustom().getProperties().get("partial-logout.attribute-repository"))){
                             ldapPersonAttributeDao = (LdapPersonAttributeDao) dao;
                         }
                     }
@@ -81,7 +86,7 @@ public class DefaultSingleLogoutRequestExecutor implements SingleLogoutRequestEx
                         // Second step : request ldap with uid obtained from actual principal
                         val attributes = tgt.getAuthentication().getPrincipal().getAttributes();
                         Map<String, List<Object>> requestAttributes = new HashMap<>();
-                        requestAttributes.put("username", attributes.get("uid"));
+                        requestAttributes.put("username", attributes.get(casProperties.getCustom().getProperties().get("partial-logout.attribute-id")));
                         Set<PersonAttributes> personAttributesSet =  ldapPersonAttributeDao.getPeopleWithMultivaluedAttributes(
                                 requestAttributes, null ,new HashSet<>());
                         // Third step : update principal and TGT in registry with new attributes
