@@ -71,6 +71,7 @@ echo -n "Node version: " && node --version
 
 # Installation des dépendances python
 cd "${ROOT_DIRECTORY}"
+pip install -r ci/python/requirements.txt
 pip install -r ci/python/flask-saml-client/requirements.txt
 pip install -r ci/python/flask-oidc-client/requirements.txt
 
@@ -128,6 +129,8 @@ python3 service_test64.py &
 pid_python_service_test64=$!
 python3 service_test65.py &
 pid_python_service_test65=$!
+python3 service_test66.py &
+pid_python_service_test66=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
@@ -208,6 +211,7 @@ exit_ci () {
     kill -9 "$pid_python_service_test62"
     kill -9 "$pid_python_service_test64"
     kill -9 "$pid_python_service_test65"
+    kill -9 "$pid_python_service_test66"
     kill -9 "$pid_python_structs_info_api"
     kill -9 "$pid_python_externalid_api"
     kill -9 "$pid_python_scim_server"
