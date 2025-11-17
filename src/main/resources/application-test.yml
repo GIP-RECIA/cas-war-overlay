@@ -147,6 +147,32 @@ cas.authn.attribute-repository.ldap[1].attributes.ENTPersonLogin: ENTPersonLogin
 cas.authn.attribute-repository.ldap[1].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
 cas.authn.attribute-repository.ldap[1].attributes.ESCOPersonEtatCompte: ESCOPersonEtatCompte
 
+# Specific attribute repository used to update attributes
+cas.authn.attribute-repository.ldap[2].id: attributeUpdate
+cas.authn.attribute-repository.ldap[2].state: STANDBY 
+cas.authn.attribute-repository.ldap[2].base-dn: ou=people,dc=esco-centre,dc=fr
+cas.authn.attribute-repository.ldap[2].bind-credential: admin
+cas.authn.attribute-repository.ldap[2].bind-dn: cn=admin,ou=administrateurs,dc=esco-centre,dc=fr
+cas.authn.attribute-repository.ldap[2].ldap-url: ldap://localhost:389
+cas.authn.attribute-repository.ldap[2].search-filter: uid={0}
+cas.authn.attribute-repository.ldap[2].attributes.uid: uid
+cas.authn.attribute-repository.ldap[2].attributes.cn: cn
+cas.authn.attribute-repository.ldap[2].attributes.sn: sn
+cas.authn.attribute-repository.ldap[2].attributes.mail: mail
+cas.authn.attribute-repository.ldap[2].attributes.ESCOUAICourant: ESCOUAICourant
+cas.authn.attribute-repository.ldap[2].attributes.givenName: givenName
+cas.authn.attribute-repository.ldap[2].attributes.ENTPersonFonctions: ENTPersonFonctions
+cas.authn.attribute-repository.ldap[2].attributes.ENTPersonProfils: ENTPersonProfils
+cas.authn.attribute-repository.ldap[2].attributes.ESCOPersonProfils: ESCOPersonProfils
+cas.authn.attribute-repository.ldap[2].attributes.ESCOUAI: ESCOUAI
+cas.authn.attribute-repository.ldap[2].attributes.ESCOSIRENCourant: ESCOSIRENCourant
+cas.authn.attribute-repository.ldap[2].attributes.ENTPersonGARIdentifiant: ENTPersonGARIdentifiant
+cas.authn.attribute-repository.ldap[2].attributes.ENTPersonJointure: ENTPersonJointure
+cas.authn.attribute-repository.ldap[2].attributes.isMemberOf: isMemberOf
+cas.authn.attribute-repository.ldap[2].attributes.ENTPersonLogin: ENTPersonLogin
+cas.authn.attribute-repository.ldap[2].attributes.ESCOPersonExternalIds: ESCOPersonExternalIds
+cas.authn.attribute-repository.ldap[2].attributes.ESCOPersonEtatCompte: ESCOPersonEtatCompte
+
 # SLO
 cas.logout.follow-service-redirects: true
 cas.logout.redirect-parameter: url
