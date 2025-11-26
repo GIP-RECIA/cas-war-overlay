@@ -34,13 +34,13 @@ Pour une activation service par service cela se fait dans les définitions de se
 
 ## Gestion des devices (supports)
 
-Si on veut pouvoir ajouter/supprimer des devices il faut activer le mutli-device :
+Si on veut pouvoir ajouter/supprimer des devices après le premier enregistrement il faut activer le mutli-device :
 ```
 cas.authn.mfa.gauth.core.multiple-device-registration-enabled=true
 ```
-Attention cela à pour conséquence de permettre à l'utilisateur d'ajouter/supprimer des nouvelles devices avant connexion, ce qui rend le MFA inutile. Si on active ce paramètre il faut modifier les templates en conséquence pour enlever cette possibilité à l'utilisateur (et ne la laisser que dans une interface de gestion dédiée accessible après connexion).
+Attention cela à pour conséquence de permettre à l'utilisateur d'ajouter/supprimer des nouvelles devices avant connexion dans les versions < 7.3, ce qui rend le MFA inutile.
 
-Pour avoir une interface de gestion des devices MFA il faut activer le module `Account Management` en ajoutant cette propriété :
+Pour avoir une interface de gestion des devices MFA il faut activer le module `Account Management` en ajoutant cette propriété (même remarque, à ne pas activer avant la 7.3):
 ```
 CasFeatureModule.AccountManagement.enabled=true
 ```
@@ -96,3 +96,17 @@ Cela correspond à une modification des templates HTML mais aussi des fichiers j
 De base CAS gère mal l'utilisation des codes de récupération : lorsqu'un code de récupération est utilisée, la device associée dans le redis est dupliquée (car il en insère une nouvelle avec le code de récupération en moins mais sans supprimer l'ancienne). Le soucis se présente aussi bien pour chaque nouvelle connexion que pour le premier enregistrement. Un fix a donc été mis en place à deux endroits :
 - Dans le `RedisGoogleAuthenticatorTokenCredentialRepository` pour le login, en supprimant la device d'origine associée avant de la recréer ;
 - Dans un ensemble de fichiers pour l'enregistement, en empêchant l'enregistrement d'une device avec un code de récupération (ajout d'une fonction `isTokenAuthorizedForRegistration`).
+
+### Trusted device expiration
+
+Pour gérer correctement le temps d'expiration des trusted devices stockées dans le redis et l'aligner sur le temps d'expiration du cookie stocké dans le navigateur, une petite modification a été faite dans le fichier `MultifactorAuthenticationSetTrustAction.java`.
+
+
+### Templates
+
+Les pages web ont été modifiées pour améliorer l'UI/UX. Les pages modifiées se trouvent dans le dossier `src/main/resources/templates/gauth`.
+
+
+## Bugs connus (>=7.2)
+
+- Suppression des devices du redis qui ne fonctionne qu'à moitié quand on passe par l'interface de gestion de CAS.
