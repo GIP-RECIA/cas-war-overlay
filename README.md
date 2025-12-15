@@ -49,7 +49,7 @@ And has a number of custom enhancements :
 - Account activation check
 - Fix profile selection authentication with existing TGT
 
-Current CAS Base version : **7.3.0**
+Current CAS Base version : **7.3.2**
 
 # Project Structure
 
