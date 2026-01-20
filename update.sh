@@ -79,7 +79,7 @@ for file_info in "${FILES[@]}"; do
     local_path=$(echo "$file_info" | cut -d ' ' -f 1)
     remote_path=$(echo "$file_info" | cut -d ' ' -f 2)
     filename=$(basename "$local_path")
-    wget -q -O "diff/${filename}_$VERSION" "https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/$remote_path"
+    wget -q -O "diff/${filename}_$VERSION" "https://raw.githubusercontent.com/apereo/cas/refs/tags/v$VERSION/$remote_path" < /dev/null
 done
 
 # Pour les fichiers de l'overlay c'est un peu différent il faut générer un nouvel overlay, l'extraire puis les recopier
