@@ -1,5 +1,6 @@
 package org.apereo.cas.config;
 
+import module java.base;
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.audit.AuditTrailExecutionPlan;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlan;
@@ -64,6 +65,7 @@ import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.impl.CasWebflowEventResolutionConfigurationContext;
 import org.apereo.cas.web.support.ArgumentExtractor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -78,7 +80,6 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.webflow.execution.Action;
-import java.util.List;
 
 /**
  * This is {@link CasSupportActionsAutoConfiguration}.
@@ -455,7 +456,7 @@ public class CasSupportActionsAutoConfiguration {
             final CasConfigurationProperties casProperties,
             final ConfigurableApplicationContext applicationContext,
             @Qualifier(ScriptResourceCacheManager.BEAN_NAME)
-            final ObjectProvider<ScriptResourceCacheManager> scriptResourceCacheManager,
+            final ObjectProvider<@NonNull ScriptResourceCacheManager> scriptResourceCacheManager,
             @Qualifier(ServicesManager.BEAN_NAME)
             final ServicesManager servicesManager) {
             return WebflowActionBeanSupplier.builder()
@@ -680,7 +681,7 @@ public class CasSupportActionsAutoConfiguration {
         @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
         public Action populateSpringSecurityContextAction(
             @Qualifier("securityContextRepository")
-            final ObjectProvider<SecurityContextRepository> securityContextRepository,
+            final ObjectProvider<@NonNull SecurityContextRepository> securityContextRepository,
             final CasConfigurationProperties casProperties,
             final ConfigurableApplicationContext applicationContext) {
             return WebflowActionBeanSupplier.builder()
@@ -702,13 +703,13 @@ public class CasSupportActionsAutoConfiguration {
         @ConditionalOnMissingBean(name = CasWebflowConstants.ACTION_ID_ACCOUNT_PROFILE_REMOVE_SINGLE_SIGNON_SESSION)
         public Action accountProfileRemoveSingleSignOnSessionAction(
             final ConfigurableApplicationContext applicationContext,
-            @Qualifier(TicketRegistry.BEAN_NAME)
-            final TicketRegistry ticketRegistry,
+            @Qualifier(SingleLogoutRequestExecutor.BEAN_NAME)
+            final SingleLogoutRequestExecutor defaultSingleLogoutRequestExecutor,
             final CasConfigurationProperties casProperties) {
             return WebflowActionBeanSupplier.builder()
                 .withApplicationContext(applicationContext)
                 .withProperties(casProperties)
-                .withAction(() -> new AccountProfileRemoveSingleSignOnSessionAction(ticketRegistry))
+                .withAction(() -> new AccountProfileRemoveSingleSignOnSessionAction(defaultSingleLogoutRequestExecutor))
                 .withId(CasWebflowConstants.ACTION_ID_ACCOUNT_PROFILE_REMOVE_SINGLE_SIGNON_SESSION)
                 .build()
                 .get();
@@ -719,7 +720,7 @@ public class CasSupportActionsAutoConfiguration {
         @ConditionalOnMissingBean(name = CasWebflowConstants.ACTION_ID_PREPARE_ACCOUNT_PROFILE)
         public Action prepareAccountProfileViewAction(
             @Qualifier(GeoLocationService.BEAN_NAME)
-            final ObjectProvider<GeoLocationService> geoLocationService,
+            final ObjectProvider<@NonNull GeoLocationService> geoLocationService,
             final ConfigurableApplicationContext applicationContext,
             @Qualifier(AuditTrailExecutionPlan.BEAN_NAME)
             final AuditTrailExecutionPlan auditTrailExecutionPlan,

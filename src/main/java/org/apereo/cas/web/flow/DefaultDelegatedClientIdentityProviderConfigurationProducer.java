@@ -1,5 +1,6 @@
 package org.apereo.cas.web.flow;
 
+import module java.base;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apereo.cas.authentication.principal.Service;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.jooq.lambda.Unchecked;
+import org.jspecify.annotations.NonNull;
 import org.pac4j.core.client.Client;
 import org.pac4j.core.client.IndirectClient;
 import org.pac4j.core.context.WebContext;
@@ -21,17 +23,6 @@ import org.pac4j.jee.context.JEEContext;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.webflow.execution.RequestContext;
-
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * This is {@link DefaultDelegatedClientIdentityProviderConfigurationProducer}.
@@ -42,7 +33,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class DefaultDelegatedClientIdentityProviderConfigurationProducer implements DelegatedClientIdentityProviderConfigurationProducer {
-    private final ObjectProvider<DelegatedClientAuthenticationConfigurationContext> configurationContext;
+    private final ObjectProvider<@NonNull DelegatedClientAuthenticationConfigurationContext> configurationContext;
     private Set<String> authorizedDomains;
     private final Pattern domainExtractorPattern;
 

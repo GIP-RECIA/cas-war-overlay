@@ -1,28 +1,25 @@
 package org.apereo.cas.web.flow.actions;
 
+import module java.base;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apereo.cas.authentication.principal.DelegatedAuthenticationCandidateProfile;
 import org.apereo.cas.web.flow.CasWebflowConstants;
 import org.apereo.cas.web.flow.DelegatedClientAuthenticationConfigurationContext;
 import org.apereo.cas.web.flow.DelegationWebflowUtils;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jspecify.annotations.Nullable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This is {@link DelegatedClientAuthenticationCredentialSelectionAction}.
@@ -54,7 +51,7 @@ public class DelegatedClientAuthenticationCredentialSelectionAction extends Base
     }
 
     @Override
-    protected Event doExecuteInternal(final RequestContext requestContext) throws Exception {
+    protected @Nullable Event doExecuteInternal(final RequestContext requestContext) throws Exception {
         val profiles = DelegationWebflowUtils.getDelegatedClientAuthenticationResolvedCredentials(requestContext,
             DelegatedAuthenticationCandidateProfile.class);
         if (profiles.size() == 1) {

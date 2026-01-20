@@ -1,5 +1,6 @@
 package org.apereo.cas.authentication.principal.resolvers;
 
+import module java.base;
 import org.apereo.cas.authentication.AuthenticationHandler;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.attribute.AggregatingPersonAttributeDao;
@@ -33,17 +34,9 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.lambda.Unchecked;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ConfigurableApplicationContext;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 /**
@@ -65,7 +58,7 @@ public class PersonDirectoryPrincipalResolver implements PrincipalResolver {
     private final PrincipalResolutionContext context;
 
     @Override
-    public Principal resolve(final Credential credential, final Optional<Principal> currentPrincipal,
+    public @Nullable Principal resolve(final Credential credential, final Optional<Principal> currentPrincipal,
                              final Optional<AuthenticationHandler> handler, final Optional<Service> service) throws Throwable {
 
         LOGGER.trace("Attempting to resolve a principal via [{}]", getName());
@@ -114,7 +107,7 @@ public class PersonDirectoryPrincipalResolver implements PrincipalResolver {
         return credential != null && credential.getId() != null;
     }
 
-    protected Principal buildResolvedPrincipal(final String id, final Map<String, List<Object>> attributes,
+    protected @Nullable Principal buildResolvedPrincipal(final String id, final Map<String, List<Object>> attributes,
                                                final Credential credential, final Optional<Principal> currentPrincipal,
                                                final Optional<AuthenticationHandler> handler) throws Throwable {
         return context.getPrincipalFactory().createPrincipal(id, attributes);
@@ -178,8 +171,8 @@ public class PersonDirectoryPrincipalResolver implements PrincipalResolver {
                                                                  final Optional<Service> givenService,
                                                                  final Optional<AuthenticationHandler> handler) throws Throwable {
 
-        queryAttributes.computeIfAbsent("credentialId", __ -> CollectionUtils.wrapList(credential.getId()));
-        queryAttributes.computeIfAbsent("credentialClass", __ -> CollectionUtils.wrapList(credential.getClass().getSimpleName()));
+        queryAttributes.computeIfAbsent("credentialId", _ -> CollectionUtils.wrapList(credential.getId()));
+        queryAttributes.computeIfAbsent("credentialClass", _ -> CollectionUtils.wrapList(credential.getClass().getSimpleName()));
 
         val attributes = new LinkedHashMap<String, List<Object>>();
         currentPrincipal.ifPresent(p -> {
@@ -261,7 +254,7 @@ public class PersonDirectoryPrincipalResolver implements PrincipalResolver {
      * @param currentPrincipal the current principal
      * @return the username, or null if it could not be resolved.
      */
-    protected String extractPrincipalId(final Credential credential, final Optional<Principal> currentPrincipal) {
+    protected @Nullable String extractPrincipalId(final Credential credential, final Optional<Principal> currentPrincipal) {
         LOGGER.debug("Extracting credential id based on existing credential [{}]", credential);
         val id = credential.getId();
         if (currentPrincipal.isPresent()) {
@@ -403,18 +396,27 @@ public class PersonDirectoryPrincipalResolver implements PrincipalResolver {
             .attributeRepository(attributeRepository)
             .attributeMerger(attributeMerger)
             .principalFactory(principalFactory)
-            .returnNullIfNoAttributes(Arrays.stream(personDirectory).filter(p -> p.getReturnNull() != TriStateBoolean.UNDEFINED)
-                .map(p -> p.getReturnNull().toBoolean()).findFirst().orElse(Boolean.FALSE))
+            .returnNullIfNoAttributes(Arrays.stream(personDirectory)
+                .filter(p -> p.getReturnNull() != TriStateBoolean.UNDEFINED)
+                .map(p -> p.getReturnNull().toBoolean())
+                .findFirst()
+                .orElse(Boolean.FALSE))
             .principalAttributeNames(Arrays.stream(personDirectory)
                 .map(PersonDirectoryPrincipalResolverProperties::getPrincipalAttribute)
                 .filter(StringUtils::isNotBlank)
                 .findFirst()
                 .orElse(StringUtils.EMPTY))
             .principalNameTransformer(transformer)
-            .useCurrentPrincipalId(Arrays.stream(personDirectory).filter(p -> p.getUseExistingPrincipalId() != TriStateBoolean.UNDEFINED)
-                .map(p -> p.getUseExistingPrincipalId().toBoolean()).findFirst().orElse(Boolean.FALSE))
-            .resolveAttributes(Arrays.stream(personDirectory).filter(p -> p.getAttributeResolutionEnabled() != TriStateBoolean.UNDEFINED)
-                .map(p -> p.getAttributeResolutionEnabled().toBoolean()).findFirst().orElse(Boolean.TRUE))
+            .useCurrentPrincipalId(Arrays.stream(personDirectory)
+                .filter(p -> p.getUseExistingPrincipalId() != TriStateBoolean.UNDEFINED)
+                .map(p -> p.getUseExistingPrincipalId().toBoolean())
+                .findFirst()
+                .orElse(Boolean.FALSE))
+            .resolveAttributes(Arrays.stream(personDirectory)
+                .filter(p -> p.getAttributeResolutionEnabled() != TriStateBoolean.UNDEFINED)
+                .map(p -> p.getAttributeResolutionEnabled().toBoolean())
+                .findFirst()
+                .orElse(Boolean.TRUE))
             .activeAttributeRepositoryIdentifiers(activeAttributeRepositoryIdentifiers)
             .attributeRepositoryResolver(attributeRepositoryResolver)
             .tenantExtractor(applicationContext.getBean(TenantExtractor.BEAN_NAME, TenantExtractor.class))

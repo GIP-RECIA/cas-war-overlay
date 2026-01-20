@@ -1,6 +1,6 @@
 <script type="text/javascript" th:src="@{#{webjars.jquery.js}}"></script>
 <script type="text/javascript" th:src="@{#{webjars.dataTables.js}}"></script>
-<script type="text/javascript" th:src="@{#{webjars.clientjs.js}}"></script>
+<script type="text/javascript" th:src="@{#{webjars.fingerprintjs.js}}"></script>
 
 <span th:remove="tag" th:if="${#cas.isTrue(#cas.theme('cas.js.core.enabled'))}">
     <span th:replace="~{fragments/includes :: javascript}">
@@ -16,11 +16,12 @@
 <script src="/cas/js/loginForm.js" defer></script>
 
 <script th:inline="javascript">
+    const rememberUsername = /*[[${#cas.theme('cas.login-form.remember-username.enabled')}]]*/
+    const trackGeoLocation = /*[[${trackGeoLocation}]]*/ === "true";
+    
     if (typeof resourceLoadedSuccessfully === "function") {
         resourceLoadedSuccessfully();
     }
-    $(() => typeof cssVars === "function" && cssVars({onlyLegacy: true}));
-    let trackGeoLocation = /*[[${trackGeoLocation}]]*/ === "true";
 </script>
 
 <script th:replace="~{fragments/googleanalytics :: ga}"></script>

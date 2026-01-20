@@ -1,5 +1,6 @@
 package org.apereo.cas.logout;
 
+import module java.base;
 import lombok.RequiredArgsConstructor;
 import org.apereo.cas.logout.slo.SingleLogoutMessage;
 import org.apereo.cas.logout.slo.SingleLogoutMessageCreator;
@@ -10,7 +11,6 @@ import org.apereo.cas.ticket.UniqueTicketIdGenerator;
 import org.apereo.cas.util.CompressionUtils;
 import org.apereo.cas.util.DefaultUniqueTicketIdGenerator;
 import org.apereo.cas.util.ISOStandardDateFormat;
-
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.context.ConfigurableApplicationContext;

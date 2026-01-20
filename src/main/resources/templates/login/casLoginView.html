@@ -17,7 +17,7 @@
         </div>
     </form>
 
-   <div th:with="loginFormEnabled=${#strings.defaultString(#themes.code('cas.login-form.enabled'), 'true') == 'true'},
+   <div th:with="loginFormEnabled=${#strings.defaultString(#cas.theme('cas.login-form.enabled'), 'true') == 'true'},
                   loginFormViewable=${@casThymeleafTemplatesDirector.isLoginFormViewable(#vars)}">
         <section id="loginForm"
                  th:if="${#bools.isFalse(delegatedAuthenticationProviderConfigurations)}"

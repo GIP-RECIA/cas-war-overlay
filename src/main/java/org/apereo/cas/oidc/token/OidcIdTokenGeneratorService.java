@@ -1,5 +1,6 @@
 package org.apereo.cas.oidc.token;
 
+import module java.base;
 import org.apereo.cas.audit.AuditActionResolvers;
 import org.apereo.cas.audit.AuditResourceResolvers;
 import org.apereo.cas.audit.AuditableActions;
@@ -43,21 +44,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apereo.inspektr.audit.annotation.Audit;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.util.Assert;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This is {@link OidcIdTokenGeneratorService}.
@@ -68,7 +57,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<OidcConfigurationContext> {
 
-    public OidcIdTokenGeneratorService(final ObjectProvider<OidcConfigurationContext> configurationContext) {
+    public OidcIdTokenGeneratorService(final ObjectProvider<@NonNull OidcConfigurationContext> configurationContext) {
         super(configurationContext);
     }
 
@@ -91,8 +80,13 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
                 OidcConstants.StandardScopes.OPENID.getScope());
             return null;
         }
+        if (context.getGrantType() == OAuth20GrantTypes.JWT_BEARER
+            && !getConfigurationContext().getCasProperties().getAuthn().getOidc().getIdToken().isGenerateForJwtBearerGrantType()) {
+            LOGGER.debug("ID token generation for grant type [{}] is disabled. Skipping ID token generation.", OAuth20GrantTypes.JWT_BEARER);
+            return null;
+        }
+        
         val claims = buildJwtClaims(context);
-
         var deviceSecret = StringUtils.EMPTY;
         if (context.getGrantType() == OAuth20GrantTypes.AUTHORIZATION_CODE
             && context.getAccessToken().getScopes().contains(OidcConstants.StandardScopes.DEVICE_SSO.getScope())
@@ -169,7 +163,7 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
 
         if (includeClaimsInIdToken(context) || includeClaimsInIdTokenForcefully(context)) {
             FunctionUtils.doIf(includeClaimsInIdTokenForcefully(context),
-                    __ -> LOGGER.warn("Individual claims requested by OpenID scopes are forced to be included in the ID token. "
+                    _ -> LOGGER.warn("Individual claims requested by OpenID scopes are forced to be included in the ID token. "
                         + "This is a violation of the OpenID Connect specification and a workaround via dedicated CAS configuration. "
                         + "Claims should be requested from the userinfo/profile endpoints in exchange for an access token."))
                 .accept(claims);

@@ -1,5 +1,6 @@
 package org.apereo.cas.authentication.principal;
 
+import module java.base;
 import org.apereo.cas.CasProtocolConstants;
 import org.apereo.cas.multitenancy.TenantDefinition;
 import org.apereo.cas.multitenancy.TenantExtractor;
@@ -22,19 +23,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.hc.core5.net.URIBuilder;
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.Ordered;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Spliterator;
-import java.util.Spliterators;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 /**
  * The {@link AbstractServiceFactory} is the parent class providing
@@ -69,7 +60,7 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
      * @param url the url
      * @return sanitized url.
      */
-    protected static String cleanupUrl(final String url) {
+    protected static @Nullable String cleanupUrl(final String url) {
         if (url == null) {
             return null;
         }
@@ -84,7 +75,7 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
         return url.substring(0, jsessionPosition) + url.substring(questionMarkPosition);
     }
 
-    protected static String getSourceParameter(final HttpServletRequest request, final String... paramNames) {
+    protected static @Nullable String getSourceParameter(@Nullable final HttpServletRequest request, final String... paramNames) {
         if (request != null) {
             val parameterMap = request.getParameterMap();
             return Stream.of(paramNames)
@@ -95,7 +86,7 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
         return null;
     }
 
-    protected Map<String, List> extractQueryParameters(final Service service) {
+    protected Map<String, List> extractQueryParameters(@Nullable final Service service) {
         val attributes = new LinkedHashMap<String, List>();
         if (service instanceof final WebApplicationService webApplicationService) {
             val originalUrl = webApplicationService.getOriginalUrl();
@@ -116,7 +107,7 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
         return attributes;
     }
 
-    protected Service populateAttributes(final Service service, final HttpServletRequest request) {
+    protected @Nullable Service populateAttributes(@Nullable final Service service, final HttpServletRequest request) {
         val attributes = (Map) request.getParameterMap()
             .entrySet()
             .stream()
@@ -127,40 +118,30 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
 
         val collectAttributes = Objects.requireNonNullElse((Boolean) request.getAttribute(COLLECT_SERVICE_ATTRIBUTES), Boolean.TRUE);
         if (collectAttributes) {
-            val httpRequest = new LinkedHashMap<>();
-            FunctionUtils.doIfNotBlank(request.getPathInfo(), value -> collectHttpRequestProperty("pathInfo", value, httpRequest));
-            FunctionUtils.doIfNotBlank(request.getMethod(), value -> collectHttpRequestProperty("httpMethod", value, httpRequest));
-            FunctionUtils.doIfNotBlank(request.getRequestURL(), value -> collectHttpRequestProperty("requestURL", value.toString(), httpRequest));
-            FunctionUtils.doIfNotBlank(request.getRequestURI(), value -> collectHttpRequestProperty("requestURI", value, httpRequest));
-            FunctionUtils.doIfNotBlank(request.getRequestId(), value -> collectHttpRequestProperty("requestId", value, httpRequest));
-            FunctionUtils.doIfNotBlank(request.getContentType(), value -> collectHttpRequestProperty("contentType", value, httpRequest));
-            FunctionUtils.doIfNotBlank(request.getContextPath(), value -> collectHttpRequestProperty("contextPath", value, httpRequest));
-            FunctionUtils.doIfNotBlank(request.getLocalName(), value -> collectHttpRequestProperty("localeName", value, httpRequest));
-            if (!httpRequest.isEmpty()) {
-                attributes.put(Service.SERVICE_ATTRIBUTE_HTTP_REQUEST, httpRequest);
-            }
+            FunctionUtils.doIfNotBlank(request.getPathInfo(), value -> collectHttpRequestProperty("pathInfo", value, attributes));
+            FunctionUtils.doIfNotBlank(request.getMethod(), value -> collectHttpRequestProperty("httpMethod", value, attributes));
+            FunctionUtils.doIfNotBlank(request.getRequestURL(), value -> collectHttpRequestProperty("requestURL", value.toString(), attributes));
+            FunctionUtils.doIfNotBlank(request.getRequestURI(), value -> collectHttpRequestProperty("requestURI", value, attributes));
+            FunctionUtils.doIfNotBlank(request.getRequestId(), value -> collectHttpRequestProperty("requestId", value, attributes));
+            FunctionUtils.doIfNotBlank(request.getContentType(), value -> collectHttpRequestProperty("contentType", value, attributes));
+            FunctionUtils.doIfNotBlank(request.getContextPath(), value -> collectHttpRequestProperty("contextPath", value, attributes));
+            FunctionUtils.doIfNotBlank(request.getLocalName(), value -> collectHttpRequestProperty("localeName", value, attributes));
 
-            val cookies = new LinkedHashMap<>();
-            FunctionUtils.doIfNotNull(request.getCookies(), __ -> Arrays.stream(request.getCookies())
-                .forEach(cookie -> collectHttpRequestProperty("cookie-%s".formatted(cookie.getName()), cookie.getValue(), cookies)));
-            if (!cookies.isEmpty()) {
-                attributes.put(Service.SERVICE_ATTRIBUTE_COOKIES, cookies);
-            }
-            
-            val headers = new LinkedHashMap<>();
-            FunctionUtils.doIfNotNull(request.getHeaderNames(), __ -> StreamSupport.stream(
+            FunctionUtils.doIfNotNull(request.getCookies(), _ -> Arrays.stream(request.getCookies())
+                .forEach(cookie -> collectHttpRequestProperty("cookie-%s".formatted(cookie.getName()), cookie.getValue(), attributes)));
+
+            FunctionUtils.doIfNotNull(request.getHeaderNames(), _ -> StreamSupport.stream(
                     Spliterators.spliteratorUnknownSize(request.getHeaderNames().asIterator(), Spliterator.ORDERED), false)
-                .forEach(header -> collectHttpRequestProperty("header-%s".formatted(header), request.getHeader(header), headers)));
-            if (!headers.isEmpty()) {
-                attributes.put(Service.SERVICE_ATTRIBUTE_HEADERS, headers);
-            }
+                .forEach(header -> collectHttpRequestProperty("header-%s".formatted(header), request.getHeader(header), attributes)));
         }
 
-        LOGGER.trace("Extracted attributes [{}] for service [{}]", attributes, service.getId());
-        service.setAttributes(attributes);
-        tenantExtractor.extract(request)
-            .map(TenantDefinition::getId)
-            .ifPresent(service::setTenant);
+        if (service != null) {
+            LOGGER.trace("Extracted attributes [{}] for service [{}]", attributes, service.getId());
+            service.setAttributes(attributes);
+            tenantExtractor.extract(request)
+                .map(TenantDefinition::getId)
+                .ifPresent(service::setTenant);
+        }
         return service;
     }
 
@@ -172,16 +153,16 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
     }
 
     @Override
-    public <T extends Service> T createService(final String id, final Class<T> clazz) {
+    public @Nullable <T extends Service> T createService(final String id, final Class<T> clazz) {
         var service = createService(id);
-        if (!clazz.isAssignableFrom(service.getClass())) {
+        if (service != null && !clazz.isAssignableFrom(service.getClass())) {
             throw new ClassCastException("Service [" + service.getId() + " is of type " + service.getClass() + " when we were expecting " + clazz);
         }
         return (T) service;
     }
 
     @Override
-    public <T extends Service> T createService(final HttpServletRequest request, final Class<T> clazz) {
+    public @Nullable <T extends Service> T createService(final HttpServletRequest request, final Class<T> clazz) {
         var service = createService(request);
         if (service != null && !clazz.isAssignableFrom(service.getClass())) {
             throw new ClassCastException("Service [" + service.getId() + " is of type " + service.getClass() + " when we were expecting " + clazz);
@@ -190,7 +171,7 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
     }
 
     @Override
-    public T createService(final String id, final HttpServletRequest request) {
+    public @Nullable T createService(final String id, final HttpServletRequest request) {
         val service = createService(id);
         return (T) populateAttributes(service, request);
     }

@@ -1,5 +1,6 @@
 package org.apereo.cas.web.flow;
 
+import module java.base;
 import org.apereo.cas.authentication.AuthenticationServiceSelectionPlan;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.services.RegisteredServiceProperty;
@@ -8,25 +9,15 @@ import org.apereo.cas.services.UnauthorizedServiceException;
 import org.apereo.cas.util.function.FunctionUtils;
 import org.apereo.cas.web.flow.actions.BaseCasWebflowAction;
 import org.apereo.cas.web.support.WebUtils;
-
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * This is {@link BaseServiceAuthorizationCheckAction}.
@@ -45,7 +36,7 @@ public abstract class BaseServiceAuthorizationCheckAction extends BaseCasWebflow
     private CasConfigurationProperties casProperties;
 
     @Override
-    protected Event doExecuteInternal(final RequestContext context) {
+    protected @Nullable Event doExecuteInternal(final RequestContext context) {
         val serviceInContext = WebUtils.getService(context);
         val service = FunctionUtils.doUnchecked(() -> authenticationRequestServiceSelectionStrategies.resolveService(serviceInContext));
         if (service == null) {
