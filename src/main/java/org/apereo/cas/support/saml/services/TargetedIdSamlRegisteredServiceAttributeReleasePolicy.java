@@ -1,5 +1,6 @@
 package org.apereo.cas.support.saml.services;
 
+import module java.base;
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.services.RegisteredServiceAttributeReleasePolicyContext;
@@ -7,7 +8,6 @@ import org.apereo.cas.support.saml.services.idp.metadata.SamlRegisteredServiceMe
 import org.apereo.cas.support.saml.services.idp.metadata.cache.SamlRegisteredServiceCachingMetadataResolver;
 import org.apereo.cas.util.EncodingUtils;
 import org.apereo.cas.util.function.FunctionUtils;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +15,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.opensaml.saml.saml2.metadata.EntityDescriptor;
-
 import java.io.Serial;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -42,9 +41,21 @@ public class TargetedIdSamlRegisteredServiceAttributeReleasePolicy extends BaseS
 
     private String salt;
     private String attributeName;
-    private String releaseName = "eduPersonTargetedID";
-    private String separator = "!";
-    private String algorithm = "SHA";
+    private String releaseName;
+    private String separator;
+    private String algorithm;
+
+    private String getSeparator() {
+        return Objects.requireNonNullElse(this.separator, "!");
+    }      
+
+    private String getAlgorithm() {
+        return Objects.requireNonNullElse(this.algorithm, "SHA");
+    }
+
+    private String getReleaseName() {
+        return Objects.requireNonNullElse(this.releaseName, "eduPersonTargetedID");
+    }
 
     @Override
     protected Map<String, List<Object>> getAttributesForSamlRegisteredService(
@@ -67,22 +78,22 @@ public class TargetedIdSamlRegisteredServiceAttributeReleasePolicy extends BaseS
 
         return FunctionUtils.doUnchecked(() -> {
 
-            val md = MessageDigest.getInstance(algorithm);
+            val md = MessageDigest.getInstance(getAlgorithm());
             if (StringUtils.isNotBlank(sp)) {
                 md.update(sp.getBytes(StandardCharsets.UTF_8));
-                md.update(separator.getBytes());
+                md.update(getSeparator().getBytes());
             }
             md.update(attribute.getBytes(StandardCharsets.UTF_8));
-            md.update(separator.getBytes());
+            md.update(getSeparator().getBytes());
 
             val digestedMessage = md.digest(salt.getBytes(StandardCharsets.UTF_8));
             val encodedMessage = EncodingUtils.encodeBase32(digestedMessage, false);
             LOGGER.trace("Encoded digested message to base32 : [{}]", encodedMessage);
-            val finalValue = idp + separator + sp + separator + encodedMessage;
+            val finalValue = idp + getSeparator() + sp + getSeparator() + encodedMessage;
             LOGGER.debug("Final value for pairwise-id is [{}]", finalValue);
 
             Map<String, List<Object>> toRelease = new HashMap<>(1);
-            toRelease.put(releaseName, Collections.singletonList(finalValue));
+            toRelease.put(getReleaseName(), Collections.singletonList(finalValue));
             return toRelease;
         });
 
