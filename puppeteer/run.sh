@@ -122,6 +122,8 @@ python3 service_test51.py &
 pid_python_service_test51=$!
 python3 service_test57.py &
 pid_python_service_test57=$!
+python3 service_test60.py &
+pid_python_service_test60=$!
 python3 service_test62.py &
 pid_python_service_test62=$!
 python3 service_test64.py &
@@ -205,6 +207,7 @@ exit_ci () {
     kill -9 "$pid_python_service_test49"    
     kill -9 "$pid_python_service_test51"
     kill -9 "$pid_python_service_test57"
+    kill -9 "$pid_python_service_test60"
     kill -9 "$pid_python_service_test62"
     kill -9 "$pid_python_service_test64"
     kill -9 "$pid_python_service_test65"
