@@ -51,11 +51,10 @@ public class ReturnExternalIDAttributeReleasePolicy extends AbstractRegisteredSe
     private boolean notReleased = false;
 
     @JsonIgnore
-    private transient final HttpClient httpClient;
+    private transient HttpClient httpClient;
 
     public ReturnExternalIDAttributeReleasePolicy(){
         super();
-        this.httpClient = HttpClient.newHttpClient();
     }
 
     @Override
@@ -140,6 +139,9 @@ public class ReturnExternalIDAttributeReleasePolicy extends AbstractRegisteredSe
                     .build();
             final HttpRequest request = HttpRequest.newBuilder().uri(requestUri).POST(HttpRequest.BodyPublishers.noBody()).build();
             LOGGER.trace("Sending a request at url [{}] to generate a new externalid", requestUri);
+            if (this.httpClient == null) {
+                this.httpClient = HttpClient.newHttpClient();
+            }
             final HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             LOGGER.trace("HTTP response to generateExternalId request [{}] ", response.body());
 

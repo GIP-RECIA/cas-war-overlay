@@ -51,11 +51,10 @@ public class PrincipalExternalIdRegisteredOidcServiceUsernameProvider extends Ba
     private String internalServiceId;
 
     @JsonIgnore
-    private transient final HttpClient httpClient;
+    private transient HttpClient httpClient;
 
     public PrincipalExternalIdRegisteredOidcServiceUsernameProvider(){
         super();
-        this.httpClient = HttpClient.newHttpClient();
     }
 
     /**
@@ -139,6 +138,9 @@ public class PrincipalExternalIdRegisteredOidcServiceUsernameProvider extends Ba
                     .build();
             final HttpRequest request = HttpRequest.newBuilder().uri(requestUri).POST(HttpRequest.BodyPublishers.noBody()).build();
             LOGGER.trace("Sending a request at url [{}] to generate a new externalid", requestUri);
+            if (this.httpClient == null) {
+                this.httpClient = HttpClient.newHttpClient();
+            }
             final HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             LOGGER.trace("HTTP response to generateExternalId request [{}] ", response.body());
 
