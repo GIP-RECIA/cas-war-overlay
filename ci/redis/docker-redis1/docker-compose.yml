@@ -1,7 +1,6 @@
 services:
   redis:
     container_name: redis-server1
-    image: redis/redis-stack-server:7.4.0-v1
+    image: redis:8.4.0
     network_mode: "host"
-    environment:
-      - REDIS_ARGS= --requirepass OZwtXSpJCjZEQ5b
+    command: redis-server --requirepass OZwtXSpJCjZEQ5b

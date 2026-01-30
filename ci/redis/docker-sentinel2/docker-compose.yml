@@ -1,6 +1,6 @@
 services:
   sentinel:
-    image: redis:7.4.1
+    image: redis:8.4.0
     container_name: sentinel2
     command: ["redis-sentinel", "/etc/redis/sentinel.conf", "--sentinel", "--port 26380", "--requirepass GWMije5VNMe7avz"]
     volumes:
