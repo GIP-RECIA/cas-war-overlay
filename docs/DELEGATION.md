@@ -324,8 +324,11 @@ cas.custom.properties.profile-selection.client-name: NOMUNIQUE
 Attribut principal en sortie des attributes repositories (le principal id en sortie de la chaîne) :
 ```
 cas.person-directory.principal-attribute: uid
+cas.authn.attribute-repository.core.merger: ADD
 cas.person-directory.principal-resolution-conflict-strategy: first
 ```
+
+Cela permet de récupérer un principal avec comme id l'uid et comme attributs ceux du LDAP en priorité (et pas ceux de la source d'authentification).
 
 Il y a un paramétrage similaire dans le cas de l'authentification locale :
 ```
