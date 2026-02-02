@@ -85,12 +85,14 @@ cas.authn.ldap[0].principal-attribute-list: uid,cn,sn,mail,ESCOUAICourant,givenN
 # LDAP attribute repository
 cas.person-directory.active-attribute-repository-ids: none
 cas.person-directory.use-existing-principal-id: true
-cas.person-directory.principal-resolution-conflict-strategy: first
 cas.person-directory.principal-attribute: uid
 # Error management
 cas.person-directory.principal-resolution-failure-fatal: true
 cas.authn.attribute-repository.core.recover-exceptions: false
 cas.authn.attribute-repository.core.require-all-repository-sources: true
+# Order of principals
+cas.authn.attribute-repository.core.merger: ADD
+cas.person-directory.principal-resolution-conflict-strategy: first
 
 # First test IDP
 cas.authn.attribute-repository.ldap[0].id: educagri

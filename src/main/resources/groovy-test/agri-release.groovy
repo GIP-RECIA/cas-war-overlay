@@ -5,11 +5,11 @@ def run(final Object... args) {
     logger.error("Current attributes received are {}", currentAttributes)
     // Dans ce cas spécifique on veut retourner un mail qui n'existe pas dans le LDAP pour lever une exception
     if(currentAttributes.get("mail")[0] == "test10.test@idp1.com"){
-        return [mail:["invalid.test@nodomain.com"]]
+        return [mail:["invalid.test@nodomain.com"], ENTPersonLogin:["valueThatShouldBeReplaced"]]
     }
     if(currentAttributes.get("mail")[0] == "test.test14@test.com"){
-        return [mail:["test.test14@test.com"]]
+        return [mail:["test.test14@test.com"], ENTPersonLogin:["valueThatShouldBeReplaced"]]
     }
     // Dans les autres cas on retourne un mail qui existe vraiment
-    return [mail:["test7.test@idp1.com"]]
+    return [mail:["test7.test@idp1.com"], ENTPersonLogin:["valueThatShouldBeReplaced"]]
 }
