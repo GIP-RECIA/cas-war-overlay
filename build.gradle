@@ -403,8 +403,8 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-core-cookie-api"
     // SCIM
     implementation "org.apereo.cas:cas-server-support-scim"
-    compileOnly "de.captaingoldfish:scim-sdk-common:1.27.1"
-    compileOnly "de.captaingoldfish:scim-sdk-client:1.27.1"
+    compileOnly "de.captaingoldfish:scim-sdk-common:1.30.0"
+    compileOnly "de.captaingoldfish:scim-sdk-client:1.30.0"
     compileOnly "org.apereo.cas:cas-server-support-scim-core"
     // Custom TOTP MFA
     compileOnly "org.apereo.cas:cas-server-support-gauth-core-mfa"
