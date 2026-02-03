@@ -4,50 +4,19 @@
 
 **Modifications apportées**
 
-Activer le module des interruptions dans le build.gradle :
-```gradle
-implementation "org.apereo.cas:cas-server-support-interrupt-webflow"
-```
+L'idée est de rediriger l'utilisateur sur le `/cas/login` une fois l'utilisateur connecté mais avec le service partant du bon domaine : comme le `TGC` sera présent lors de la redirection dans les cookies alors l'utilisateur ne se rendra compte de rien. La seule différence coté CAS est dans l'action d'émission des tickets `GenerateServiceTicketAction` où on rajoute une vérification avant de créer un `ST`.
 
-Activer les différents modules permettant de compiler le code java :
- ```gradle
-compileOnly "org.apereo.cas:cas-server-support-interrupt-core"
-compileOnly "org.apereo.cas:cas-server-support-interrupt-api"
-```
-
-Mettre les bonnes properties pour activer les interruptions :
-```properties
-cas.interrupt.core.force-execution=true
-cas.interrupt.core.trigger-mode=AFTER_SSO
-```
-`AFTER_SSO` permet d'attendre qu'on ai déjà établi le TGT. Pour choisir le bon trigger mode voir : `https://apereo.github.io/cas/7.0.x/webflow/Webflow-Customization-Interrupt-TriggerModes.html`.
-
-L'objectif est de rediriger l'utilisateur sur le `/cas/login` mais avec le service partant du bon domaine. Comme le `TGC` sera cette fois-ci présent dans les cookies alors l'utilisateur ne se rendra compte de rien. La seule différence coté CAS sera la génération de deux `ST` (un pour le premier login et un autre pour le second).
-
-On a 2 fichiers java : un qui sert à enregistrer une nouvelle interruption, et l'autre qui est l'interruption en tant que tel (`CustomInterruptConfiguration` et `DomainChangeInterruptInquirer`)
-On enregstre l'interruption avec :
-```java
-plan.registerInterruptInquirer(domainChangeInterruptInquirer);
-```
-Ce qui appelera la méthode `inquireInternal` de `DomainChangeInterruptInquirer`
-
-Parmi les paramètres de la méthode inquireInternal, attention à bien faire la différence entre :
-```
-service 	           The Service object representing the requesting application.
-registeredService 	  The RegisteredService object representing the service definition in the registry.
-```
-
-Les scripts utilisent des propriétés customs, il ne faut pas oublier de les définir : 
+Les propriétés à définir sont les suivantes :
 ```properties
 cas.custom.properties.interrupt.structs-base-api-url=https://test-lycee.giprecia.net
 cas.custom.properties.interrupt.structs-api-path=/change-etablissement/rest/v2/structures/structs/
 cas.custom.properties.interrupt.replace-domain-regex=(\\?service=https://)[^/]+(/)
 ```
 
-La logique du script est la suivante : 
-- On récupère d'ou vient l'utilisateur grâce a spring webflow et au `requestContext` ;
-- On récupère le vrai domaine de l'utilisateur via son SIRENCourant qu'on à grâce à l'object `authentication` et au `principal`. On fait alors une requête API sur `https://test-lycee.giprecia.net/change-etablissement/rest/v2/structures/structs/` ;
-- On regarde si le vrai domaine est contenu dans l'url par laquelle est arrivée l'utilisateur, si oui on le laisse passer, sinon on lève une `InterruptResponse` en redirigeant sur le bon domaine (on revient au début de la phase de login, mais avec le TGC cette fois-ci).
+La logique de la vérification est assez simple : 
+- On récupère d'où vient l'utilisateur grâce a spring webflow et au `RequestContext` ;
+- On récupère le vrai domaine de l'utilisateur via son SIRENCourant qu'on à grâce à l'object `authentication` et au `principal`. On fait alors une requête API sur `https://.../change-etablissement/rest/v2/structures/structs/` ;
+- On regarde si le vrai domaine est contenu dans l'url par laquelle est arrivée l'utilisateur, si oui on le laisse passer, sinon on le redirige sur la bonne url avec un `requestExternalRedirect()`.
 
 **Gestion du cache**
 
@@ -64,21 +33,16 @@ On se contente de remettre à zéro le dictionnaire à un interval donné :
 ```
 Attention à bien annoter la classe avec `@EnableScheduling`
 
-**Page de redirection custom**
-
-Lorsque l'utilisateur change de domaine, l'interruption lève une notification. Cette notification affiche une page avec un bouton sur lequel on peut cliquer pour être redirigé (comportement de CAS de base).
-Comme dans notre cas la redirection est instantannée grâce à `interrupt.setAutoRedirect(true)`, on ne doit pas voir la page. 
-
-Malgré tout, une page custom a été créée si un problème venait à se produire.
-Pour cela on a modifié le template `casInterruptView.html` en simplifiant l'affichage à un texte avec un bouton en dessous, et ajouté un texte custom dans `messages_fr.properties` et `messages.properties`.
-
-**Par service**
+**Gestion par service**
 
 On peut forcer un service particulier à ne pas prendre en compte les interruptions :
 ```json
-"webflowInterruptPolicy" : {
-    "@class" : "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
-    "enabled": true
+"properties" : {
+    "@class" : "java.util.HashMap",
+    "skipDomainRedirect" : {
+        "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+        "values" : [ "java.util.HashSet", [ true ] ]
+    }
 }
 ```
 Par défaut tous les autres services prendront en compte les interruptions.

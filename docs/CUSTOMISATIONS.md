@@ -2,7 +2,7 @@
 
 | Fonctionnalité | Fichier(s) |
 |--|--|
-| Redirection multidomaine | CustomInterruptConfiguration + DomainChangeInterruptInquirer |
+| Redirection multidomaine | GenerateServiceTicketAction |
 | Redirection portail | BaseServiceAuthorizationCheckAction |
 | Chaînage access strategy | TimeBasedRegisteredServiceAccessStrategy |
 | ExternalID | ReturnExternalIDAttributeReleasePolicy + ReturnExternalIDOidcAttributeReleasePolicy + PrincipalExternalIdRegisteredServiceUsernameProvider + PrincipalExternalIdRegisteredOidcServiceUsernameProvider |

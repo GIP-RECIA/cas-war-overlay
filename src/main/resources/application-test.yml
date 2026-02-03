@@ -150,10 +150,6 @@ cas.authn.attribute-repository.ldap[1].attributes.ESCOPersonEtatCompte: ESCOPers
 cas.logout.follow-service-redirects: true
 cas.logout.redirect-parameter: url
 
-# Login Flow Interrupt
-cas.interrupt.core.force-execution: true
-cas.interrupt.core.trigger-mode: AFTER_SSO
-
 # SAML
 cas.authn.saml-idp.core.entity-id: https://localhost:8443/cas/idp/metadata
 cas.authn.saml-idp.core.session-storage-type: TICKET_REGISTRY

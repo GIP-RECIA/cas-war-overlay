@@ -7,7 +7,6 @@ This CAS server uses the following modules :
 - **cas-server-support-ldap** as an authentication method
 - **cas-server-support-redis-ticket-registry** as the ticket registry
 - **cas-server-support-json-service-registry** as the service registry
-- **cas-server-support-interrupt-webflow** to interrupt the webflow during the login phase
 - **cas-server-support-oidc** to enable the OIDC protocol
 - **cas-server-support-saml-idp** to act as an SAML2 identity provider
 - **cas-server-support-pac4j-webflow** to enable delegated authentication
@@ -49,7 +48,7 @@ And has a number of custom enhancements :
 - Account activation check
 - Fix profile selection authentication with existing TGT
 
-Current CAS Base version : **7.2.5**
+Current CAS Base version : **7.2.7**
 
 # Project Structure
 
@@ -108,7 +107,6 @@ All the important parts of the project are listed below:
 │       │               │   ├── CasCoreLogoutAutoConfiguration.java
 │       │               │   ├── CasScimAutoConfiguration.java
 │       │               │   ├── CasSupportActionsAutoConfiguration.java
-│       │               │   └── CustomInterruptConfiguration.java
 │       │               ├── gauth/web/flow
 │       │               │   ├── credential
 │       │               │   │   ├── GoogleAuthenticatorOneTimeTokenCredentialValidator.java
@@ -117,8 +115,6 @@ All the important parts of the project are listed below:
 │       │               │   └── web/flow
 │       │               │       ├── GoogleAuthenticatorMultifactorWebflowConfigurer.java
 │       │               │       └── GoogleAuthenticatorSaveRegistrationAction.java
-│       │               ├── interrupt
-│       │               │   └── DomainChangeInterruptInquirer.java
 │       │               ├── logout
 │       │               │   ├── DefaultLogoutRedirectionStrategy.java
 │       │               │   └── DefaultSingleLogoutMessageCreator.java
@@ -207,8 +203,6 @@ All the important parts of the project are listed below:
 |           |   ├── gauth
 |           |   |   ├── casGoogleAuthenticatorLoginView.html
 |           |   |   └── casGoogleAuthenticatorRegistrationView.html
-|           |   ├── interrupt
-|           |   |   └── casInterruptView.html
 |           |   ├── login
 |           |   |   └── casGenericSuccessView.html
 |           |   ├── logout

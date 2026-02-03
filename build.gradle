@@ -345,7 +345,6 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-json-service-registry"
     implementation "org.apereo.cas:cas-server-support-jmx"
     implementation "org.apereo.cas:cas-server-support-pac4j-webflow"
-    implementation "org.apereo.cas:cas-server-support-interrupt-webflow"
     implementation "org.apereo.cas:cas-server-support-pac4j-cas"
     implementation "org.apereo.cas:cas-server-support-saml-idp"
     implementation "org.apereo.cas:cas-server-support-oidc"
