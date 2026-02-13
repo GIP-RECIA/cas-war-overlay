@@ -18,7 +18,7 @@ This CAS server uses the following modules :
 
 And has a number of custom enhancements :
 - CI pipeline with end-to-end tests using **puppeteer** and **docker**
-- Multidomain and dynamic redirection on a specific domain
+- Multidomain and dynamic redirection on a specific domain based on user attributes
 - Portal forced redirection with token check
 - Time and attribute service access strategy chaining
 - Dynamic attribute username provider and dynamic attribute release (externalid)
@@ -47,6 +47,7 @@ And has a number of custom enhancements :
 - Fix when using CAS as an SAML2 IDP (bug introduced by this [commit](https://github.com/apereo/cas/commit/8fa06ae1d366e770916dfd4be9bbd6bca398b4f9))
 - Account activation check
 - Fix profile selection authentication with existing TGT
+- Partial logout (logout from all services but not from CAS and refresh the attributes)
 
 Current CAS Base version : **7.2.7**
 
@@ -116,6 +117,8 @@ All the important parts of the project are listed below:
 │       │               │       ├── GoogleAuthenticatorMultifactorWebflowConfigurer.java
 │       │               │       └── GoogleAuthenticatorSaveRegistrationAction.java
 │       │               ├── logout
+│       │               │   ├── slo
+│       │               │   │   └── DefaultSingleLogoutRequestExecutor.java
 │       │               │   ├── DefaultLogoutRedirectionStrategy.java
 │       │               │   └── DefaultSingleLogoutMessageCreator.java
 │       │               ├── oidc
@@ -156,7 +159,8 @@ All the important parts of the project are listed below:
 │       │                   │   ├── actions
 │       │                   │   │   └── logout
 │       │                   │   │   │   ├── DelegatedAuthenticationClientLogoutAction.java
-│       │                   │   │   │   └── FinishLogoutAction.java
+│       │                   │   │   │   ├── FinishLogoutAction.java
+│       │                   │   │   │   └── TerminateSessionAction.java
 │       │                   │   │   ├── DelegatedClientAuthenticationCredentialSelectionAction.java
 │       │                   │   │   └── DelegatedClientAuthenticationRedirectAction.java
 │       │                   │   ├── error
