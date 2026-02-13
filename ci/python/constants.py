@@ -83,3 +83,5 @@ SERVICE_CERBERE_URL_OTHER_DOMAIN = "http://localhost:8064/test"
 # Url du service cerbere pour tester l'authentification déléguée quand un TGT existe déjà
 SERVICE_DELEGATED_AUTHN_EXISTING_TGT = "http://localhost:8065/test"
 
+# Url du service pour tester la déconnexion partielle
+SERVICE_PARTIAL_SLO_URL = "http://localhost:8066/test"
