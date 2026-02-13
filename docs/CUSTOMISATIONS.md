@@ -33,3 +33,4 @@
 | Fix SAML2 IDP unauthorized service | AbstractServiceFactory |
 | Validation charte redirection cerbere | GenerateServiceTicketAction + CasSupportActionsAutoConfiguration |
 | Fix SAML IDP Initiated TGT existant | DefaultSingleSignOnBuildingStrategy |
+| Logout partiel | DefaultSingleLogoutRequestExecutor + TerminateSessionAction |
