@@ -1,5 +1,6 @@
 package org.apereo.cas.logout.slo;
 
+import module java.base;
 import org.apereo.cas.authentication.principal.attribute.PersonAttributeDao;
 import org.apereo.cas.authentication.principal.attribute.PersonAttributes;
 import org.apereo.cas.configuration.CasConfigurationProperties;
@@ -19,14 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * This is {@link DefaultSingleLogoutRequestExecutor}.

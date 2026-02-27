@@ -35,7 +35,9 @@ import org.springframework.context.ApplicationEvent;
 public abstract class AbstractServicesManager implements IndexableServicesManager {
     protected final ServicesManagerConfigurationContext configurationContext;
 
-    private final CasReentrantLock lock = new CasReentrantLock();
+    protected final CasReentrantLock lock = new CasReentrantLock();
+
+    protected List<RegisteredService> sortedRegisteredServices;
 
     protected AbstractServicesManager(final ServicesManagerConfigurationContext configurationContext) {
         this.configurationContext = configurationContext;
@@ -63,19 +65,22 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
     }
 
     @Override
-    public RegisteredService save(final RegisteredService registeredService, final boolean publishEvent) {
+    public @Nullable RegisteredService save(final RegisteredService registeredService, final boolean publishEvent) {
         return lock.tryLock(() -> {
-            val clientInfo = ClientInfoHolder.getClientInfo();
-            publishEvent(new CasRegisteredServicePreSaveEvent(this, registeredService, clientInfo));
-            flattenAttributeReleasePolicy(registeredService);
-            val savedService = configurationContext.getServiceRegistry().save(registeredService);
-            cacheRegisteredService(savedService);
-            saveInternal(registeredService);
+            if (supports(registeredService)) {
+                val clientInfo = ClientInfoHolder.getClientInfo();
+                publishEvent(new CasRegisteredServicePreSaveEvent(this, registeredService, clientInfo));
+                flattenAttributeReleasePolicy(registeredService);
+                val savedService = configurationContext.getServiceRegistry().save(registeredService);
+                cacheRegisteredService(savedService);
+                saveInternal(registeredService);
 
-            if (publishEvent) {
-                publishEvent(new CasRegisteredServiceSavedEvent(this, savedService, clientInfo));
+                if (publishEvent) {
+                    publishEvent(new CasRegisteredServiceSavedEvent(this, savedService, clientInfo));
+                }
+                return savedService;
             }
-            return savedService;
+            return null;
         });
     }
 
@@ -86,7 +91,7 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
         configurationContext.getServiceRegistry().save(() -> {
             val registeredService = supplier.get();
             val clientInfo = ClientInfoHolder.getClientInfo();
-            if (registeredService != null) {
+            if (registeredService != null && supports(registeredService)) {
                 publishEvent(new CasRegisteredServicePreSaveEvent(this, registeredService, clientInfo));
                 flattenAttributeReleasePolicy(registeredService);
                 cacheRegisteredService(registeredService);
@@ -118,14 +123,14 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
 
     @Override
     public @Nullable RegisteredService delete(
-        @Nullable
-        final RegisteredService service) {
+        @Nullable final RegisteredService service) {
         return lock.tryLock(() -> {
             if (service != null) {
                 val clientInfo = ClientInfoHolder.getClientInfo();
                 publishEvent(new CasRegisteredServicePreDeleteEvent(this, service, clientInfo));
                 configurationContext.getServiceRegistry().delete(service);
                 configurationContext.getServicesCache().invalidate(service.getId());
+                sortedRegisteredServices = null;
                 deleteInternal(service);
                 publishEvent(new CasRegisteredServiceDeletedEvent(this, service, clientInfo));
             }
@@ -355,6 +360,8 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
         servicesCache.invalidateAll();
         servicesCache.putAll(servicesMap);
 
+        sortedRegisteredServices = null;
+
         configurationContext.getRegisteredServiceIndexService().clear();
         configurationContext.getRegisteredServiceIndexService().indexServices(servicesMap.values());
         return servicesCache.asMap();
@@ -411,6 +418,8 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
     private void cacheRegisteredService(final RegisteredService service) {
         configurationContext.getServicesCache().put(service.getId(), service);
         configurationContext.getRegisteredServiceIndexService().indexService(service);
+
+        sortedRegisteredServices = null;
     }
 
     private void evaluateExpiredServiceDefinitions() {
@@ -421,8 +430,7 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
     }
 
     private @Nullable RegisteredService validateRegisteredService(
-        @Nullable
-        final RegisteredService registeredService) {
+        @Nullable final RegisteredService registeredService) {
         val result = checkServiceExpirationPolicyIfAny(registeredService);
         if (validateAndFilterServiceByEnvironment(result)) {
             return result;
@@ -431,8 +439,7 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
     }
 
     private @Nullable RegisteredService checkServiceExpirationPolicyIfAny(
-        @Nullable
-        final RegisteredService registeredService) {
+        @Nullable final RegisteredService registeredService) {
         if (registeredService == null || RegisteredServiceAccessStrategyUtils.ensureServiceIsNotExpired(registeredService)) {
             return registeredService;
         }
@@ -465,8 +472,7 @@ public abstract class AbstractServicesManager implements IndexableServicesManage
     }
 
     private boolean validateAndFilterServiceByEnvironment(
-        @Nullable
-        final RegisteredService service) {
+        @Nullable final RegisteredService service) {
         if (configurationContext.getEnvironments().isEmpty()) {
             LOGGER.trace("No environments are defined by which services could be filtered");
             return true;

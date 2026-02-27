@@ -31,8 +31,8 @@ const assert = require("assert");
 
         // Delete the TST like if it was missing from the ticket registry
         const { cookies } = await client.send('Network.getAllCookies');
-        const cookieToDelete = cookies.find(c => c.name === 'DISSESSIONAuthnDelegation');
-        assert(cookieToDelete.name.includes('DISSESSIONAuthnDelegation'))
+        const cookieToDelete = cookies.find(c => c.name === 'SESSION');
+        assert(cookieToDelete.name.includes('SESSION'))
         if (cookieToDelete) {
             await client.send('Network.deleteCookies', {
             name: cookieToDelete.name,

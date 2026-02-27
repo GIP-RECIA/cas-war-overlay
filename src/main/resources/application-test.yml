@@ -50,10 +50,6 @@ cas.authn.oauth.crypto.encryption.key: -a3HCYBRYDCcnskNvLMiw_cUgd28PZllv8oRlRWUD
 cas.authn.oauth.crypto.signing.key: XJeUdyaPKz4GHNWmjlFeKlEkGlVPqFTJbOmX8ezbao9lpucrtk5IA9GX3yC6ibVe7Wa-ze4RNhD62Z2v3N8wyA
 cas.authn.oauth.access-token.crypto.encryption.key: Jv1r8eGlQ5imRzk6g2lY5e7gFo-HISohmb7iYivfOPxauWjojsHomW58_7ChyitAe3Jdio64UneRx7FGW4z2dg
 cas.authn.oauth.access-token.crypto.signing.key: RfjL0ADLFzj4u5jhj6ysNk4G2P2-FIiPm04TYiENbktq-RO9zwQwsQzLg2496UlQiLNnpu1NJq7dcvsv5xDYjw
-cas.authn.oauth.session-replication.cookie.crypto.encryption.key: FuUHa2yjd9FdfTeQsNZuN3gGG2liISzASC5GjhuCkkKSP5L8p0m1MsGjs_ITQAC4n6cMMseSIqmm0twr-wFl4A
-cas.authn.oauth.session-replication.cookie.crypto.signing.key: q1U_Kp0qgl6uMKdVE_k4jvvE-zb3IxdtP5eIxLWbjOy74vYkfYSXspbLXR327F4D7qtuXI4DIVnvU5vEe8sH2Q
-cas.authn.pac4j.core.session-replication.cookie.crypto.encryption.key: s_3Q9UuJRjieQE5zWMYz91ZhSyigVoJ4CPBymGg-KF7iWCzVfXxcANhSUKD24sWWiJq1Q3g7utTQkK93e61Rxg
-cas.authn.pac4j.core.session-replication.cookie.crypto.signing.key: H9q5Z1Wog_iEzUbF021Z4d1ASDvUPHKeHekUUj4lX_Y5N57WLIyb1KxIUgtfQ6nXLoNRpejk84PDTyQO4fwXOA
 
 # Service ticket registry
 cas.authn.accept.enabled: false
