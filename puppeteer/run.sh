@@ -139,6 +139,8 @@ python3 externalid_api.py &
 pid_python_externalid_api=$!
 python3 scim_server.py &
 pid_python_scim_server=$!
+python3 restriction_api.py &
+pid_python_restriction_api=$!
 cd "flask-saml-client"
 python3 index.py --port 8011 --settings "saml/settings11.json" &
 pid_python_saml_client=$!
@@ -218,6 +220,7 @@ exit_ci () {
     kill -9 "$pid_python_structs_info_api"
     kill -9 "$pid_python_externalid_api"
     kill -9 "$pid_python_scim_server"
+    kill -9 "$pid_python_restriction_api"
     kill -9 "$pid_python_saml_client"
     kill -9 "$pid_python_saml_client2"
     kill -9 "$pid_python_saml_client3"

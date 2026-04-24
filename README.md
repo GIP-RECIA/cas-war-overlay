@@ -48,6 +48,7 @@ And has a number of custom enhancements :
 - Account activation check
 - Fix profile selection authentication with existing TGT
 - Partial logout (logout from all services but not from CAS and refresh the attributes)
+- Service access check via external API
 
 Current CAS Base version : **7.2.7**
 
@@ -139,6 +140,7 @@ All the important parts of the project are listed below:
 │       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
 │       │               │   ├── PrincipalExternalIdRegisteredServiceUsernameProvider.java
 │       │               │   ├── PrincipalExternalIdRegisteredOidcServiceUsernameProvider.java
+│       │               │   ├── RemoteEndpointServiceAccessStrategy.java
 │       │               │   ├── ReturnExternalIDAttributeReleasePolicy.java
 │       │               │   ├── ReturnExternalIDOidcAttributeReleasePolicy.java
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java

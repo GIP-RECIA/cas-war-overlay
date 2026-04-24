@@ -1,0 +1,34 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:8069\/.*",
+    "name": "Service Test",
+    "description": "Service de test restriction d'accès rentrée scolaire - Accès autorisé (pas concerné)",
+    "id": 69,
+    "accessStrategy" : {
+		"@class" : "org.apereo.cas.services.RemoteEndpointServiceAccessStrategy",
+		"endpointUrl" : "http://localhost:7004/restriction/cas",
+		"acceptableResponseCodes" : "200",
+		"method": "POST",
+		"headers": {
+			"@class":"java.util.LinkedHashMap",
+			"x-api-key": "KEY_456"
+		},
+		"activationCriteria": {
+			"@class": "org.apereo.cas.services.AttributeBasedRegisteredServiceAccessStrategyActivationCriteria",
+			"allowIfInactive": true,
+			"operator": "AND",
+			"requiredAttributes": {
+				"@class" : "java.util.HashMap",
+				"ENTPersonProfils": [ "java.util.ArrayList", [ "National_TUT" ] ],
+				"ENTPersonJointure": [ "java.util.ArrayList", [ "AC-RENNES" ] ]
+			}
+		}
+	},
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "skipDomainRedirect" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ true ] ]
+        }
+    }
+}
