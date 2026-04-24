@@ -34,3 +34,4 @@
 | Validation charte redirection cerbere | GenerateServiceTicketAction + CasSupportActionsAutoConfiguration |
 | Fix SAML IDP Initiated TGT existant | DefaultSingleSignOnBuildingStrategy |
 | Logout partiel | DefaultSingleLogoutRequestExecutor + TerminateSessionAction |
+| Service Access Strategy via API externe | RemoteEndpointServiceAccessStrategy |
