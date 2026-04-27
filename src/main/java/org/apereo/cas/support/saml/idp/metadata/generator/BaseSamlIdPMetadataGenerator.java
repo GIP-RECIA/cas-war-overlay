@@ -181,9 +181,20 @@ public abstract class BaseSamlIdPMetadataGenerator implements SamlIdPMetadataGen
 
     }
 
-    private String getIdPEndpointUrl() {
+    protected String getIdPEndpointUrl() {
         val resolver = SpringExpressionLanguageValueResolver.getInstance();
         return resolver.resolve(configurationContext.getCasProperties().getServer().getPrefix().concat("/idp"));
+    }
+
+    protected String getIdPEntityId() {
+        val idp = configurationContext.getCasProperties().getAuthn().getSamlIdp();
+        val resolver = SpringExpressionLanguageValueResolver.getInstance();
+        return resolver.resolve(idp.getCore().getEntityId());
+    }
+
+    protected String getIdPScope() {
+        val resolver = SpringExpressionLanguageValueResolver.getInstance();
+        return resolver.resolve(configurationContext.getCasProperties().getServer().getScope());
     }
 
     /**
@@ -202,23 +213,20 @@ public abstract class BaseSamlIdPMetadataGenerator implements SamlIdPMetadataGen
         val signingCert = SamlIdPMetadataGenerator.cleanCertificate(signing.getKey());
         val encryptionCert = SamlIdPMetadataGenerator.cleanCertificate(encryption.getKey());
 
-        val idp = configurationContext.getCasProperties().getAuthn().getSamlIdp();
         try (val writer = new StringWriter()) {
-            val resolver = SpringExpressionLanguageValueResolver.getInstance();
-            val entityId = resolver.resolve(idp.getCore().getEntityId());
-            val scope = resolver.resolve(configurationContext.getCasProperties().getServer().getScope());
 
             // Custom parameters in context
             val displayName = configurationContext.getCasProperties().getCustom().getProperties().get("saml.metadata.display-name");
             val description = configurationContext.getCasProperties().getCustom().getProperties().get("saml.metadata.description");
             val logo = configurationContext.getCasProperties().getCustom().getProperties().get("saml.metadata.logo");
 
+            val idp = configurationContext.getCasProperties().getAuthn().getSamlIdp();
             val metadataCore = idp.getMetadata().getCore();
             val context = IdPMetadataTemplateContext.builder()
                 .encryptionCertificate(encryptionCert)
                 .signingCertificate(signingCert)
-                .entityId(entityId)
-                .scope(scope)
+                .entityId(getIdPEntityId())
+                .scope(getIdPScope())
                 .displayName(displayName)
                 .description(description)
                 .logo(logo)

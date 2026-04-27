@@ -45,6 +45,7 @@ import org.apereo.inspektr.audit.annotation.Audit;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.NumericDate;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.util.Assert;
 
@@ -161,7 +162,7 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
         }
         generateAccessTokenHash(accessToken, oidcRegisteredService, claims);
 
-        if (includeClaimsInIdToken(context) || includeClaimsInIdTokenForcefully(context)) {
+        if (context.getResponseType() == OAuth20ResponseTypes.ID_TOKEN || includeClaimsInIdTokenForcefully(context)) {
             FunctionUtils.doIf(includeClaimsInIdTokenForcefully(context),
                     _ -> LOGGER.warn("Individual claims requested by OpenID scopes are forced to be included in the ID token. "
                         + "This is a violation of the OpenID Connect specification and a workaround via dedicated CAS configuration. "
@@ -182,12 +183,6 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
         Optional.ofNullable(accessToken.getAuthentication().getSingleValuedAttribute(OAuth20Constants.CLAIM_ACT, Map.class))
             .ifPresent(value -> claims.setClaim(OAuth20Constants.CLAIM_ACT, value));
         return claims;
-    }
-
-    protected boolean includeClaimsInIdToken(final IdTokenGenerationContext context) {
-        return context.getResponseType() != OAuth20ResponseTypes.CODE
-            && context.getGrantType() != OAuth20GrantTypes.AUTHORIZATION_CODE
-            && context.getGrantType() != OAuth20GrantTypes.REFRESH_TOKEN;
     }
 
     private boolean includeClaimsInIdTokenForcefully(final IdTokenGenerationContext context) {

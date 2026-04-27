@@ -83,7 +83,6 @@ import org.ldaptive.auth.FormatDnResolver;
 import org.ldaptive.auth.SearchDnResolver;
 import org.ldaptive.auth.SearchEntryResolver;
 import org.ldaptive.auth.SimpleBindAuthenticationHandler;
-import org.ldaptive.auth.User;
 import org.ldaptive.auth.ext.ActiveDirectoryAuthenticationResponseHandler;
 import org.ldaptive.auth.ext.EDirectoryAuthenticationResponseHandler;
 import org.ldaptive.auth.ext.FreeIPAAuthenticationResponseHandler;
@@ -1093,25 +1092,6 @@ public class LdapUtils {
         LOGGER.debug("Initializing LDAP authentication handler for [{}]", props.getLdapUrl());
         handler.initialize();
         return handler;
-    }
-
-    @SuppressWarnings("UnusedVariable")
-    private record ChainingLdapDnResolver(List<? extends DnResolver> resolvers) implements DnResolver {
-        @Override
-        public @Nullable String resolve(final User user) {
-            return resolvers
-                .stream()
-                .map(resolver -> FunctionUtils.doAndHandle(
-                        () -> resolver.resolve(user),
-                        throwable -> {
-                            LoggingUtils.warn(LOGGER, throwable);
-                            return null;
-                        })
-                    .get())
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException(new AccountNotFoundException("Unable to resolve user dn for " + user.getIdentifier())));
-        }
     }
 
     @SuppressWarnings("UnusedVariable")
