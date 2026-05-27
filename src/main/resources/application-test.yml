@@ -340,3 +340,6 @@ cas.custom.properties.cerbere.validation.redirect-path: /cerbere
 cas.custom.properties.partial-logout.parameter-name: partialLogout
 cas.custom.properties.partial-logout.attribute-id: uid
 cas.custom.properties.partial-logout.attribute-repository: attributeUpdate
+
+# DNMA
+cas.custom.properties.dnma.service-id: http://localhost:2026/dnma/auth

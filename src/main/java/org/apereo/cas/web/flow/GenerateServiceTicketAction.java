@@ -103,6 +103,16 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     private Map<String, String> domainBySirenCache;
 
     /**
+     * ServiceId of DNMA service
+     */
+    private final String dnmaServiceId;
+
+    /**
+     * Login URL of this cas server
+     */
+    private final String casUrl;
+
+    /**
      * Constructor
      * @param casConfigurationProperties configuration properties
      */
@@ -119,6 +129,8 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         this.structsBaseAPIUrl = casConfigurationProperties.getCustom().getProperties().get("interrupt.structs-base-api-url");
         this.baseAPIPath = casConfigurationProperties.getCustom().getProperties().get("interrupt.structs-api-path");
         this.replaceDomainRegex = casConfigurationProperties.getCustom().getProperties().get("interrupt.replace-domain-regex");
+        this.dnmaServiceId = casConfigurationProperties.getCustom().getProperties().get("dnma.service-id");
+        this.casUrl = casConfigurationProperties.getServer().getLoginUrl();
         this.domainBySirenCache = new HashMap<>();
     }
 
@@ -170,6 +182,30 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
             val builder = authenticationSystemSupport.establishAuthenticationContextFromInitial(authentication,
                 credentials.toArray(Credential.EMPTY_CREDENTIALS_ARRAY));
             val authenticationResult = builder.build(service);
+
+            // POC modif DNMA
+            val tgt = ticketRegistrySupport.getTicketGrantingTicket(ticketGrantingTicket);
+            boolean found = false;
+            for(Service tgtService : tgt.getServices().values()){
+                LOGGER.trace("Checking if service {} is DNMA", tgtService.getId());
+                if(tgtService.getId().startsWith(dnmaServiceId)){
+                    LOGGER.trace("DNMA service found !");
+                    found = true;
+                    break;
+                }
+            }
+            // Il y a 2 cas de figure dans lequel on doit laisser passer :
+            // - Soit on est déjà passé par le DNMA
+            // - Soit on se connecte au service DNMA
+            // Dans tous les autres cas on redirige vers le service DNMA en gardant dans l'url l'information du service original
+            if(!found && !service.getOriginalUrl().startsWith(dnmaServiceId)){
+                final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
+                final String requestURL = nativeRequest.getRequestURL().toString();
+                final String dnmaURL = casUrl+"?service="+dnmaServiceId+"?originalUrl="+requestURL+"?service="+service.getOriginalUrl();
+                LOGGER.debug("User has no DNMA session, redirecting to {}", dnmaURL);
+                context.getExternalContext().requestExternalRedirect(dnmaURL);
+                return result("error");
+            }
 
             // Customisation : redirect to correct domain
             // A null service means that the request is coming directly from the cas (so no redirection needed)
