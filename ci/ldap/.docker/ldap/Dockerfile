@@ -1,4 +1,4 @@
-FROM osixia/openldap:1.2.2
+FROM osixia/openldap:1.2.4
 LABEL maintainer="GIP RECIA - Julien Gribonvald <julien.gribonvald@recia.fr>"
 
 RUN rm -Rf /container/service/slapd/assets/config/bootstrap/schema/mmc
