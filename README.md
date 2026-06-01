@@ -146,12 +146,15 @@ All the important parts of the project are listed below:
 │       │               │   └── TimeBasedRegisteredServiceAccessStrategy.java
 │       │               ├── trusted/web/flow
 │       │               │   └── MultifactorAuthenticationSetTrustAction.java
-│       │               ├── support/saml/idp/metadata/generator
-│       │               │   ├── idp/metadata/generator
-│       │               │   │   └── BaseSamlIdPMetadataGenerator.java
-│       │               │   └── services
-│       │               │       ├── PairwiseIdSamlRegisteredServiceAttributeReleasePolicy.java
-│       │               │       └── TargetedIdSamlRegisteredServiceAttributeReleasePolicy.java
+│       │               ├── support
+│       │               │   ├── oidc/web
+│       │               │   │   └── OidcHandlerInterceptorAdapter.java
+│       │               │   ├── saml
+│       │               │   │   ├── idp/metadata/generator
+│       │               │   │   │   └── BaseSamlIdPMetadataGenerator.java
+│       │               │   │   └── services
+│       │               │   │       ├── PairwiseIdSamlRegisteredServiceAttributeReleasePolicy.java
+│       │               │   │       └── TargetedIdSamlRegisteredServiceAttributeReleasePolicy.java
 │       │               ├── trusted/web/flow
 │       │               │   └── MultifactorAuthenticationSetTrustAction.java
 │       │               ├── util
