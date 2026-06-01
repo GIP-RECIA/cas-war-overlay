@@ -164,24 +164,23 @@ configurations {
 }
 
 war {
-    entryCompression = ZipEntryCompression.STORED
     enabled = false
 }
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(project.targetCompatibility)
-
         def chosenJvmVendor = null
-        if (project.jvmVendor != null) {
-            out.withStyle(Style.Info).println("JVM vendor ${project.jvmVendor} is requested for the Java toolchain")
-            chosenJvmVendor = JvmVendorSpec.of(project.jvmVendor?.toUpperCase())
+        def jvmVendor = project.findProperty('jvmVendor') ?: ''
+        if (!jvmVendor.isEmpty()) {
+            out.withStyle(Style.Info).println("JVM vendor ${jvmVendor} is requested for the Java toolchain")
+            chosenJvmVendor = JvmVendorSpec.of(jvmVendor?.toUpperCase())
         }
         if (chosenJvmVendor != null) {
             vendor = chosenJvmVendor
             out.withStyle(Style.Success).println("Using ${chosenJvmVendor} as the JVM vendor for the Java toolchain")
-        } else {
-            out.withStyle(Style.Info).println("JVM vendor ${project.jvmVendor} is not recognized")
+        } else if (!jvmVendor.isEmpty()) {
+            out.withStyle(Style.Info).println("JVM vendor ${jvmVendor} is not recognized")
         }
     }
 }
@@ -303,12 +302,26 @@ tasks.register("casPushDockerImage", DockerPushImage) {
     }
 }
 
+["build", "assemble", "bootWar"].each { taskName ->
+    tasks.matching { it.name == taskName }.configureEach {
+        doFirst {
+            if (project.hasProperty("appServer")) {
+                def appServer = project.findProperty("appServer") ?: ""
+                out.withStyle(Style.Success).println(
+                    "Building CAS version ${project.version} with application server ${appServer}"
+                )
+            } else {
+                out.withStyle(Style.Success).println(
+                    "Building CAS version ${project.version} without an application server"
+                )
+            }
+        }
+    }
+}
 
-if (project.hasProperty("appServer")) {
-    def appServer = project.findProperty('appServer') ?: ''
-    out.withStyle(Style.Success).println("Building CAS version ${project.version} with application server ${appServer}")
-} else {
-    out.withStyle(Style.Success).println("Building CAS version ${project.version} without an application server")
+tasks.named('test') {
+    useJUnitPlatform()
+    failOnNoDiscoveredTests = false
 }
 
 dependencies {
@@ -317,6 +330,38 @@ dependencies {
     **/
     implementation enforcedPlatform("org.apereo.cas:cas-server-support-bom:${project.'cas.version'}")
     implementation platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+
+    def casModules = providers.gradleProperty("casModules")
+        .orElse(providers.systemProperty("casModules"))
+        .map { it.trim() }
+        .getOrElse("")
+
+    if (casModules) {
+        casModules.split(",")
+            .collect { it.trim() }
+            .findAll { it }
+            .each { module ->
+                def moduleToAdd = ""
+                if (module.contains(":")) {
+                    moduleToAdd = module
+                } else if (module.startsWith("cas-server-")) {
+                    moduleToAdd = implementation "org.apereo.cas:${module}"
+                } else if (module.contains("/")) {
+                    def parts = module.split("/", 2)
+                    def variant = parts[0].trim()
+                    def name = parts[1].trim()
+                    moduleToAdd = "org.apereo.cas:cas-server-${variant}-${name}"
+                } else {
+                    moduleToAdd = "org.apereo.cas:cas-server-support-${module}"
+                }
+                if (moduleToAdd.isEmpty()) {
+                    throw new GradleException("Unable to determine the CAS module to add for entry: ${module}")
+                } else {
+                    out.withStyle(Style.Success).println("Adding CAS module: ${moduleToAdd}")
+                    implementation moduleToAdd
+                }
+            }
+    }
 
     /**
      * Do NOT modify the lines below or else you will risk breaking the build.
@@ -329,6 +374,9 @@ dependencies {
     }
     
     developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:${project.springBootVersion}'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    
     // developmentOnly "org.springframework.boot:spring-boot-docker-compose:${project.springBootVersion}"
         
     /**

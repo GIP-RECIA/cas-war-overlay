@@ -72,7 +72,7 @@ public class OidcIdTokenGeneratorService extends BaseIdTokenGeneratorService<Oid
         actionResolverName = AuditActionResolvers.OIDC_ID_TOKEN_ACTION_RESOLVER,
         resourceResolverName = AuditResourceResolvers.OIDC_ID_TOKEN_RESOURCE_RESOLVER)
     @Override
-    public OidcIdToken generate(final IdTokenGenerationContext context) throws Throwable {
+    public @Nullable OidcIdToken generate(final IdTokenGenerationContext context) throws Throwable {
         Assert.isAssignable(OidcRegisteredService.class, context.getRegisteredService().getClass(),
             "Registered service instance is not registered as an OpenID Connect application");
         if (!context.getAccessToken().getScopes().contains(OidcConstants.StandardScopes.OPENID.getScope())) {
