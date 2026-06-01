@@ -50,7 +50,7 @@ And has a number of custom enhancements :
 - Partial logout (logout from all services but not from CAS and refresh the attributes)
 - Service access check via external API
 
-Current CAS Base version : **7.3.2**
+Current CAS Base version : **8.0.0-RC5**
 
 # Project Structure
 
@@ -135,8 +135,6 @@ All the important parts of the project are listed below:
 │       │               ├── scim/v2/provisioning
 │       │               │   └── ScimPrincipalProvisioner.java
 │       │               ├── services
-│       │               │   ├── mgmt
-│       │               │   │   └── AbstractServicesManager.java
 │       │               │   ├── HardAndSoftTimeoutRegisteredServiceTicketGrantingTicketExpirationPolicy.java
 │       │               │   ├── PrincipalExternalIdRegisteredServiceUsernameProvider.java
 │       │               │   ├── PrincipalExternalIdRegisteredOidcServiceUsernameProvider.java
@@ -202,7 +200,6 @@ All the important parts of the project are listed below:
 |           |   ├── fragments
 |           |   |   ├── footer.html
 |           |   |   ├── header.html
-|           |   |   ├── layout.html
 |           |   |   ├── loginform.html
 |           |   |   ├── loginProviders.html
 |           |   |   └── scripts.html
@@ -211,9 +208,8 @@ All the important parts of the project are listed below:
 |           |   |   └── casGoogleAuthenticatorRegistrationView.html
 |           |   ├── login
 |           |   |   └── casGenericSuccessView.html
-|           |   ├── logout
-|           |   |   └── casLogoutView.html
-|           |   └── layout.html
+|           |   └── logout
+|           |       └── casLogoutView.html
 |           ├── application-test.yml
 |           ├── application.yml
 |           ├── custom_messages_fr.properties
