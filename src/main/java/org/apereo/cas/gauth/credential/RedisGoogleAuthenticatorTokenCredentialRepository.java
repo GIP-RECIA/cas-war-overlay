@@ -4,17 +4,20 @@ import org.apereo.cas.authentication.OneTimeTokenAccount;
 import org.apereo.cas.gauth.RedisCompositeKey;
 import org.apereo.cas.redis.core.CasRedisTemplate;
 import org.apereo.cas.util.crypto.CipherExecutor;
+import org.jspecify.annotations.Nullable;
 import com.warrenstrange.googleauth.IGoogleAuthenticator;
 import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.ScanOptions;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -41,7 +44,7 @@ public class RedisGoogleAuthenticatorTokenCredentialRepository extends BaseGoogl
     }
 
     @Override
-    public OneTimeTokenAccount get(final String username, final long id) {
+    public @Nullable OneTimeTokenAccount get(final String username, final long id) {
         return get(username)
             .stream()
             .filter(account -> account.getId() == id)
@@ -161,7 +164,8 @@ public class RedisGoogleAuthenticatorTokenCredentialRepository extends BaseGoogl
     @Override
     public long count(final String username) {
         val redisKeyPattern = RedisCompositeKey.forPrincipals().withPrincipal(username).toKeyPattern();
-        return casRedisTemplates.getPrincipalsRedisTemplate().boundSetOps(redisKeyPattern).size();
+        val members = this.casRedisTemplates.getPrincipalsRedisTemplate().boundSetOps(redisKeyPattern).members();
+        return members != null ? members.size() : 0L;
     }
 
     @Data
