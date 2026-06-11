@@ -33,6 +33,7 @@ import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -115,6 +116,16 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     private final String casUrl;
 
     /**
+     * Health check for DNMA service
+     */
+    private final String dnmaStatusUrl;
+    
+    /**
+     * Boolean that keeps track of DNMA status
+     */
+    private boolean dnmaAvailable;
+
+    /**
      * Constructor
      * @param casConfigurationProperties configuration properties
      */
@@ -132,7 +143,9 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         this.baseAPIPath = casConfigurationProperties.getCustom().getProperties().get("interrupt.structs-api-path");
         this.replaceDomainRegex = casConfigurationProperties.getCustom().getProperties().get("interrupt.replace-domain-regex");
         this.dnmaServiceId = casConfigurationProperties.getCustom().getProperties().get("dnma.service-id");
+        this.dnmaStatusUrl = casConfigurationProperties.getCustom().getProperties().get("dnma.status-url");
         this.casUrl = casConfigurationProperties.getServer().getLoginUrl();
+        this.dnmaAvailable = true;
         this.domainBySirenCache = new HashMap<>();
     }
 
@@ -185,29 +198,32 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 credentials.toArray(Credential.EMPTY_CREDENTIALS_ARRAY));
             val authenticationResult = builder.build(service);
 
-            // POC modif DNMA
-            val tgt = ticketRegistrySupport.getTicketGrantingTicket(ticketGrantingTicket);
-            boolean found = false;
-            for(Service tgtService : tgt.getServices().values()){
-                LOGGER.trace("Checking if service {} is DNMA", tgtService.getId());
-                if(tgtService.getId().startsWith(dnmaServiceId)){
-                    LOGGER.trace("DNMA service found !");
-                    found = true;
-                    break;
+            // -- Debut modif DNMA --
+            if(dnmaAvailable){
+                val tgt = ticketRegistrySupport.getTicketGrantingTicket(ticketGrantingTicket);
+                boolean found = false;
+                for(Service tgtService : tgt.getServices().values()){
+                    LOGGER.trace("Checking if service {} is DNMA", tgtService.getId());
+                    if(tgtService.getId().startsWith(dnmaServiceId)){
+                        LOGGER.trace("DNMA service found !");
+                        found = true;
+                        break;
+                    }
+                }
+                // Il y a 2 cas de figure dans lequel on doit laisser passer :
+                // - Soit on est déjà passé par le DNMA
+                // - Soit on se connecte au service DNMA
+                // Dans tous les autres cas on redirige vers le service DNMA en gardant dans l'url l'information du service original
+                if(!found && !service.getOriginalUrl().startsWith(dnmaServiceId)){
+                    final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
+                    final String requestURL = nativeRequest.getRequestURL().toString();
+                    final String dnmaURL = casUrl+"?service="+dnmaServiceId+"?originalUrl="+requestURL+"?service="+service.getOriginalUrl();
+                    LOGGER.debug("User has no DNMA session, redirecting to {}", dnmaURL);
+                    context.getExternalContext().requestExternalRedirect(dnmaURL);
+                    return result("error");
                 }
             }
-            // Il y a 2 cas de figure dans lequel on doit laisser passer :
-            // - Soit on est déjà passé par le DNMA
-            // - Soit on se connecte au service DNMA
-            // Dans tous les autres cas on redirige vers le service DNMA en gardant dans l'url l'information du service original
-            if(!found && !service.getOriginalUrl().startsWith(dnmaServiceId)){
-                final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
-                final String requestURL = nativeRequest.getRequestURL().toString();
-                final String dnmaURL = casUrl+"?service="+dnmaServiceId+"?originalUrl="+requestURL+"?service="+service.getOriginalUrl();
-                LOGGER.debug("User has no DNMA session, redirecting to {}", dnmaURL);
-                context.getExternalContext().requestExternalRedirect(dnmaURL);
-                return result("error");
-            }
+            // -- Fin modif DNMA --
 
             // Customisation : redirect to correct domain
             // A null service means that the request is coming directly from the cas (so no redirection needed)
@@ -397,6 +413,27 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     @Scheduled(fixedDelayString = "${cas.custom.properties.interrupt.refresh-cache-interval:PT6H}")
     public void resetDomainBySirenCache(){
         this.domainBySirenCache.clear();
+    }
+
+    /**
+     * Check if DNMA is available at specific interval
+     */
+    @Scheduled(fixedDelayString = "PT10S")
+    private void refreshDNMAStatus() {
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(dnmaStatusUrl)).build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode() == 200){
+                logger.debug("DNMA is available.");
+                this.dnmaAvailable = true;
+            } else {
+                logger.warn("DNMA is not available ! Skipping redirection for now.");
+                this.dnmaAvailable = false;
+            }
+        } catch (IOException | InterruptedException e) {
+            logger.warn("DNMA is not available ! Skipping redirection for now.");
+            this.dnmaAvailable = false;
+        }
     }
 
     private void grantServiceTicket(final AuthenticationResult authenticationResult,
