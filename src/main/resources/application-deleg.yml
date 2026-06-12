@@ -96,3 +96,5 @@ cas.ticket.registry.redis.crypto.enabled: false
 
 # Custom properties : cerbere validation skip
 cas.custom.properties.cerbere.validation.enabled: false
+# DNMA skip
+cas.custom.properties.dnma.enabled: false
