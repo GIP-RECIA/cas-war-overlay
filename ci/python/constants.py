@@ -85,3 +85,12 @@ SERVICE_DELEGATED_AUTHN_EXISTING_TGT = "http://localhost:8065/test"
 
 # Url du service pour tester la déconnexion partielle
 SERVICE_PARTIAL_SLO_URL = "http://localhost:8066/test"
+
+# Url du service pour le DNMA api
+SERVICE_DNMA_URL = "http://localhost:8070/test"
+
+# Url du service pour le DNMA api - passage déjà effectué
+SERVICE_DNMA_ALREADY_AUTH_URL = "http://localhost:8071/test"
+
+# Url du service pour le DNMA auth
+SERVICE_DNMA_AUTH_URL = "http://localhost:7005"
