@@ -99,3 +99,5 @@ cas.authn.oauth.session-replication.cookie.crypto.encryption.key: b2m08Llbt9kBR7
 
 # Custom properties : cerbere validation skip
 cas.custom.properties.cerbere.validation.enabled: false
+# DNMA skip
+cas.custom.properties.dnma.enabled: false
