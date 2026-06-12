@@ -149,6 +149,10 @@ python3 service_test65.py &
 pid_python_service_test65=$!
 python3 service_test66.py &
 pid_python_service_test66=$!
+python3 service_test70.py &
+pid_python_service_test70=$!
+python3 service_test71.py &
+pid_python_service_test71=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
@@ -157,6 +161,8 @@ python3 scim_server.py &
 pid_python_scim_server=$!
 python3 restriction_api.py &
 pid_python_restriction_api=$!
+python3 dnma_auth.py &
+pid_python_dnma_auth=$!
 cd "flask-saml-client"
 python3 index.py --port 8011 --settings "saml/settings11.json" &
 pid_python_saml_client=$!
@@ -199,12 +205,12 @@ cd "${ROOT_DIRECTORY}"
 echo "Launching CAS delegation server at $casWebApplicationFile with options $CAS_DELEG_ARGS"
 java -jar "$casWebApplicationFile" $CAS_DELEG_ARGS &
 pid_cas_deleg=$!
-sleep 30
+sleep 15
 # Puis le serveur sur lequel on va faire les tests
 echo "Launching CAS at $casWebApplicationFile with options $CAS_ARGS"
 java -jar "$casWebApplicationFile" $CAS_ARGS &
 pid_cas=$!
-sleep 120
+sleep 30
 
 exit_ci () {
     kill -9 "$pid_cas"
@@ -222,6 +228,7 @@ exit_ci () {
     kill -9 "$pid_python_service_test38"
     kill -9 "$pid_python_service_test39"
     kill -9 "$pid_python_service_test40"
+    kill -9 "$pid_python_service_test41"
     kill -9 "$pid_python_service_test46"
     kill -9 "$pid_python_service_test47"
     kill -9 "$pid_python_service_test48"
@@ -233,10 +240,13 @@ exit_ci () {
     kill -9 "$pid_python_service_test64"
     kill -9 "$pid_python_service_test65"
     kill -9 "$pid_python_service_test66"
+    kill -9 "$pid_python_service_test70"
+    kill -9 "$pid_python_service_test71"    
     kill -9 "$pid_python_structs_info_api"
     kill -9 "$pid_python_externalid_api"
     kill -9 "$pid_python_scim_server"
     kill -9 "$pid_python_restriction_api"
+    kill -9 "$pid_python_dnma_auth"
     kill -9 "$pid_python_saml_client"
     kill -9 "$pid_python_saml_client2"
     kill -9 "$pid_python_saml_client3"

@@ -1,0 +1,14 @@
+{
+    "@class": "org.apereo.cas.services.CasRegisteredService",
+    "serviceId": "^http:\/\/localhost:7005\/.*",
+    "name": "Service Test",
+    "description": "Service DNMA Auth",
+    "id": 7005,
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "skipDomainRedirect" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ true ] ]
+        }
+    }
+}
