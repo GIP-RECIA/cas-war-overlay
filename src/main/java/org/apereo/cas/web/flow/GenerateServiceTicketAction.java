@@ -12,6 +12,7 @@ import org.apereo.cas.authentication.AuthenticationSystemSupport;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.configuration.CasConfigurationProperties;
+import org.apereo.cas.services.CasRegisteredService;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.ticket.InvalidTicketException;
 import org.apereo.cas.ticket.ServiceTicketGeneratorAuthority;
@@ -124,6 +125,11 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     private boolean dnmaAvailable;
 
     /**
+     * If DNMA is enabled
+     */
+    private boolean dnmaEnabled;
+
+    /**
      * Constructor
      * @param casConfigurationProperties configuration properties
      */
@@ -142,6 +148,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         this.replaceDomainRegex = casConfigurationProperties.getCustom().getProperties().get("interrupt.replace-domain-regex");
         this.dnmaServiceId = casConfigurationProperties.getCustom().getProperties().get("dnma.service-id");
         this.dnmaStatusUrl = casConfigurationProperties.getCustom().getProperties().get("dnma.status-url");
+        this.dnmaEnabled = Boolean.parseBoolean(casConfigurationProperties.getCustom().getProperties().get("dnma.enabled"));
         this.casUrl = casConfigurationProperties.getServer().getLoginUrl();
         this.dnmaAvailable = true;
         this.domainBySirenCache = new HashMap<>();
@@ -197,7 +204,8 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
             val authenticationResult = builder.build(service);
 
             // -- Debut modif DNMA --
-            if(dnmaAvailable){
+            // Désactivation temporaire pour le SAML et le OIDC car la redirection finale ne fonctionnera pas
+            if(registeredService instanceof CasRegisteredService && dnmaEnabled && dnmaAvailable){
                 val tgt = ticketRegistrySupport.getTicketGrantingTicket(ticketGrantingTicket);
                 boolean found = false;
                 for(Service tgtService : tgt.getServices().values()){
@@ -418,19 +426,21 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
      */
     @Scheduled(fixedDelayString = "PT10S")
     private void refreshDNMAStatus() {
-        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(dnmaStatusUrl)).build();
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if(response.statusCode() == 200){
-                logger.debug("DNMA is available.");
-                this.dnmaAvailable = true;
-            } else {
+        if(dnmaEnabled){
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(dnmaStatusUrl)).build();
+            try {
+                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                if(response.statusCode() == 200){
+                    logger.debug("DNMA is available.");
+                    this.dnmaAvailable = true;
+                } else {
+                    logger.warn("DNMA is not available ! Skipping redirection for now.");
+                    this.dnmaAvailable = false;
+                }
+            } catch (IOException | InterruptedException e) {
                 logger.warn("DNMA is not available ! Skipping redirection for now.");
                 this.dnmaAvailable = false;
             }
-        } catch (IOException | InterruptedException e) {
-            logger.warn("DNMA is not available ! Skipping redirection for now.");
-            this.dnmaAvailable = false;
         }
     }
 
