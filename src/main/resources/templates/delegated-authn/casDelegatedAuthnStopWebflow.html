@@ -18,7 +18,7 @@
                 <p th:utext="#{screen.pac4j.unauthz.message}">Either the authentication request was rejected/cancelled,
                     or the authentication provider denied access due to permissions, etc. Review logs to find the root
                     cause of the issue.</p>
-
+                <p>Identifiant unique de l'erreur : <span th:utext="${errorId}"></span></p>
                 <p>
                     <i th:if="${extra_exception_info_i18n_key}" class="mdi mdi-alert fas fa-exclamation-triangle me-2" aria-hidden="true"></i>
                     <span th:if="${extra_exception_info_i18n_key}"
