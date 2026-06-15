@@ -167,6 +167,7 @@ All the important parts of the project are listed below:
 │       │                   │   │   │   ├── FinishLogoutAction.java
 │       │                   │   │   │   └── TerminateSessionAction.java
 │       │                   │   │   ├── DelegatedClientAuthenticationCredentialSelectionAction.java
+│       │                   │   │   ├── DelegatedClientAuthenticationFailureAction.java
 │       │                   │   │   └── DelegatedClientAuthenticationRedirectAction.java
 │       │                   │   ├── error
 │       │                   │   │   └── DefaultDelegatedClientAuthenticationFailureEvaluator.java

@@ -35,3 +35,4 @@
 | Fix SAML IDP Initiated TGT existant | DefaultSingleSignOnBuildingStrategy |
 | Logout partiel | DefaultSingleLogoutRequestExecutor + TerminateSessionAction |
 | Service Access Strategy via API externe | RemoteEndpointServiceAccessStrategy |
+| Identifiant d'erreur unique | DelegatedClientAuthenticationFailureAction |
