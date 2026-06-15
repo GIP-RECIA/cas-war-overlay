@@ -189,12 +189,12 @@ cd "${ROOT_DIRECTORY}"
 echo "Launching CAS delegation server at $casWebApplicationFile with options $CAS_DELEG_ARGS"
 java -jar "$casWebApplicationFile" $CAS_DELEG_ARGS &
 pid_cas_deleg=$!
-sleep 15
+sleep 30
 # Puis le serveur sur lequel on va faire les tests
 echo "Launching CAS at $casWebApplicationFile with options $CAS_ARGS"
 java -jar "$casWebApplicationFile" $CAS_ARGS &
 pid_cas=$!
-sleep 30
+sleep 120
 
 exit_ci () {
     kill -9 "$pid_cas"
