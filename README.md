@@ -49,6 +49,7 @@ And has a number of custom enhancements :
 - Fix profile selection authentication with existing TGT
 - Partial logout (logout from all services but not from CAS and refresh the attributes)
 - Service access check via external API
+- DNMA forced redirection
 
 Current CAS Base version : **8.0.0**
 
