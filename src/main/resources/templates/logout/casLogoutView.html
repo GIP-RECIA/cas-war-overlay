@@ -34,7 +34,6 @@
                     <a id="customLogoutRedirectButton" th:href="${logoutRedirect}" style="display: none;"><p th:text="${logoutRedirect}"/></a>
                 </div>
                 <div th:remove="tag" th:if="${enableProceed}">
-                    <p>Logout will continue in a few seconds. Please wait...</p>
                     <form method="post" id="logoutform" th:action="@{/logout}">
                         <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
                         <input type="hidden" name="_eventId" value="proceed"/>
