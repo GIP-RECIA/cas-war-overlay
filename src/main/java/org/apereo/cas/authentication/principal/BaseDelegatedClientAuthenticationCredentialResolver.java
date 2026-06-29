@@ -1,11 +1,12 @@
 package org.apereo.cas.authentication.principal;
 
 import module java.base;
-import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.web.flow.DelegatedClientAuthenticationConfigurationContext;
 import org.apereo.cas.web.support.WebUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.pac4j.core.context.CallContext;
 import org.pac4j.core.profile.UserProfile;
 import org.pac4j.jee.context.JEEContext;
@@ -17,7 +18,6 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Misagh Moayyed
  * @since 6.6.0
  */
-@Slf4j
 @RequiredArgsConstructor
 public abstract class BaseDelegatedClientAuthenticationCredentialResolver
     implements DelegatedClientAuthenticationCredentialResolver {
@@ -26,7 +26,6 @@ public abstract class BaseDelegatedClientAuthenticationCredentialResolver
 
     @Override
     public boolean supports(final ClientCredential credentials) {
-        LOGGER.debug("DEBUG - Credentials in supports : {}", credentials);
         if(credentials.getClientName().contains(configContext.getCasProperties().getCustom().getProperties().get("profile-selection.client-name"))){
             return credentials != null;
         } else {
@@ -34,7 +33,8 @@ public abstract class BaseDelegatedClientAuthenticationCredentialResolver
         }
     }
 
-    protected Optional<UserProfile> resolveUserProfile(final RequestContext requestContext, final ClientCredential credentials) {
+    @NullMarked
+    protected Optional<@Nullable UserProfile> resolveUserProfile(final RequestContext requestContext, final ClientCredential credentials) {
         return Optional.ofNullable(credentials.getUserProfile())
             .or(() -> {
                 val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);

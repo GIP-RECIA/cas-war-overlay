@@ -36,6 +36,7 @@ buildscript {
         classpath "io.freefair.gradle:lombok-plugin:${project.gradleFreeFairPluginVersion}"
         classpath "com.google.cloud.tools:jib-gradle-plugin:${project.jibVersion}"
         classpath "com.bmuschko:gradle-docker-plugin:${project.gradleDockerPluginVersion}"
+        classpath "org.cyclonedx:cyclonedx-gradle-plugin:${project.gradleCyclonePluginVersion}"
         classpath "de.undercouch:gradle-download-task:${project.gradleDownloadTaskVersion}"
         classpath "org.apereo.cas:cas-server-core-api-configuration-model:${project.'cas.version'}"
         classpath "org.apereo.cas:cas-server-support-configuration-metadata-repository:${project.'cas.version'}"
@@ -77,6 +78,7 @@ repositories {
     }
 }
 
+
 apply plugin: "io.freefair.war-overlay"
 apply plugin: "war"
 
@@ -85,6 +87,8 @@ apply plugin: "io.freefair.lombok"
 lombok {
     version = "${project.lombokVersion}"
 }
+
+apply plugin: "org.cyclonedx.bom"
 
 apply plugin: "maven-publish"
 
@@ -130,6 +134,8 @@ apply from: rootProject.file("gradle/springboot.gradle")
 apply plugin: "com.google.cloud.tools.jib"
 apply plugin: "com.bmuschko.docker-remote-api"
 apply from: rootProject.file("gradle/tasks.gradle")
+apply from: rootProject.file("gradle/diff.gradle")
+apply from: rootProject.file("gradle/getjavaclass.gradle")
 
 def out = services.get(StyledTextOutputFactory).create("cas")
 def configurationCacheRequested = services.get(BuildFeatures).configurationCache.requested.getOrElse(true)

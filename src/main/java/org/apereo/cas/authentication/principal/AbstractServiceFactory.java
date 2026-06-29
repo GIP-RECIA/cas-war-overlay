@@ -8,6 +8,7 @@ import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.function.FunctionUtils;
 import org.apereo.cas.util.http.HttpRequestUtils;
 import org.apereo.cas.web.UrlValidator;
+import org.apereo.cas.web.flow.CasWebflowConstants;
 import org.apache.commons.lang3.StringUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.hc.core5.net.URIBuilder;
@@ -42,7 +42,8 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
         CasProtocolConstants.PARAMETER_SERVICE,
         CasProtocolConstants.PARAMETER_TARGET_SERVICE,
         CasProtocolConstants.PARAMETER_TICKET,
-        CasProtocolConstants.PARAMETER_FORMAT);
+        CasProtocolConstants.PARAMETER_FORMAT,
+        CasWebflowConstants.PARAMETER_FLOW_EXECUTION_KEY);
 
     private final TenantExtractor tenantExtractor;
     private final UrlValidator urlValidator;

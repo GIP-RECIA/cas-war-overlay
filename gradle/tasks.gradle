@@ -6,7 +6,8 @@ import org.gradle.internal.logging.text.*
 import groovy.json.*
 import groovy.time.*
 import groovy.xml.*
- 
+
+import java.net.*
 import java.nio.file.*
 import java.util.*
 import java.security.*
@@ -31,6 +32,24 @@ buildscript {
     }
 }
 apply plugin: "de.undercouch.download"
+
+def urlAvailable = { String location ->
+    HttpURLConnection connection = null
+    try {
+        connection = new URL(location).openConnection() as HttpURLConnection
+        connection.requestMethod = 'HEAD'
+        connection.instanceFollowRedirects = true
+        connection.connectTimeout = 10_000
+        connection.readTimeout = 10_000
+        def code = connection.responseCode
+        return code >= 200 && code < 400
+    } catch (Throwable e) {
+        println("URL is not available: ${location} (${e.class.simpleName}: ${e.message})")
+        return false
+    } finally {
+        connection?.disconnect()
+    }
+}
 
 tasks.register('debug', JavaExec) {
     group = "CAS"
@@ -112,52 +131,70 @@ task zip(type: Zip, description: "Package the CAS overlay into a zip archive", g
     }
 }
 
-task createKeystore(group: "CAS", description: "Create CAS keystore") {
-    def dn = "CN=cas.example.org,OU=Example,OU=Org,C=US"
-    if (project.hasProperty("certificateDn")) {
-        dn = project.getProperty("certificateDn")
-    }
-    def subjectAltName = "dns:example.org,dns:localhost,ip:127.0.0.1"
-    if (project.hasProperty("certificateSubAltName")) {
-        subjectAltName = project.getProperty("certificateSubAltName")
-    }
+def dn = providers.gradleProperty("certificateDn").orElse("CN=cas.example.org,OU=Example,OU=Org,C=US")
+def subjectAltName = providers.gradleProperty("certificateSubAltName").orElse("dns:example.org,dns:localhost,ip:127.0.0.1")
+def certDir = providers.gradleProperty("certDir").orElse("/etc/cas")
+def serverKeyStore = providers.gradleProperty("serverKeystore").orElse("thekeystore")
+def exportedServerCert = providers.gradleProperty("exportedServerCert").orElse("cas.crt")
+def storeType = providers.gradleProperty("storeType").orElse("PKCS12")
 
-    doFirst {
-        def certDir = project.getProperty("certDir")
-        def serverKeyStore = project.getProperty("serverKeystore")
-        def exportedServerCert = project.getProperty("exportedServerCert")
-        def storeType = project.getProperty("storeType")
-        def keystorePath = "$certDir/$serverKeyStore"
-        def serverCert = "$certDir/$exportedServerCert"
+def keystorePath = certDir.zip(serverKeyStore) { dir, file -> "${dir}/${file}" }
+def serverCert = certDir.zip(exportedServerCert) { dir, file -> "${dir}/${file}" }
 
-        mkdir certDir
-        // this will fail if thekeystore exists and has cert with cas alias already (so delete if you want to recreate)
-        logger.info "Generating keystore for CAS with DN ${dn}"
-        exec {
-            workingDir "."
-            commandLine "keytool", "-genkeypair", "-alias", "cas",
-                    "-keyalg", "RSA",
-                    "-keypass", "changeit", "-storepass", "changeit",
-                    "-keystore", keystorePath,
-                    "-dname", dn, "-ext", "SAN=${subjectAltName}",
-                    "-storetype", storeType
+tasks.register("prepareKeystoreDir") {
+    group = "CAS"
+    description = "Prepare CAS keystore directory"
+    
+    def outputDir = layout.dir(certDir.map { new File(it) })
+    outputs.dir(outputDir)
+
+    doLast {
+        def dir = outputDir.get().asFile
+        if (!dir.exists() && !dir.mkdirs()) {
+            throw new GradleException("Failed to create directory: ${dir}")
         }
-        logger.info "Exporting cert from keystore..."
-        exec {
-            workingDir "."
-            commandLine "keytool", "-exportcert", "-alias", "cas",
-                    "-storepass", "changeit", "-keystore", keystorePath,
-                    "-file", serverCert
-        }
-        logger.info "Import $serverCert into your Java truststore (\$JAVA_HOME/lib/security/cacerts)"
     }
+}
+
+tasks.register("generateCasKeystore", Exec) {
+    group = "CAS"
+    description = "Generate CAS keystore"
+    dependsOn("prepareKeystoreDir")
+
+    commandLine "keytool", "-genkeypair",
+        "-alias", "cas",
+        "-keyalg", "RSA",
+        "-keypass", "changeit",
+        "-storepass", "changeit",
+        "-keystore", keystorePath.get(),
+        "-dname", dn.get(),
+        "-ext", "SAN=${subjectAltName.get()}",
+        "-storetype", storeType.get()
+}
+
+tasks.register("exportCasCertificate", Exec) {
+    group = "CAS"
+    description = "Export CAS certificate"
+    dependsOn("generateCasKeystore")
+
+    commandLine "keytool", "-exportcert",
+    "-alias", "cas",
+    "-storepass", "changeit",
+    "-keystore", keystorePath.get(),
+    "-file", serverCert.get()
+}
+
+tasks.register("createKeystore") {
+    group = "CAS"
+    description = "Create CAS keystore"
+    dependsOn("exportCasCertificate")
 }
 
 task unzipWAR(type: Copy, group: "CAS", description: "Explodes the CAS web application archive") {
     dependsOn 'build'
     def destination = "${buildDir}/app"
 
-    from zipTree("build/libs/cas.war")
+    from zipTree("$buildDir/libs/cas.war")
     into "${destination}"
     doLast {
         println "Unzipped WAR into ${destination}"
@@ -205,25 +242,21 @@ task unzip(type: Copy, group: "CAS", description: "Explodes the CAS archive and 
 task downloadShell(group: "Shell", description: "Download CAS shell jar from snapshot or release maven repo", type: Download) {
     def shellDir = project.providers.gradleProperty("shellDir").get()
     def casVersion = project.providers.gradleProperty("cas.version").get()
-    def downloadFile
-    if (casVersion.contains("-SNAPSHOT")) {
-        def snapshotDir = "https://central.sonatype.com/repository/maven-snapshots/org/apereo/cas/cas-server-support-shell/${casVersion}"
-        def metaUrl = "${snapshotDir}/maven-metadata.xml"
-        def xml = new XmlSlurper().parse(metaUrl.toURL().openStream())
-        def sv = xml.versioning.snapshotVersions.snapshotVersion.findAll {
-            it.extension.text() == "jar" && it.classifier.text() == ""
-        }.sort { a, b -> a.updated.text() <=> b.updated.text() }.last()
-        def stamped = sv.value.text()
-        def jarName = "cas-server-support-shell-${stamped}.jar"
-        def jarUrl  = "${snapshotDir}/${jarName}"
-        downloadFile = jarUrl
-    } else {
-        downloadFile = "https://github.com/apereo/cas/releases/download/v${casVersion}/cas-server-support-shell-${casVersion}.jar"
+    def downloadFile = "https://github.com/apereo/cas/releases/download/v${casVersion}/cas-server-support-shell-${casVersion}.jar"
+    def targetFile = new File("${shellDir}", "cas-server-support-shell-${casVersion}.jar")
+
+    onlyIf("CAS Shell artifact is available at ${downloadFile}") {
+        def available = urlAvailable(downloadFile)
+        if (!available) {
+            println "Skipping downloadShell; URL is not available: ${downloadFile}"
+        }
+        available
     }
+
     new File("${shellDir}").mkdir()
     logger.info "Downloading file: ${downloadFile} into ${shellDir}"
     src downloadFile
-    dest new File("${shellDir}", "cas-server-support-shell-${casVersion}.jar")
+    dest targetFile
     overwrite false
 }
 
@@ -231,8 +264,17 @@ task runShell(group: "Shell", description: "Run the CAS shell") {
     dependsOn downloadShell
     def shellDir = project.providers.gradleProperty("shellDir").get()
     def casVersion = project.providers.gradleProperty("cas.version").get()
+    def shellJar = new File("${shellDir}", "cas-server-support-shell-${casVersion}.jar")
+    onlyIf("CAS shell jar exists") {
+        def exists = shellJar.exists()
+        if (!exists) {
+            println "Skipping runShell; CAS shell jar does not exist: ${shellJar}"
+        }
+        exists
+    }
+
     doLast {
-        println "Run the following command to launch the shell:\n\tjava -jar ${shellDir}/cas-server-support-shell-${casVersion}.jar"
+        println "Run the following command to launch the shell:\n\tjava -jar ${shellJar}"
     }
 }
 
@@ -240,10 +282,19 @@ task debugShell(group: "Shell", description: "Run the CAS shell with debug optio
     dependsOn downloadShell
     def casVersion = project.providers.gradleProperty("cas.version").get()
     def shellDir = project.providers.gradleProperty("shellDir").get()
+    def shellJar = new File("${shellDir}", "cas-server-support-shell-${casVersion}.jar")
+    onlyIf("CAS shell jar exists") {
+        def exists = shellJar.exists()
+        if (!exists) {
+            println "Skipping debugShell; CAS shell jar does not exist: ${shellJar}"
+        }
+        exists
+    }
+                                              
     doLast {
         println """
         Run the following command to launch the shell:\n\t
-        java -Xrunjdwp:transport=dt_socket,address=5000,server=y,suspend=y -jar ${shellDir}/cas-server-support-shell-${casVersion}.jar
+        java -Xrunjdwp:transport=dt_socket,address=5000,server=y,suspend=y -jar ${shellJar}
         """
     }
 }

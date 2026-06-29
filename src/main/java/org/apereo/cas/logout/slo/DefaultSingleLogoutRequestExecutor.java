@@ -45,18 +45,19 @@ public class DefaultSingleLogoutRequestExecutor implements SingleLogoutRequestEx
                                                     final HttpServletResponse response) {
         try {
             val ticket = ticketRegistry.getTicket(ticketId, Ticket.class);
-            LOGGER.debug("Ticket [{}] found. Processing logout requests and then deleting the ticket...", ticket.getId());
+            LOGGER.debug("Ticket [{}] found. Processing logout requests and then deleting the ticket...",
+                Objects.requireNonNull(ticket).getId());
             val clientInfo = ClientInfoHolder.getClientInfo();
             val logoutRequests = new ArrayList<SingleLogoutRequestContext>();
             if (ticket instanceof final TicketGrantingTicket tgt) {
                 val results = logoutManager.performLogout(
-                        SingleLogoutExecutionRequest.builder()
-                                .ticketGrantingTicket(tgt)
-                                .httpServletRequest(Optional.of(request))
-                                .httpServletResponse(Optional.of(response))
-                                .build());
+                    SingleLogoutExecutionRequest.builder()
+                        .ticketGrantingTicket(tgt)
+                        .httpServletRequest(Optional.of(request))
+                        .httpServletResponse(Optional.of(response))
+                        .build());
                 results.stream().filter(r -> r.getStatus() == LogoutRequestStatus.FAILURE)
-                        .forEach(r -> LOGGER.warn("Logout request for [{}] and [{}] has failed", r.getTicketId(), r.getLogoutUrl()));
+                    .forEach(r -> LOGGER.warn("Logout request for [{}] and [{}] has failed", r.getTicketId(), r.getLogoutUrl()));
                 logoutRequests.addAll(results);
             }
 
