@@ -1,10 +1,11 @@
 package org.apereo.cas.web.flow.actions;
 
+import module java.base;
 import org.apereo.cas.pac4j.client.DelegatedClientAuthenticationFailureEvaluator;
 import org.apereo.cas.web.support.WebUtils;
-
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.jspecify.annotations.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
@@ -23,7 +24,7 @@ public class DelegatedClientAuthenticationFailureAction extends BaseCasWebflowAc
     private final DelegatedClientAuthenticationFailureEvaluator evaluator;
 
     @Override
-    protected Event doExecuteInternal(final RequestContext requestContext) {
+    protected @Nullable Event doExecuteInternal(final RequestContext requestContext) {
         val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
         val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(requestContext);
         var errorId = UUID.randomUUID().toString();
