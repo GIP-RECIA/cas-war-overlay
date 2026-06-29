@@ -28,7 +28,6 @@
 | Remontée des erreurs de délégation | LdaptivePersonAttributeDao + LdapDelegatedClientAuthenticationCredentialResolver + casLoginView |
 | Logout custom par IDP delegation | DelegatedAuthenticationClientLogoutAction + FinishLogoutAction + casLogoutView |
 | SCIM | ScimPrincipalProvisioner + CasScimAutoConfiguration |
-| Fix TOTP scratch code login | RedisGoogleAuthenticatorTokenCredentialRepository |
 | Fix TOTP scratch code registration | GoogleAuthenticatorOneTimeTokenCredentialValidator + OneTimeTokenCredentialValidator + GoogleAuthenticatorSaveRegistrationAction |
 | Fix SAML2 IDP unauthorized service | AbstractServiceFactory |
 | Validation charte redirection cerbere | GenerateServiceTicketAction + CasSupportActionsAutoConfiguration |

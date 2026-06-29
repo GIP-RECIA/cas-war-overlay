@@ -93,9 +93,7 @@ Cela correspond à une modification des templates HTML mais aussi des fichiers j
 
 ### Codes de récupération
 
-De base CAS gère mal l'utilisation des codes de récupération : lorsqu'un code de récupération est utilisée, la device associée dans le redis est dupliquée (car il en insère une nouvelle avec le code de récupération en moins mais sans supprimer l'ancienne). Le soucis se présente aussi bien pour chaque nouvelle connexion que pour le premier enregistrement. Un fix a donc été mis en place à deux endroits :
-- Dans le `RedisGoogleAuthenticatorTokenCredentialRepository` pour le login, en supprimant la device d'origine associée avant de la recréer ;
-- Dans un ensemble de fichiers pour l'enregistement, en empêchant l'enregistrement d'une device avec un code de récupération (ajout d'une fonction `isTokenAuthorizedForRegistration`).
+De base CAS gère mal l'utilisation des codes de récupération : lorsqu'un code de récupération est utilisée, la device associée dans le redis est dupliquée (car il en insère une nouvelle avec le code de récupération en moins mais sans supprimer l'ancienne) Un fix a donc été mis en place dans un ensemble de fichiers pour l'enregistement, en empêchant l'enregistrement d'une device avec un code de récupération (ajout d'une fonction `isTokenAuthorizedForRegistration`).
 
 ### Trusted device expiration
 

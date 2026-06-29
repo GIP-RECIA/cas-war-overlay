@@ -112,8 +112,7 @@ All the important parts of the project are listed below:
 │       │               ├── gauth/web/flow
 │       │               │   ├── credential
 │       │               │   │   ├── GoogleAuthenticatorOneTimeTokenCredentialValidator.java
-│       │               │   │   ├── GoogleAuthenticatorTokenCredential.java
-│       │               │   │   └── RedisGoogleAuthenticatorTokenCredentialRepository.java
+│       │               │   │   └── GoogleAuthenticatorTokenCredential.java
 │       │               │   └── web/flow
 │       │               │       ├── GoogleAuthenticatorMultifactorWebflowConfigurer.java
 │       │               │       └── GoogleAuthenticatorSaveRegistrationAction.java
