@@ -1,6 +1,6 @@
 services:
   redis:
     container_name: redis-server1
-    image: redis:8.4.0
+    image: redis:8.8.1
     network_mode: "host"
     command: redis-server --requirepass OZwtXSpJCjZEQ5b
