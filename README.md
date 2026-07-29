@@ -50,7 +50,7 @@ And has a number of custom enhancements :
 - Partial logout (logout from all services but not from CAS and refresh the attributes)
 - Service access check via external API
 
-Current CAS Base version : **8.0.0-RC5**
+Current CAS Base version : **8.0.0**
 
 # Project Structure
 
