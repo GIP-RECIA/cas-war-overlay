@@ -59,6 +59,7 @@ FILES=(
     "src/main/java/org/apereo/cas/logout/slo/DefaultSingleLogoutRequestExecutor.java core/cas-server-core-logout-api/src/main/java/org/apereo/cas/logout/slo/DefaultSingleLogoutRequestExecutor.java"
     "src/main/java/org/apereo/cas/services/RemoteEndpointServiceAccessStrategy.java core/cas-server-core-services-api/src/main/java/org/apereo/cas/services/RemoteEndpointServiceAccessStrategy.java"
     "src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationFailureAction.java support/cas-server-support-pac4j-webflow/src/main/java/org/apereo/cas/web/flow/actions/DelegatedClientAuthenticationFailureAction.java"
+    "src/main/java/org/apereo/cas/ticket/registry/RedisTicketRegistry.java support/cas-server-support-redis-ticket-registry/src/main/java/org/apereo/cas/ticket/registry/RedisTicketRegistry.java"
 )
 
 # Créer un dossier diff dans lequel on va copier les fichier locaux et nouveaux

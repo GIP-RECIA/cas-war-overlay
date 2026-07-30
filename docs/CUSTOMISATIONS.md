@@ -35,3 +35,4 @@
 | Logout partiel | DefaultSingleLogoutRequestExecutor + TerminateSessionAction |
 | Service Access Strategy via API externe | RemoteEndpointServiceAccessStrategy |
 | Identifiant d'erreur unique | DelegatedClientAuthenticationFailureAction |
+| Fix erreur WRONGTYPE redis | RedisTicketRegistry |
