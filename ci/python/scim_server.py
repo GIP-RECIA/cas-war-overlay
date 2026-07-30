@@ -115,13 +115,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                 if data["Operations"][0]["value"][0]["value"] == "cls.22222222222222222222":
                     response_data = {"schemas":["urn:ietf:params:scim:schemas:core:2.0:Group","urn:ietf:params:scim:schemas:extension:idruide:education:2.0:Group"],"id":"est.1111111111111111111","meta":{"resourceType":"Group","location":"http://localhost:8036/scim/v2/Groups/est.1111111111111111111"},"displayName":"0290009C","members":[{"value":"cls.22222222222222222222","$ref":"http://localhost:8036/scim/v2/Groups/cls.22222222222222222222","type":"Group"}],"urn:ietf:params:scim:schemas:extension:idruide:education:2.0:Group":{"educationGroupType":"establishment","establishment":{"identifier":"0290009C","address":{"streetAddress":"","locality":"","postalCode":"","country":""}}}}
                     send_json_reponse(self, 200, json.dumps(response_data))
-                    if post_data.decode('utf-8') == '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"path":"members","op":"add","value":[{"value":"cls.22222222222222222222"}]}]}':
+                    if post_data.decode('utf-8') == '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"op":"add","value":[{"value":"cls.22222222222222222222"}],"path":"members"}]}':
                         results48["ETAB_PATCH"] = True
                 # Ajout de l'utilisateur dans la classe
                 elif data["Operations"][0]["value"][0]["value"] == "00000000000000000000000":
                     response_data = {"schemas":["urn:ietf:params:scim:schemas:core:2.0:Group","urn:ietf:params:scim:schemas:extension:idruide:education:2.0:Group"],"id":"cls.22222222222222222222","meta":{"resourceType":"Group","location":"http://localhost:8036/scim/v2/Groups/cls.22222222222222222222"},"displayName":"0290009C/TS2","members":[{"value":"00000000000000000000000","$ref":"http://localhost:8036/scim/v2/Users/00000000000000000000000","type":"User"}],"urn:ietf:params:scim:schemas:extension:idruide:education:2.0:Group":{"educationGroupType":"class"}}
                     send_json_reponse(self, 200, json.dumps(response_data))
-                    if post_data.decode('utf-8') == '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"path":"members","op":"add","value":[{"value":"00000000000000000000000"}]}]}':
+                    if post_data.decode('utf-8') == '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"op":"add","value":[{"value":"00000000000000000000000"}],"path":"members"}]}':
                         results48["CLASS_PATCH"] = True
                 else:
                     self.send_response(500)
@@ -134,13 +134,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                 data = json.loads(post_data.decode('utf-8'))
                 # Ajout de l'utilisateur dans sa nouvelle classe
                 if data["Operations"][0]["value"][0]["value"] == "33333333333333333333333333" and "cls.777777777777777777777" in self.path\
-                    and post_data.decode('utf-8') == '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"path":"members","op":"add","value":[{"value":"33333333333333333333333333"}]}]}':
+                    and post_data.decode('utf-8') == '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"op":"add","value":[{"value":"33333333333333333333333333"}],"path":"members"}]}':
                     response_data = {"schemas":["urn:ietf:params:scim:schemas:core:2.0:Group","urn:ietf:params:scim:schemas:extension:idruide:education:2.0:Group"],"id":"cls.777777777777777777777","meta":{"resourceType":"Group","location":"http://localhost:8036/scim/v2/Groups/cls.777777777777777777777"},"displayName":"0290009C/TS2","members":[{"value":"33333333333333333333333333","$ref":"http://localhost:8036/scim/v2/Users/33333333333333333333333333","type":"User"}],"urn:ietf:params:scim:schemas:extension:idruide:education:2.0:Group":{"educationGroupType":"class"}}
                     send_json_reponse(self, 200, json.dumps(response_data))
                     results49["CLASS_REMOVE"] = True
                 # Suppression de l'utilisateur de son ancienne classe
                 elif data["Operations"][0]["value"][0]["value"] == "33333333333333333333333333" and "cls.5555555555555555555555555555" in self.path\
-                    and post_data.decode('utf-8') == '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"path":"members","op":"remove","value":[{"value":"33333333333333333333333333"}]}]}':
+                    and post_data.decode('utf-8') == '{"schemas":["urn:ietf:params:scim:api:messages:2.0:PatchOp"],"Operations":[{"op":"remove","value":[{"value":"33333333333333333333333333"}],"path":"members"}]}':
                     response_data = {"schemas":["urn:ietf:params:scim:schemas:core:2.0:Group","urn:ietf:params:scim:schemas:extension:idruide:education:2.0:Group"],"id":"cls.5555555555555555555555555555","meta":{"resourceType":"Group","location":"http://localhost:8036/scim/v2/Groups/cls.5555555555555555555555555555"},"displayName":"0290009C/TS3","members":[],"urn:ietf:params:scim:schemas:extension:idruide:education:2.0:Group":{"educationGroupType":"class"}}
                     send_json_reponse(self, 200, json.dumps(response_data))
                     results49["CLASS_ADD"] = True                    
