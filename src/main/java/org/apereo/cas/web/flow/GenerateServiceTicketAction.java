@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -78,7 +79,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
 
     private final CasConfigurationProperties casConfigurationProperties;
 
-    private Set<String> authorizedDomains;
+    private Set<String> cerbereAuthorizedDomains;
 
     /**
      * HTTPClient to make requests to structs info api
@@ -112,6 +113,16 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     private final String dnmaServiceId;
 
     /**
+     * List of authorized domains for DNMA
+     */
+    private Set<String> dnmaAuthorizedDomains;
+
+    /**
+     * Default domain for dnma
+     */
+    private final String dnmaDefaultDomain;
+
+    /**
      * Login URL of this cas server
      */
     private final String casUrl;
@@ -129,7 +140,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     /**
      * If DNMA is enabled
      */
-    private boolean dnmaEnabled;
+    private final boolean dnmaEnabled;
 
     /**
      * Constructor
@@ -150,6 +161,16 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         this.replaceDomainRegex = casConfigurationProperties.getCustom().getProperties().get("interrupt.replace-domain-regex");
         this.dnmaServiceId = casConfigurationProperties.getCustom().getProperties().get("dnma.service-id");
         this.dnmaStatusUrl = casConfigurationProperties.getCustom().getProperties().get("dnma.status-url");
+        this.dnmaDefaultDomain = casConfigurationProperties.getCustom().getProperties().get("dnma.default-domain");
+        if(casConfigurationProperties.getCustom().getProperties().get("dnma.authorized-domains") == null){
+            LOGGER.error("No authorized domains were provided in configuration for dnma");
+            this.dnmaAuthorizedDomains = new HashSet<>();
+        } else {
+            this.dnmaAuthorizedDomains = Arrays.stream(casConfigurationProperties.getCustom().getProperties().get("dnma.authorized-domains")
+                .split(","))
+                .map(String::trim)
+                .collect(Collectors.toSet());
+        }        
         this.dnmaEnabled = Boolean.parseBoolean(casConfigurationProperties.getCustom().getProperties().get("dnma.enabled"));
         this.casUrl = casConfigurationProperties.getServer().getLoginUrl();
         this.dnmaAvailable = true;
@@ -249,12 +270,12 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                     val cerbereDefaultUrl = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.default-url");
                     val cerbereIdRegex = Pattern.compile(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.service-id"));
                     val cerberePath = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.redirect-path");
-                    if(authorizedDomains == null){
+                    if(this.cerbereAuthorizedDomains == null){
                         if(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.authorized-domains") == null){
                             LOGGER.error("No authorized domains were provided in configuraiton for cerbere link generation");
-                            this.authorizedDomains = new HashSet<>();
+                            this.cerbereAuthorizedDomains = new HashSet<>();
                         } else {
-                            authorizedDomains = Arrays.stream(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.authorized-domains")
+                            this.cerbereAuthorizedDomains = Arrays.stream(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.authorized-domains")
                                 .split(","))
                                 .map(String::trim)
                                 .collect(Collectors.toSet());
@@ -282,7 +303,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                                             domain += ":"+uri.getPort();
                                         }
                                         String finalRedirectUrl = cerbereDefaultUrl;
-                                        if(authorizedDomains.contains(domain)){
+                                        if(this.cerbereAuthorizedDomains.contains(domain)){
                                             finalRedirectUrl = uri.getScheme() + "://" + domain + cerberePath;
                                             LOGGER.info("Domain {} is authorized, redirecting to : {}", domain, finalRedirectUrl);
                                         } else {
@@ -306,23 +327,39 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
             // Désactivation temporaire pour le SAML et le OIDC car la redirection finale ne fonctionnera pas
             if(registeredService instanceof CasRegisteredService && dnmaEnabled && dnmaAvailable){
                 val tgt = ticketRegistrySupport.getTicketGrantingTicket(ticketGrantingTicket);
-                boolean found = false;
+                boolean hasDNMASession = false;
                 for(Service tgtService : tgt.getServices().values()){
                     LOGGER.trace("Checking if service {} is DNMA", tgtService.getId());
-                    if(tgtService.getId().startsWith(dnmaServiceId)){
-                        LOGGER.trace("DNMA service found !");
-                        found = true;
-                        break;
+                    // On regarde si on est déjà passé par le DNMA auparavant
+                    // Pour ça il faut que le service contienne l'ID du service DNMA
+                    // ET que le domaine soit le même (sinon on, devra refaire une auth DNMA si on arrive sur un autre domaine)
+                    if(tgtService.getId().contains(dnmaServiceId)){
+                        final URI uri = new URI(service.getOriginalUrl());
+                        String serviceHost = uri.getScheme() + "://" + this.dnmaDefaultDomain;
+                        if(dnmaAuthorizedDomains.contains(uri.getHost())){
+                            serviceHost = uri.getScheme() + "://" + uri.getHost();
+                        }
+                        if(tgtService.getId().startsWith(serviceHost)){
+                            LOGGER.trace("DNMA service found !");
+                            hasDNMASession = true;
+                            break;
+                        }
                     }
                 }
+
                 // Il y a 2 cas de figure dans lequel on doit laisser passer :
                 // - Soit on est déjà passé par le DNMA
                 // - Soit on se connecte au service DNMA
                 // Dans tous les autres cas on redirige vers le service DNMA en gardant dans l'url l'information du service original
-                if(!found && !service.getOriginalUrl().startsWith(dnmaServiceId)){
+                if(!hasDNMASession && !service.getOriginalUrl().contains(dnmaServiceId)){
+                    final URI uri = new URI(service.getOriginalUrl());
+                    String host = this.dnmaDefaultDomain;
+                    if(dnmaAuthorizedDomains.contains(uri.getHost())){
+                        host = uri.getHost();
+                    }
                     final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
                     final String requestURL = nativeRequest.getRequestURL().toString();
-                    final String dnmaURL = casUrl+"?service="+dnmaServiceId+"?originalUrl="+requestURL+"?service="+service.getOriginalUrl();
+                    final String dnmaURL = casUrl + "?service=" + uri.getScheme() + "://" + host + dnmaServiceId + "?originalUrl=" + requestURL + "?service=" + service.getOriginalUrl();
                     LOGGER.debug("User has no DNMA session, redirecting to {}", dnmaURL);
                     context.getExternalContext().requestExternalRedirect(dnmaURL);
                     return result("error");
