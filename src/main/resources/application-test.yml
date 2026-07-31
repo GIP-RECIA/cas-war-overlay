@@ -342,6 +342,8 @@ cas.custom.properties.partial-logout.attribute-id: uid
 cas.custom.properties.partial-logout.attribute-repository: attributeUpdate
 
 # DNMA
-cas.custom.properties.dnma.service-id: http://localhost:7005/dnma/auth/cas/login
-cas.custom.properties.dnma.status-url: http://localhost:7005/dnma/auth/health-check
 cas.custom.properties.dnma.enabled: true
+cas.custom.properties.dnma.service-id: /dnma/auth/cas/login
+cas.custom.properties.dnma.status-url: http://localhost:7005/dnma/auth/health-check
+cas.custom.properties.dnma.default-domain: localhost:7005
+cas.custom.properties.dnma.authorized-domains=: localhost:7005
