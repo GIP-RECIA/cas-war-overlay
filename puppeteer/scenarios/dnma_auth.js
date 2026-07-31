@@ -11,6 +11,9 @@ const assert = require("assert");
         var casHost = "https://localhost:8443";
         var service = "http://localhost:8070/test"
 
+        // TODO : Same test with two different authorized domains should make two DNMA auth
+        // DNMA needs to be on same domain than service
+        
         // Login to cas
         await cas.loginWith(page, casHost, service, "test3", "test")
 
