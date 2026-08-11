@@ -327,6 +327,10 @@ tasks.named('test') {
     failOnNoDiscoveredTests = false
 }
 
+tasks.named('run') {
+    dependsOn tasks.named('bootWar')
+}
+
 dependencies {
     /**
     * Do NOT modify the lines below or else you will risk breaking dependency management.
