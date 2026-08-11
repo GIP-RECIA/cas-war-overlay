@@ -633,8 +633,8 @@ public class RedisTicketRegistry extends AbstractTicketRegistry implements Clean
 
         // Fix warn "WRONGTYPE Operation against a key holding the wrong kind of value"
         // SET performed juste before HMSET, why ?
-        //val valueOps = casRedisTemplates.getTicketsRedisTemplate().boundValueOps(redisKeyPattern);
-        //valueOps.set(ticketDocument, Expiration.from(timeout, TimeUnit.SECONDS));
+        val valueOps = casRedisTemplates.getTicketsRedisTemplate().boundValueOps(redisKeyPattern);
+        valueOps.set(ticketDocument, Expiration.from(timeout, TimeUnit.SECONDS));
 
         val keyspace = redisKeyGenerator.getKeyspace();
         val redisDataItem = new RedisData();
