@@ -428,6 +428,7 @@ dependencies {
     compileOnly "org.apereo.cas:cas-server-support-token-core-api"
     compileOnly "org.apereo.cas:cas-server-support-discovery-profile-core"
     compileOnly "org.apereo.cas:cas-server-core-validation-api"
+    compileOnly "org.apereo.cas:cas-server-core-authentication-throttle"
     compileOnly "org.springframework.security:spring-security-config"
     compileOnly "org.springframework.integration:spring-integration-redis"
 }
