@@ -11,7 +11,7 @@
 <span th:remove="tag" th:each="file : ${#strings.arraySplit(#themes.code('cas.standard.js.file'), ',')}">
     <script type="text/javascript" th:src="@{${file}}"></script>
 </span>
-<script src="/cas/js/r-wayf.js" type="module" defer></script>
+<script src="/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js" type="module" defer></script>
 <script src="/cas/js/logoutRedirect.js"></script>
 <script src="/cas/js/loginForm.js" defer></script>
 
