@@ -31,6 +31,15 @@ else
     echo "'appServer=' not found or already replaced in $casGradlePropertiesFile"
 fi
 
+# On a aussi un remplacement à faire au niveau du composant web chargé pour le WAYF
+casScriptsFile="${ROOT_DIRECTORY}/src/main/resources/templates/fragments/scripts.html"
+if grep -q 'src="/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js"' "$casScriptsFile"; then
+    echo "Replacing r-wayf.js URL in $casScriptsFile"
+    sed -i 's|src="/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js"|src="https://auth.recia.fr/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js"|' "$casScriptsFile"
+else
+    echo "r-wayf.js URL not found or already replaced in $casScriptsFile"
+fi
+
 # Build le war du CAS
 casWebApplicationFile="${ROOT_DIRECTORY}/build/libs/cas.war"
 if [[ ! -f "$casWebApplicationFile" ]]; then
@@ -42,12 +51,19 @@ if [[ ! -f "$casWebApplicationFile" ]]; then
     fi
 fi
 
-# Une fois le build fini on peut remettre le gradle.properties dans son état d'origine
+# Une fois le build fini on peut remettre les fichiers modifiés dans leur état d'origine
 if grep -q 'appServer=-tomcat' "$casGradlePropertiesFile"; then
     echo "Replacing 'appServer=-tomcat' with 'appServer=' in $casGradlePropertiesFile"
     sed -i 's/appServer=-tomcat/appServer=/' "$casGradlePropertiesFile"
 else
     echo "'appServer=-tomcat' not found or already replaced in $casGradlePropertiesFile"
+fi
+
+if grep -q 'src="https://auth.recia.fr/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js"' "$casScriptsFile"; then
+    echo "Restoring r-wayf.js URL in $casScriptsFile"
+    sed -i 's|src="https://auth.recia.fr/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js"|src="/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js"|' "$casScriptsFile"
+else
+    echo "Absolute r-wayf.js URL not found in $casScriptsFile"
 fi
 
 # Installation de puppeteer s'il n'est pas enore installé

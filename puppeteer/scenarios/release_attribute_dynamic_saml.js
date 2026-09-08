@@ -6,7 +6,7 @@ const assert = require("assert");
     const browser = await puppeteer.launch(cas.browserOptions());
 
     try {
-        const page = await browser.newPage();
+        const page = await cas.getPage(browser);
         const client = await page.createCDPSession();
 
         // Login to cas

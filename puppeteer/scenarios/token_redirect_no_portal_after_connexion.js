@@ -7,7 +7,7 @@ const assert = require("assert");
 
     try {
         // Login to CAS for the first time
-        const page = await browser.newPage();
+        const page = await cas.getPage(browser);
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
 
