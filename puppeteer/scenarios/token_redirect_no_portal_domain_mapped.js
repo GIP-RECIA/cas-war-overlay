@@ -9,6 +9,7 @@ const puppeteer = require('puppeteer');
 
         // Assert that the user is redirected to the right domain (first domain)
         page = await browser.newPage();
+        await page.setBypassCSP(true);
         domain = "mappeddomain1";
         service = "https://"+domain+"/tokenredirectnoportal"
         whereToRedirect = "https://mappeddomain3.fr/portail"
@@ -20,6 +21,7 @@ const puppeteer = require('puppeteer');
 
         // Assert that the user is redirected to the right domain (second domain)
         page = await browser.newPage();
+        await page.setBypassCSP(true);
         domain = "mappeddomain2";
         service = "https://"+domain+"/tokenredirectnoportal"
         whereToRedirect = "https://mappeddomain4.fr/portail"

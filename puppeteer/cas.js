@@ -17,7 +17,7 @@ const BROWSER_OPTIONS = {
     devtools: false,
     defaultViewport: null,
     slowMo: 5,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-web-security'],
 };
 
 exports.browserOptions = () => BROWSER_OPTIONS;
@@ -37,6 +37,12 @@ exports.logi = async (text) => {
 exports.loge = async (text) => {
     await LOGGER.error(`📛 ${text}`);
 };
+
+exports.getPage = async (browser) => {
+    const page = await browser.newPage();
+    await page.setBypassCSP(true);
+    return page;
+}
 
 exports.goToPageAndEnterLocalCredentials = async (page, url, username, password) => {
     // Go to requested page

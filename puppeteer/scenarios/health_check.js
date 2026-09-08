@@ -6,7 +6,7 @@ const assert = require("assert");
     const browser = await puppeteer.launch(cas.browserOptions());
 
     try {
-        const page = await browser.newPage();
+        const page = await cas.getPage(browser);
         const casHost = "https://localhost:8443";
 
         await page.goto(`${casHost}/cas/actuator/health`);

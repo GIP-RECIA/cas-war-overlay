@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer');
     const browser = await puppeteer.launch(cas.browserOptions());
 
     try {
-        const page = await browser.newPage();
+        const page = await cas.getPage(browser);
         const client = await page.createCDPSession();
         const casHost = "https://localhost:8443";
         const service = "http://localhost:8007/test"
