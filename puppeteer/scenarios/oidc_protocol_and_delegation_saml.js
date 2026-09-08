@@ -15,7 +15,7 @@ const assert = require("assert");
         // Click on external idp for profile selection button
         const rWayf = await page.$("r-wayf");
         const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
-        const idpLink = await shadowRoot.$("#eleves-parents"); 
+        const idpLink = await shadowRoot.$("#autres-publics"); 
         await idpLink.click();
 
         // Enter credentials and validate
