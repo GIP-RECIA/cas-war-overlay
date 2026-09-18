@@ -2,7 +2,7 @@
   "@class": "org.apereo.cas.services.CasRegisteredService",
   "serviceId": "^http:\/\/localhost:8063\/.*",
   "name": "Service Test",
-  "description": "Service de test pour redirection avec compte invalide et mauvais domaine",
+  "description": "Service de test pour connection à cerbere via une redirection sur domaine par défaut",
   "id": 63,
   "properties" : {
     "@class" : "java.util.HashMap",
