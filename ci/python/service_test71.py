@@ -6,16 +6,20 @@ Utilisé comme service pour simuler le comportement de cerbere (validation de la
 
 import urllib3
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from constants import CAS_BASE_URL, SERVICE_CERBERE_URL_CHARTER_SIGNATED_GOOD_DATE
-from utils import validate_ticket_to_cas_and_return_attributes
+from constants import CAS_BASE_URL, SERVICE_CERBERE_URL_CHARTER_SIGNATED_BAD_DOMAIN
 
 urllib3.disable_warnings()
 
 class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        validate_ticket_to_cas_and_return_attributes(self, SERVICE_CERBERE_URL_CHARTER_SIGNATED_GOOD_DATE, CAS_BASE_URL)
+        print(self.path)
+        if "cerbere" in self.path:
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write(f"CERBERE UI".encode('utf-8'))
 
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=8064):
+def run(server_class=HTTPServer, handler_class=RequestHandler, port=8071):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f'Starting server on port {port}...')

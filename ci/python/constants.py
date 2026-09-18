@@ -77,11 +77,29 @@ SERVICE_PROFILE_2_SELECTION_URL = "http://localhost:8060/test"
 # Url du service cerbere pour gérer la validation de la charte
 SERVICE_CERBERE_URL = "http://localhost:8062/test"
 
-# Url du service cerbere pour gérer la validation de la charte (autre domaine)
-SERVICE_CERBERE_URL_OTHER_DOMAIN = "http://localhost:8064/test"
+# Url du service cerbere pour gérer la validation de la charte si on a signé pour la bonne date
+SERVICE_CERBERE_URL_CHARTER_SIGNATED_GOOD_DATE = "http://localhost:8064/test"
 
 # Url du service cerbere pour tester l'authentification déléguée quand un TGT existe déjà
 SERVICE_DELEGATED_AUTHN_EXISTING_TGT = "http://localhost:8065/test"
 
 # Url du service pour tester la déconnexion partielle
 SERVICE_PARTIAL_SLO_URL = "http://localhost:8066/test"
+
+# Url du service cerbere pour gérer la validation de la charte si on a signé mais pas pour la bonne date
+SERVICE_CERBERE_URL_CHARTER_SIGNATED_BAD_DATE = "http://localhost:8070/test"
+
+# Url du service cerbere pour gérer la validation de la charte si on a signé mais pas pour le domain actuel
+SERVICE_CERBERE_URL_CHARTER_SIGNATED_BAD_DOMAIN = "http://localhost:8071/test"
+
+# Url du service cerbere pour gérer la validation de la charte si on a signé pour le domaine actuel mais qu'il est inconnu dans le fichier
+SERVICE_CERBERE_URL_CHARTER_SIGNATED_GOOD_DOMAIN_BUT_UNKNOWN = "http://localhost:8072/test"
+
+# Url du service cerbere pour gérer la validation de la charte si on a rien signé
+SERVICE_CERBERE_URL_NO_CHARTER_SIGNATED = "http://localhost:8073/test"
+
+# Url du service cerbere pour gérer la validation de la charte si on a signé en étant multidomaine
+SERVICE_CERBERE_URL_CHARTER_SIGNATED_MULTIDOMAIN = "http://localhost:8074/test"
+
+# Url du service cerbere pour gérer la validation de la charte si on pas signé en étant multidomaine
+SERVICE_CERBERE_URL_CHARTER_NOT_SIGNED_MULTIDOMAIN = "http://localhost:8075/test"

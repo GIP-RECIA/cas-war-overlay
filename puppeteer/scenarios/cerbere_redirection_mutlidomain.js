@@ -8,28 +8,16 @@ const assert = require("assert");
     try {
         const page = await cas.getPage(browser);
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8063/test"
+        const service = "http://localhost:8075/test"
 
-        // Goto CAS login page
-        await page.goto(`${casHost}/cas/login?service=${service}`);
-
-        // Click on external idp for profile selection button
-        const rWayf = await page.$("r-wayf");
-        const shadowRoot = await rWayf.evaluateHandle(el => el.shadowRoot);
-        const idpLink = await shadowRoot.$("#agri-IdP");
-        await idpLink.click();
-
-        // Enter credentials and validate
-        await cas.typeCredentialsAndEnter(page, "test14", "test");
-        await page.waitForNavigation();
-        await page.waitForNetworkIdle();
+        // Login to cas
+        await cas.loginWith(page, casHost, service, "test22", "test")
 
         // Assert that the user is correctly redirected
         const pageContent = await page.content();
         assert(pageContent.includes('CERBERE UI'));
         const url = page.url();
         assert(url.includes("http://localhost:8062/cerbere"))
-
         process.exit(0)
 
     } catch (e) {
