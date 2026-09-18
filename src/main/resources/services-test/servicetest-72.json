@@ -1,9 +1,9 @@
 {
   "@class": "org.apereo.cas.services.CasRegisteredService",
-  "serviceId": "^http:\/\/localhost:8064\/.*",
+  "serviceId": "^http:\/\/localhost:8072\/.*",
   "name": "Service Test",
-  "description": "Service de test pour redirection charte signée pour le bon domaine et date correcte",
-  "id": 64,
+  "description": "Service de test pour redirection charte signée le domaine courant de l'utilisateur mais inconnu dans le fichier",
+  "id": 72,
   "properties" : {
     "@class" : "java.util.HashMap",
     "skipDomainRedirect" : {
