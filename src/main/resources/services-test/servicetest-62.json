@@ -2,7 +2,7 @@
   "@class": "org.apereo.cas.services.CasRegisteredService",
   "serviceId": "^http:\/\/localhost:8062\/.*",
   "name": "Service Test",
-  "description": "Service de test pour connection avec cerbere et compte invalide",
+  "description": "Service de test pour connection à cerbere",
   "id": 62,
   "properties" : {
     "@class" : "java.util.HashMap",
