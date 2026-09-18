@@ -38,6 +38,36 @@ attributetype ( 1.3.6.1.4.1.7165.2.1.25 NAME 'sambaNTPassword'
 	EQUALITY caseIgnoreIA5Match
 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.26{32} SINGLE-VALUE )
 
+#-------------------------------------------#
+# Attributes used by qmail                  #
+# cf https://github.com/EGroupware/egroupware/blob/master/doc/mail/qmail.new.schema #
+#-------------------------------------------#
+
+#------------------------------------------#
+# mailAlternateAddress                 #
+#------------------------------------------#
+# String IA5 multi-value                   #
+#------------------------------------------#
+attributetype ( 1.3.6.1.4.1.7914.1.2.1.4 NAME 'mailAlternateAddress'
+    DESC 'Secondary (alias) mailaddresses for the same user'
+    EQUALITY caseIgnoreIA5Match
+    SUBSTR caseIgnoreIA5SubstringsMatch
+    SYNTAX ENT_IA5String{256} )
+
+#------------------------------------------#
+# mailQuotaSize                            #
+#------------------------------------------#
+# String IA5 mono-value                    #
+#------------------------------------------#
+attributetype ( 1.3.6.1.4.1.7914.1.2.1.15 NAME 'mailQuotaSize'
+	DESC 'The size of space the user can have until further messages get bounced.'
+	EQUALITY integerMatch
+	SINGLE-VALUE
+	SYNTAX LDAP_SyntPrefixe:27 )
+
+#-------------------------------------------#
+# Attributes for ESCO                       #
+#-------------------------------------------#
 
 #------------------------------------------#
 # ESCODefaultUserProfile                   #
@@ -208,17 +238,40 @@ attributetype (ENT_locAttPrefixe:25 NAME 'ESCOPersonExternalIds'
 	EQUALITY caseIgnoreMatch
 	SUBSTR caseIgnoreSubstringsMatch
 	SYNTAX ENT_UTF8String)
+
 #------------------------------------------#
-# ESCOPersonValidationCharte               #
+# ESCOPersonValidationCharte (DEPRECATED)  #
 #------------------------------------------#
 # String UTF8 mono-value                   #
 #------------------------------------------#
 attributetype (ENT_locAttPrefixe:26 NAME 'ESCOPersonValidationCharte'
 	DESC 'Timestamp LDAP de validation de la charte par l utilisateur'
 	EQUALITY generalizedTimeMatch
-  ORDERING generalizedTimeOrderingMatch
+	ORDERING generalizedTimeOrderingMatch
 	SINGLE-VALUE
-	SYNTAX 1.3.6.1.4.1.1466.115.121.1.24)
+	SYNTAX LDAP_SyntPrefixe:24)
+
+#------------------------------------------#
+# ESCODateModificationPassword             #
+#------------------------------------------#
+# String UTF8 mono-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:27 NAME 'ESCODateModificationPassword'
+	DESC 'Timestamp LDAP de modification du mot de passe de l utilisateur'
+	EQUALITY generalizedTimeMatch
+	ORDERING generalizedTimeOrderingMatch
+	SINGLE-VALUE
+	SYNTAX LDAP_SyntPrefixe:24)
+
+#------------------------------------------#
+# ESCOPersonValidationCharteService        #
+#------------------------------------------#
+# String UTF8 multi-value                   #
+#------------------------------------------#
+attributetype (ENT_locAttPrefixe:28 NAME 'ESCOPersonValidationCharteService'
+	DESC 'Derniere validation de charte par service, au format service-id$YYYYMMDDHHMMSSZ'
+	EQUALITY caseExactMatch
+	SYNTAX ENT_UTF8String)
 
 #------------------------------------------#
 # ESCOAddons                               #
@@ -233,7 +286,8 @@ objectclass (ENT_locClassPrefixe:1 NAME 'ESCOAddons'
             sambaLMPassword $ sambaNTPassword $ ESCOPersonProfils $ ESCOPersonEtatCompte $
             ESCOPersonListeRouge $ ESCOPersonEtabCompteReplique $ ESCOAuxEnsCodeMatiereEnseignEtab $
             ESCOEleveCodeEnseignements $ ESCOPersonPhoto $ ESCOSIREN $ ESCOSIRENCourant $ ESCOPersonExternalIds $
-            ESCOPersonValidationCharte ))
+            ESCOPersonValidationCharte $ ESCOPersonValidationCharteService $ mailAlternateAddress $ mailQuotaSize $
+            ESCODateModificationPassword ))
 
 #------------------------------------------#
 # ESCOEleveVecteurIdentite                 #
