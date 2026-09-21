@@ -24,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.jooq.lambda.Unchecked;
 import org.springframework.core.annotation.AnnotationAwareOrderComparator;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.webflow.action.EventFactorySupport;
@@ -33,6 +35,7 @@ import org.springframework.webflow.execution.RequestContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -115,17 +118,22 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     /**
      * Date formatter to read Instant given from LDAP attribute
      */
-    private DateTimeFormatter formatterLDAP;
+    private final DateTimeFormatter formatterLDAP;
 
     /**
      * Date formatter to read Instant given from file
      */
-    private DateTimeFormatter formatterFile;
+    private final DateTimeFormatter formatterFile;
 
     /**
      * Map used to cache the date of the charters for each domain
      */
     private Map<String, Instant> chartersDateByDomain;
+
+    /**
+     * Resource loader to load CSV file for cerbere
+     */
+    private final DefaultResourceLoader resourceLoader;
 
     /**
      * Constructor
@@ -147,6 +155,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         this.domainBySirenCache = new HashMap<>();
         this.formatterLDAP = DateTimeFormatter.ofPattern("yyyyMMddHHmmssX");
         this.formatterFile = DateTimeFormatter.ofPattern("yyyyMMdd");
+        this.resourceLoader = new DefaultResourceLoader();
         loadChartersDateByDomain();
     }
 
@@ -198,6 +207,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
             val builder = authenticationSystemSupport.establishAuthenticationContextFromInitial(authentication,
                     credentials.toArray(Credential.EMPTY_CREDENTIALS_ARRAY));
             val authenticationResult = builder.build(service);
+            val principalId = authentication.getPrincipal().getId();
 
             // Customisation (1): redirect to correct domain
             // A null service means that the request is coming directly from the cas (so no redirection needed)
@@ -210,7 +220,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                         final String sirenCourant = (String) authentication.getPrincipal().getAttributes().get("ESCOSIRENCourant").getFirst();
                         if(sirenCourant != null){
                             final String domain = getUserDomain(sirenCourant);
-                            LOGGER.trace("The current domain for [{}] is [{}]", authentication.getPrincipal().getId(), domain);
+                            LOGGER.trace("The current domain for [{}] is [{}]", principalId, domain);
                             // If there is an error trying to retrieve the domain just skip and don't change the domain
                             if(domain != null){
                                 final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
@@ -218,16 +228,16 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                                 // If service.getId() does not contain the user domain, that means we need to redirect the user
                                 if (!service.getId().contains(domain)) {
                                     final String newURL = requestURL + replaceServiceDomain(domain, "?service="+service.getOriginalUrl());
-                                    LOGGER.debug("Multidomain : redirecting user [{}] from [{}] to [{}]", authentication.getPrincipal().getId(), service.getOriginalUrl(), newURL);
+                                    LOGGER.debug("Multidomain : redirecting user [{}] from [{}] to [{}]", principalId, service.getOriginalUrl(), newURL);
                                     context.getExternalContext().requestExternalRedirect(newURL);
                                     return result("error");
                                 }
                             }
                         } else {
-                            LOGGER.warn("ESCOSIRENCourant is null for [{}]", authentication.getPrincipal().getId());
+                            LOGGER.warn("ESCOSIRENCourant is null for [{}]", principalId);
                         }
                     } else {
-                        LOGGER.warn("ESCOSIRENCourant is not in attributes for [{}]", authentication.getPrincipal().getId());
+                        LOGGER.warn("ESCOSIRENCourant is not in attributes for [{}]", principalId);
                     }
                 }
             }
@@ -238,13 +248,14 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
             if(casConfigurationProperties.getCustom().getProperties().containsKey("cerbere.validation.enabled")){
                 val cerbereEnabled = Boolean.parseBoolean(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.enabled"));
                 if(cerbereEnabled){
+                    val cerbereProtocol = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.protocol");
                     val attributeToEvaluate = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.attribute-to-evaluate");
                     val cerbereDefaultUrl = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.default-url");
                     val cerbereIdRegex = Pattern.compile(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.service-id"));
                     val cerberePath = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.redirect-path");
                     if(authorizedDomains == null){
                         if(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.authorized-domains") == null){
-                            LOGGER.error("No authorized domains were provided in configuraiton for cerbere link generation");
+                            LOGGER.error("No authorized domains were provided in configuration for cerbere link generation");
                             this.authorizedDomains = new HashSet<>();
                         } else {
                             authorizedDomains = Arrays.stream(casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.authorized-domains").split(","))
@@ -252,75 +263,68 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                                     .collect(Collectors.toSet());
                         }
                     }
-                    LOGGER.trace("Login flow was interrupted for [{}] by cerbere check", authentication.getPrincipal().getId());
+                    LOGGER.trace("Login flow was interrupted for [{}] by cerbere check", principalId);
                     if (service != null) {
                         // If service is cerbere, do not interrupt the flow
                         final Matcher matcher = cerbereIdRegex.matcher(service.getId());
                         if(matcher.find()) {
-                            LOGGER.info("Account [{}] needs to be validated but service is cerbere. Continuing...", authentication.getPrincipal().getId());
+                            LOGGER.info("Service is cerbere for [{}]. Continuing...", principalId);
                         } else {
                             // If service is not cerbere, check if charte is validated
-                            boolean ok = false;
+                            boolean hasSignedCharter = false;
                             // Get current domain of user (do not obtain it from service)
                             final String sirenCourant = (String) authentication.getPrincipal().getAttributes().get("ESCOSIRENCourant").getFirst();
                             String userDomain = getUserDomain(sirenCourant);
                             // If multidomain, then use default domain to check signing
                             if(userDomain == null){
-                                LOGGER.error("Cas spécifique multidomaine, utilisation du domaine par défaut");
+                                LOGGER.info("User [{}] with multidomain etab, choosing default domain", principalId);
                                 userDomain = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.default-domain");
                             }
+                            LOGGER.debug("Domain of user [{}] : [{}]", principalId, userDomain);
                             if(authentication.getPrincipal().getAttributes().containsKey(attributeToEvaluate)) {
                                 for (Object signature : authentication.getPrincipal().getAttributes().get(attributeToEvaluate)) {
                                     final String[] tab = ((String) signature).split("\\$");
                                     final String signatureDomain = tab[0];
-                                    LOGGER.error("signature : [{}]", signature);
-                                    LOGGER.error("signature domaine : [{}]", signatureDomain);
-                                    LOGGER.error("user      domaine : [{}]", userDomain);
+                                    LOGGER.debug("Domain of charter signed by user [{}] : [{}]", principalId, signatureDomain);
                                     if(signatureDomain.equals(userDomain)) {
                                         final String signatureDate = tab[1];
-                                        LOGGER.error("signatureDate {}", signatureDate);
+                                        LOGGER.debug("Date of charter signed by user [{}] : [{}]", principalId, signatureDate);
                                         final Instant dateSignature = OffsetDateTime.parse(signatureDate, this.formatterLDAP).toInstant();
                                         if(this.chartersDateByDomain.containsKey(userDomain)){
-                                            final Instant dateEntreeEnVigueur = this.chartersDateByDomain.get(userDomain);
-                                            if (dateSignature.isBefore(dateEntreeEnVigueur)) {
-                                                LOGGER.error("Date signature avant entrée en vigueur");
-                                            } else if (dateSignature.isAfter(dateEntreeEnVigueur)) {
-                                                LOGGER.error("Date signature après entrée en vigueur");
-                                                ok = true;
+                                            final Instant startingDate = this.chartersDateByDomain.get(userDomain);
+                                            if (dateSignature.isBefore(startingDate) || dateSignature.equals(startingDate)) {
+                                                LOGGER.info("Charted signature date for user [{}] domain [{}] is invalid", principalId, userDomain);
                                             } else {
-                                                LOGGER.error("Date signature après (égale) entrée en vigueur");
-                                                ok = true;
+                                                LOGGER.info("Charted signature date for user [{}] domain [{}] is valid", principalId, userDomain);
+                                                hasSignedCharter = true;
                                             }
                                         } else {
                                             // Si on a un domaine qu'on ne connait pas dans le fichier : on vérifie juste que la charte est signée pour ce domaine sans checker la date
-                                            LOGGER.error("Signautre pour le domaine de l'utilisateur mais domaine de pas connu dans le fichier !");
-                                            ok = true;
+                                            LOGGER.warn("Charter was signed for user [{}] domain [{}] but domain wasn't found in file !", principalId, userDomain);
+                                            hasSignedCharter = true;
                                         }
                                     }
                                 }
                             } else {
-                                LOGGER.error("Aucune charte signée ! On va forcément rediriger");
+                                LOGGER.info("No charter was signed for user [{}]", principalId);
                             }
-                            if(ok){
-                                LOGGER.error("Charte signée ou service cerbere, pas de redirection");
-                            } else {
+                            LOGGER.info("hasSignedCharter for user [{}] is [{}]", principalId, hasSignedCharter);
+                            if(!hasSignedCharter){
                                 // If account is invalid and service is not cerbere, redirect to cerbere
-                                LOGGER.error("Charte pas signée et service pas cerbere, on doit redirigier");
-                                LOGGER.info("Redirecting user [{}] to cerbere for account validation", authentication.getPrincipal().getId());
+                                LOGGER.info("Redirecting user [{}] to cerbere for account validation", principalId);
                                 String finalRedirectUrl = cerbereDefaultUrl;
                                 if(authorizedDomains.contains(userDomain)){
-                                    // TODO : en test on est en http pas https
-                                    finalRedirectUrl = "http://" + userDomain + cerberePath;
-                                    LOGGER.info("Domain {} is authorized, redirecting to : {}", userDomain, finalRedirectUrl);
+                                    finalRedirectUrl = cerbereProtocol + userDomain + cerberePath;
+                                    LOGGER.info("Domain [{}] is authorized for user [{}], redirecting to : {}", userDomain, principalId, finalRedirectUrl);
                                 } else {
-                                    LOGGER.info("Domain {} is not authorized, redirecting to default domain : {}", userDomain, finalRedirectUrl);
+                                    LOGGER.info("Domain [{}] is not authorized for user [{}], redirecting to default domain : {}", userDomain, principalId, finalRedirectUrl);
                                 }
                                 context.getExternalContext().requestExternalRedirect(finalRedirectUrl);
                                 return result("error");
                             }
                         }
                     } else {
-                        // TODO : what to do when service is null ?
+                        LOGGER.warn("Cerbere valiation: service should not be null");
                     }
                 }
             }
@@ -394,8 +398,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error("An error has occurred trying to retrieve the user domain for [{}] siren, exception message is [{}]",
-                    siren, e.getMessage());
+            LOGGER.error("An error has occurred trying to retrieve the user domain for [{}] siren", siren, e);
         }
         return null;
     }
@@ -404,41 +407,51 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
      * Loads the date of charters for each domain from CSV file
      */
     private void loadChartersDateByDomain() {
-        // Première initialisation
+        // First loading
         if(this.chartersDateByDomain == null){
             this.chartersDateByDomain = new HashMap<>();
         }
+
         final String csvPath = casConfigurationProperties.getCustom().getProperties().get("cerbere.validation.csv-path");
         if (csvPath == null) {
             LOGGER.error("No CSV path configured for Cerbere validation dates");
-        } else {
-            try (BufferedReader reader = Files.newBufferedReader(Path.of(csvPath), StandardCharsets.UTF_8)) {
-                String line = reader.readLine();
-                while (line != null) {
-                    final String[] columns = line.split(";", -1);
-                    if (columns.length < 2) {
-                        LOGGER.warn("Invalid Cerbere CSV line: [{}]", line);
-                        continue;
-                    }
-                    final String domain = columns[0].trim();
-                    final String dateValue = columns[1].trim();
-                    if (domain.isEmpty() || dateValue.isEmpty()) {
-                        LOGGER.warn("Invalid Cerbere CSV line: [{}]", line);
-                    }
-                    line = reader.readLine();
-                    // Update date in cache for this domain
-                    try {
-                        final Instant date = LocalDate.parse(dateValue, this.formatterFile).atStartOfDay(ZoneOffset.UTC).toInstant();
-                        this.chartersDateByDomain.put(domain, date);
-                    } catch (Exception e) {
-                        LOGGER.warn("Unable to parse Cerbere date [{}] for domain [{}]", dateValue, domain, e);
-                    }
-                }
-            } catch (IOException e) {
-                LOGGER.error("Unable to load Cerbere validation CSV [{}]", csvPath, e);
-            }
-            LOGGER.error("Cerbere validation dates cache reloaded: {}", this.chartersDateByDomain);
+            return;
         }
+
+        final Resource resource = resourceLoader.getResource(csvPath);
+        if (!resource.exists()) {
+            LOGGER.error("Cerbere validation CSV does not exist: [{}]", csvPath);
+            return;
+        }
+
+        // Read each line of file
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
+            String line = reader.readLine();
+            while (line != null) {
+                final String[] columns = line.split(";", -1);
+                if (columns.length < 2) {
+                    LOGGER.warn("Invalid Cerbere CSV line, too long: [{}]", line);
+                    continue;
+                }
+                final String domain = columns[0].trim();
+                final String dateValue = columns[1].trim();
+                if (domain.isEmpty() || dateValue.isEmpty()) {
+                    LOGGER.warn("Invalid Cerbere CSV line, empty value: [{}]", line);
+                }
+                line = reader.readLine();
+                // Update date in cache for this domain
+                try {
+                    final Instant date = LocalDate.parse(dateValue, this.formatterFile).atStartOfDay(ZoneOffset.UTC).toInstant();
+                    this.chartersDateByDomain.put(domain, date);
+                } catch (Exception e) {
+                    LOGGER.warn("Unable to parse Cerbere date [{}] for domain [{}]", dateValue, domain, e);
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.error("Unable to load Cerbere validation CSV [{}]", csvPath, e);
+        }
+        LOGGER.error("Cerbere validation dates cache reloaded: {}", this.chartersDateByDomain);
+
     }
 
     /**
