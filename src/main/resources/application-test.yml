@@ -339,6 +339,7 @@ cas.custom.properties.cerbere.validation.default-url: http://localhost:8062/cerb
 cas.custom.properties.cerbere.validation.service-id: http://.*:8062
 cas.custom.properties.cerbere.validation.authorized-domains: localhost:8064,localhost:8070,localhost:8071,localhost:8072,localhost:8073,other_authorized_domain
 cas.custom.properties.cerbere.validation.redirect-path: /cerbere
+cas.custom.properties.cerbere.validation.protocol: http://
 
 # Partial logout
 cas.custom.properties.partial-logout.parameter-name: partialLogout
