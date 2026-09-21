@@ -8,8 +8,11 @@
         "@class" : "org.apereo.cas.services.GroovyScriptAttributeReleasePolicy",
         "groovyScript" : "classpath:/groovy-test/educonnect-release.groovy"
     },
-    "webflowInterruptPolicy": {
-        "@class": "org.apereo.cas.services.DefaultRegisteredServiceWebflowInterruptPolicy",
-        "enabled": false
+    "properties" : {
+        "@class" : "java.util.HashMap",
+        "skipDomainRedirect" : {
+            "@class" : "org.apereo.cas.services.DefaultRegisteredServiceProperty",
+            "values" : [ "java.util.HashSet", [ true ] ]
+        }
     }
 }
