@@ -334,6 +334,7 @@ cas.custom.properties.scim.teacher-attribute-value: National_ENS
 cas.custom.properties.cerbere.validation.enabled: true
 cas.custom.properties.cerbere.validation.attribute-to-evaluate: ESCOPersonValidationCharteService
 cas.custom.properties.cerbere.validation.csv-path: classpath:chartes.csv
+cas.custom.properties.cerbere.validation.csv-refresh-cron: "*/30 * * * * *"
 cas.custom.properties.cerbere.validation.default-domain: localhost:8062
 cas.custom.properties.cerbere.validation.default-url: http://localhost:8062/cerbere
 cas.custom.properties.cerbere.validation.service-id: http://.*:8062

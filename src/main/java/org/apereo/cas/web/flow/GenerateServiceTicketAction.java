@@ -438,19 +438,19 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 if (domain.isEmpty() || dateValue.isEmpty()) {
                     LOGGER.warn("Invalid Cerbere CSV line, empty value: [{}]", line);
                 }
-                line = reader.readLine();
                 // Update date in cache for this domain
                 try {
                     final Instant date = LocalDate.parse(dateValue, this.formatterFile).atStartOfDay(ZoneOffset.UTC).toInstant();
                     this.chartersDateByDomain.put(domain, date);
                 } catch (Exception e) {
-                    LOGGER.warn("Unable to parse Cerbere date [{}] for domain [{}]", dateValue, domain, e);
+                    LOGGER.warn("Unable to parse Cerbere line [{}]", line);
                 }
+                line = reader.readLine();
             }
         } catch (IOException e) {
             LOGGER.error("Unable to load Cerbere validation CSV [{}]", csvPath, e);
         }
-        LOGGER.error("Cerbere validation dates cache reloaded: {}", this.chartersDateByDomain);
+        LOGGER.info("Cerbere validation dates cache reloaded: {}", this.chartersDateByDomain);
 
     }
 
@@ -467,9 +467,9 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     /**
      * Reload the cache for charters date domains each night
      */
-    @Scheduled(cron = "${cas.custom.properties.cerbere.validation.csv-refresh-cron:0 0 2 * * *}")
+    @Scheduled(cron = "${cas.custom.properties.cerbere.validation.csv-refresh-cron:0 0 0 * * *}")
     public void reloadCerbereValidationDates() {
-        LOGGER.error("Reloading Cerbere validation dates cache");
+        LOGGER.info("Reloading Cerbere validation dates cache");
         loadChartersDateByDomain();
     }
 
