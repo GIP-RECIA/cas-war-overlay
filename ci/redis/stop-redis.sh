@@ -8,3 +8,6 @@ docker compose stop
 
 cd ../docker-redis3
 docker compose stop
+
+cd ../docker-redis4
+docker compose stop

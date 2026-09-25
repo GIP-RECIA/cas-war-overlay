@@ -13,13 +13,8 @@ logging.config: classpath:/log4j2-deleg.xml
 # Service ticket registry
 cas.authn.accept.enabled: false
 cas.ticket.registry.redis.host: localhost
-cas.ticket.registry.redis.port: 6379
-cas.ticket.registry.redis.sentinel.master: mymaster
-cas.ticket.registry.redis.sentinel.node[0]: localhost:26379
-cas.ticket.registry.redis.sentinel.node[1]: localhost:26380
-cas.ticket.registry.redis.sentinel.node[2]: localhost:26381
+cas.ticket.registry.redis.port: 6382
 cas.ticket.registry.redis.password: OZwtXSpJCjZEQ5b
-cas.ticket.registry.redis.sentinel.password: GWMije5VNMe7avz
 
 # Custom name for TGC cookie because it is on the same domain as the other CAS
 cas.tgc.name: TGC2

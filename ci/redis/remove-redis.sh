@@ -8,3 +8,6 @@ docker compose down
 
 cd ../docker-redis3
 docker compose down
+
+cd ../docker-redis4
+docker compose down
