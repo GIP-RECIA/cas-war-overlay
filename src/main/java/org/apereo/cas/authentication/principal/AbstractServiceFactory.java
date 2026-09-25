@@ -11,7 +11,6 @@ import org.apereo.cas.util.function.FunctionUtils;
 import org.apereo.cas.util.http.HttpRequestUtils;
 import org.apereo.cas.web.UrlValidator;
 import org.apereo.cas.web.flow.CasWebflowConstants;
-import org.apache.commons.lang3.StringUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
