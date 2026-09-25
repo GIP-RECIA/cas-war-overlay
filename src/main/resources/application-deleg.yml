@@ -6,6 +6,7 @@ spring.main.lazy-initialization: false
 cas.server.name: https://localhost:9443
 cas.server.prefix: https://localhost:9443/cas
 cas.server.scope: cas-ci.git
+server.servlet.session.cookie.name: CASDELEGSESSION
 
 # Fichier de logging
 logging.config: classpath:/log4j2-deleg.xml
