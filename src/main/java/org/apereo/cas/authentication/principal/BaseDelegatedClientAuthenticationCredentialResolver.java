@@ -34,7 +34,7 @@ public abstract class BaseDelegatedClientAuthenticationCredentialResolver
     }
 
     @NullMarked
-    protected Optional<@Nullable UserProfile> resolveUserProfile(final RequestContext requestContext, final ClientCredential credentials) {
+    protected Optional<UserProfile> resolveUserProfile(final RequestContext requestContext, final ClientCredential credentials) {
         return Optional.ofNullable(credentials.getUserProfile())
             .or(() -> {
                 val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
