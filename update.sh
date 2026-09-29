@@ -87,7 +87,7 @@ done
 # Pour les fichiers de l'overlay c'est un peu différent il faut générer un nouvel overlay, l'extraire puis les recopier
 mkdir tmp
 cd tmp
-wget -O cas.tar.gz "https://getcas.apereo.org/starter.tgz?artifactId=cas&casVersion=$VERSION&commandlineShellSupported=true&dependencies=webapp-tomcat&deploymentType=executable&description=WAR overlay to use as a starting template for Apereo CAS deployments.&dockerSupported=true&githubActionsSupported=true&groupId=org.apereo.cas&helmSupported=false&herokuSupported=false&javaVersion=21&language=java&name=cas&nativeImageSupported=false&openRewriteSupported=true&packageName=org.apereo&packaging=war&puppeteerSupported=true&sbomSupported=false&type=cas-overlay&version=1.0.0"
+wget -O cas.tar.gz "https://getcas.apereo.org/starter.tgz?artifactId=cas-server-overlay&casVersion=$VERSION&commandlineShellSupported=true&dependencies=webapp-tomcat&deploymentType=executable&description=WAR overlay to use as a starting template for Apereo CAS deployments.&dockerSupported=true&githubActionsSupported=true&groupId=org.apereo.cas&helmSupported=false&herokuSupported=false&javaVersion=21&language=java&name=cas&nativeImageSupported=false&openRewriteSupported=true&packageName=org.apereo&packaging=war&puppeteerSupported=true&sbomSupported=true&type=cas-overlay&version=1.0.0" 
 tar -xzvf cas.tar.gz
 cd ..
 mv tmp/build.gradle diff/build_$VERSION.gradle
