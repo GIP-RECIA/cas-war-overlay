@@ -85,6 +85,10 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
         return null;
     }
 
+    protected static boolean isInternalAttributeName(final String name) {
+        return Strings.CI.startsWith(name, CentralAuthenticationService.NAMESPACE);
+    }
+    
     protected Map<String, List> extractQueryParameters(@Nullable final Service service) {
         val attributes = new LinkedHashMap<String, List>();
         if (service instanceof final WebApplicationService webApplicationService) {
@@ -111,13 +115,14 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
             .entrySet()
             .stream()
             .filter(entry -> !IGNORED_ATTRIBUTES_PARAMS.contains(entry.getKey()))
+            .filter(entry -> !isInternalAttributeName(entry.getKey()))
             .map(entry -> Pair.of(entry.getKey(), CollectionUtils.toCollection(entry.getValue(), ArrayList.class)))
             .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
         attributes.putAll(extractQueryParameters(service));
-        
+
         val fullUrl = HttpRequestUtils.getFullRequestUrl(request);
         collectHttpRequestProperty("fullRequestUrl", fullUrl, attributes);
-        
+
         val collectAttributes = Objects.requireNonNullElse((Boolean) request.getAttribute(COLLECT_SERVICE_ATTRIBUTES), Boolean.TRUE);
         if (collectAttributes) {
             FunctionUtils.doIfNotBlank(request.getPathInfo(), value -> collectHttpRequestProperty("pathInfo", value, attributes));
