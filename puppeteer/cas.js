@@ -153,6 +153,12 @@ exports.verifyNoTGC = async (client) => {
     assert(tgc.length == 0);
 };
 
+exports.verifySTValidated = async(pageContent, uid, service) => {
+    assert(pageContent.includes("<cas:authenticationSuccess>"))
+    assert(pageContent.includes("<cas:user>"+uid+"</cas:user>"))
+    assert(pageContent.includes("SERVICE="+service))
+}
+
 exports.generateToken = () => {
     const period = Math.floor((Date.now() + 14400000) / 86400000);
     const md5Digester = crypto.createHash('md5');
