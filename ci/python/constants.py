@@ -94,3 +94,15 @@ SERVICE_DNMA_ALREADY_AUTH_URL = "http://localhost:7005/service2"
 
 # Url du service pour le DNMA auth
 SERVICE_DNMA_AUTH_URL = "http://localhost:7005"
+
+# Url du service pour le DNMA api sur un autre domaine
+SERVICE_DNMA_OTHER_DOMAIN_URL = "http://localhost:7006/service1"
+
+# Url du service pour le DNMA api sur un autre domaine - passage déjà effectué
+SERVICE_DNMA_ALREADY_AUTH_OTHER_DOMAIN_URL = "http://localhost:7006/service2"
+
+# Url du service pour le DNMA auth sur un autre domaine
+SERVICE_DNMA_AUTH_OTHER_DOMAIN_URL = "http://localhost:7006"
+
+# Url du service pour le DNMA auth domaine inconnu
+SERVICE_DNMA_AUTH_UNKNWON_DOMAIN_URL = "http://localhost:8070/test"

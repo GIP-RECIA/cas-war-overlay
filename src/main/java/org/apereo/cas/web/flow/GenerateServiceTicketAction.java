@@ -328,19 +328,23 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
             if(registeredService instanceof CasRegisteredService && dnmaEnabled && dnmaAvailable){
                 val tgt = ticketRegistrySupport.getTicketGrantingTicket(ticketGrantingTicket);
                 boolean hasDNMASession = false;
+                final URI uri = new URI(service.getOriginalUrl());
+                String serviceDomain = uri.getHost();
+                if(uri.getPort() != -1){
+                    serviceDomain += ":" + uri.getPort();
+                }
                 for(Service tgtService : tgt.getServices().values()){
                     LOGGER.trace("Checking if service {} is DNMA", tgtService.getId());
                     // On regarde si on est déjà passé par le DNMA auparavant
                     // Pour ça il faut que le service contienne l'ID du service DNMA
                     // ET que le domaine soit le même (sinon on, devra refaire une auth DNMA si on arrive sur un autre domaine)
                     if(tgtService.getId().contains(dnmaServiceId)){
-                        final URI uri = new URI(service.getOriginalUrl());
                         String serviceHost = uri.getScheme() + "://" + this.dnmaDefaultDomain;
-                        if(dnmaAuthorizedDomains.contains(uri.getHost())){
-                            serviceHost = uri.getScheme() + "://" + uri.getHost();
+                        if(dnmaAuthorizedDomains.contains(serviceDomain)){
+                            serviceHost = uri.getScheme() + "://" + serviceDomain;
                         }
                         if(tgtService.getId().startsWith(serviceHost)){
-                            LOGGER.trace("DNMA service found !");
+                            LOGGER.trace("DNMA service found with host {}", serviceHost);
                             hasDNMASession = true;
                             break;
                         }
@@ -352,10 +356,9 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 // - Soit on se connecte au service DNMA
                 // Dans tous les autres cas on redirige vers le service DNMA en gardant dans l'url l'information du service original
                 if(!hasDNMASession && !service.getOriginalUrl().contains(dnmaServiceId)){
-                    final URI uri = new URI(service.getOriginalUrl());
                     String host = this.dnmaDefaultDomain;
-                    if(dnmaAuthorizedDomains.contains(uri.getHost())){
-                        host = uri.getHost();
+                    if(dnmaAuthorizedDomains.contains(serviceDomain)){
+                        host = serviceDomain;
                     }
                     final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
                     final String requestURL = nativeRequest.getRequestURL().toString();
