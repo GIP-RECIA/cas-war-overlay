@@ -1,9 +1,9 @@
 {
     "@class": "org.apereo.cas.services.CasRegisteredService",
-    "serviceId": "^http:\/\/localhost:8071\/.*",
+    "serviceId": "^http:\/\/localhost:7005\/service2.*",
     "name": "Service Test",
     "description": "Service de test passage forcé par le DNMA - Auth déjà effectuée",
-    "id": 71,
+    "id": 70052,
     "properties" : {
         "@class" : "java.util.HashMap",
         "skipDomainRedirect" : {
