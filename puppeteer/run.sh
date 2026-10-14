@@ -149,6 +149,8 @@ python3 service_test65.py &
 pid_python_service_test65=$!
 python3 service_test66.py &
 pid_python_service_test66=$!
+python3 service_test70.py &
+pid_python_service_test70=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
@@ -159,6 +161,8 @@ python3 restriction_api.py &
 pid_python_restriction_api=$!
 python3 dnma_auth.py &
 pid_python_dnma_auth=$!
+python3 dnma_auth_other_domain.py &
+pid_python_dnma_auth_other_domain=$!
 cd "flask-saml-client"
 python3 index.py --port 8011 --settings "saml/settings11.json" &
 pid_python_saml_client=$!
@@ -215,6 +219,8 @@ exit_ci () {
     kill -9 "$pid_python_externalid_api"
     kill -9 "$pid_python_scim_server"
     kill -9 "$pid_python_restriction_api"
+    kill -9 "$pid_python_dnma_auth"
+    kill -9 "$pid_python_dnma_auth_other_domain"
     pkill -f "python3 service_test"
     pkill -f "python3 index.py"
     cd "${ROOT_DIRECTORY}/ci/ldap"
