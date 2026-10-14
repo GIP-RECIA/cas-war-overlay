@@ -87,10 +87,10 @@ SERVICE_DELEGATED_AUTHN_EXISTING_TGT = "http://localhost:8065/test"
 SERVICE_PARTIAL_SLO_URL = "http://localhost:8066/test"
 
 # Url du service pour le DNMA api
-SERVICE_DNMA_URL = "http://localhost:8070/test"
+SERVICE_DNMA_URL = "http://localhost:7005/service1"
 
 # Url du service pour le DNMA api - passage déjà effectué
-SERVICE_DNMA_ALREADY_AUTH_URL = "http://localhost:8071/test"
+SERVICE_DNMA_ALREADY_AUTH_URL = "http://localhost:7005/service2"
 
 # Url du service pour le DNMA auth
 SERVICE_DNMA_AUTH_URL = "http://localhost:7005"

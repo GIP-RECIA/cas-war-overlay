@@ -2,14 +2,16 @@ const cas = require("../cas.js");
 const puppeteer = require('puppeteer');
 const assert = require("assert");
 
+// This test needs to be played in first, because otherwise other service accesses will try to DNMA auth
+
 (async () => {
     const browser = await puppeteer.launch(cas.browserOptions());
 
     try {
-        var page = await browser.newPage();
+        var page = await cas.getPage(browser);
         var client = await page.createCDPSession();
         var casHost = "https://localhost:8443";
-        var service = "http://localhost:8070/test"
+        var service = "http://localhost:7005/service1"
 
         // TODO : Same test with two different authorized domains should make two DNMA auth
         // DNMA needs to be on same domain than service
@@ -24,7 +26,7 @@ const assert = require("assert");
         var pageContent = await page.content();
         assert(pageContent.includes("<cas:authenticationSuccess>"))
         assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
-        assert(pageContent.includes("SERVICE=http://localhost:8070/test"))
+        assert(pageContent.includes("SERVICE=http://localhost:7005/service1"))
 
         // Assert DNMA auth is successful
         await page.goto("http://localhost:7005/dnma/auth/status");
@@ -32,7 +34,7 @@ const assert = require("assert");
         assert(pageContent.includes("auth: 1"))
 
         // Same session but new service
-        service = "http://localhost:8071/test"
+        service = "http://localhost:7005/service2"
 
         // Login to cas again
         await cas.loginAgain(page, casHost, service, "test3", "test")
@@ -41,7 +43,7 @@ const assert = require("assert");
         pageContent = await page.content();
         assert(pageContent.includes("<cas:authenticationSuccess>"))
         assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
-        assert(pageContent.includes("SERVICE=http://localhost:8071/test"))
+        assert(pageContent.includes("SERVICE=http://localhost:7005/service2"))
 
         // Assert only one DNMA auth
         await page.goto("http://localhost:7005/dnma/auth/status");

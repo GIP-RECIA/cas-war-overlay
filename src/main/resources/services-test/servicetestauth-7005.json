@@ -1,6 +1,6 @@
 {
     "@class": "org.apereo.cas.services.CasRegisteredService",
-    "serviceId": "^http:\/\/localhost:7005\/.*",
+    "serviceId": "^http:\/\/localhost:7005\/dnma/.*",
     "name": "Service Test",
     "description": "Service DNMA Auth",
     "id": 7005,

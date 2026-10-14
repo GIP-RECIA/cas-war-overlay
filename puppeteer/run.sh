@@ -133,10 +133,6 @@ python3 service_test65.py &
 pid_python_service_test65=$!
 python3 service_test66.py &
 pid_python_service_test66=$!
-python3 service_test70.py &
-pid_python_service_test70=$!
-python3 service_test71.py &
-pid_python_service_test71=$!
 python3 structs_info_api.py &
 pid_python_structs_info_api=$!
 python3 externalid_api.py &
