@@ -16,6 +16,7 @@ const assert = require("assert");
         var service5 = "http://localhost:7006/service1"
         var dnma1Status = "http://localhost:7005/dnma/auth/status"
         var dnma2Status = "http://localhost:7006/dnma/auth/status"
+        var uid = "F3abc"
 
         // Login to cas
         await cas.loginWith(page, casHost, service1, "test3", "test")
@@ -25,9 +26,7 @@ const assert = require("assert");
 
         // Assert that the ST was successfully validated 
         var pageContent = await page.content();
-        assert(pageContent.includes("<cas:authenticationSuccess>"))
-        assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
-        assert(pageContent.includes("SERVICE="+service1))
+        await cas.verifySTValidated(pageContent, uid, service1);
 
         // Assert DNMA auth is successful
         await page.goto(dnma1Status);
@@ -39,9 +38,7 @@ const assert = require("assert");
 
         // Assert that the ST was successfully validated
         pageContent = await page.content();
-        assert(pageContent.includes("<cas:authenticationSuccess>"))
-        assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
-        assert(pageContent.includes("SERVICE="+service2))
+        await cas.verifySTValidated(pageContent, uid, service2);
 
         // Assert only one DNMA auth
         await page.goto(dnma1Status);
@@ -51,9 +48,7 @@ const assert = require("assert");
         // Another service from another unknown domain, so same default domain is used, should not make new DNMA auth
         await cas.loginAgain(page, casHost, service3)
         pageContent = await page.content();
-        assert(pageContent.includes("<cas:authenticationSuccess>"))
-        assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
-        assert(pageContent.includes("SERVICE="+service3))
+        await cas.verifySTValidated(pageContent, uid, service3);
         await page.goto(dnma1Status);
         pageContent = await page.content();
         assert(pageContent.includes("auth: 1"))
@@ -61,9 +56,7 @@ const assert = require("assert");
         // Then auth with a different authorized domain : it should make a new DNMA auth
         await cas.loginAgain(page, casHost, service4)
         pageContent = await page.content();
-        assert(pageContent.includes("<cas:authenticationSuccess>"))
-        assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
-        assert(pageContent.includes("SERVICE="+service4))
+        await cas.verifySTValidated(pageContent, uid, service4);
 
         // Assert DNMA auth is successful
         await page.goto(dnma2Status);
@@ -73,9 +66,7 @@ const assert = require("assert");
         // Same session but new service, should not make new DNMA auth
         await cas.loginAgain(page, casHost, service5)
         pageContent = await page.content();
-        assert(pageContent.includes("<cas:authenticationSuccess>"))
-        assert(pageContent.includes("<cas:user>F3abc</cas:user>"))
-        assert(pageContent.includes("SERVICE="+service5))
+        await cas.verifySTValidated(pageContent, uid, service5);
     
         // Assert only one DNMA auth
         await page.goto(dnma2Status);
