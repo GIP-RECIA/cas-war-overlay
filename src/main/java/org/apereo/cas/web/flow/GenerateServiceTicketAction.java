@@ -529,6 +529,8 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
             return;
         }
 
+        final Instant now = Instant.now();
+
         // Read each line of file
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))) {
             String line = reader.readLine();
@@ -543,10 +545,15 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 if (domain.isEmpty() || dateValue.isEmpty()) {
                     LOGGER.warn("Invalid Cerbere CSV line, empty value: [{}]", line);
                 }
-                // Update date in cache for this domain
+                // Update date in cache for this domain (if multiple dates, keep only the last valid one)
                 try {
                     final Instant date = LocalDate.parse(dateValue, this.formatterFile).atStartOfDay(ZoneOffset.UTC).toInstant();
-                    this.chartersDateByDomain.put(domain, date);
+                    final Instant existingDate = this.chartersDateByDomain.get(domain);
+                    if (existingDate == null) {
+                        this.chartersDateByDomain.put(domain, date);
+                    } else if (date.isAfter(existingDate) && date.isBefore(now)) {
+                        this.chartersDateByDomain.put(domain, date);
+                    }
                 } catch (Exception e) {
                     LOGGER.warn("Unable to parse Cerbere line [{}]", line);
                 }
