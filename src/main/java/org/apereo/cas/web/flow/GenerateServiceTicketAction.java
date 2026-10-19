@@ -112,6 +112,11 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
      */
     private final String dnmaServiceId;
 
+     /**
+     * ServiceId of DNMA service
+     */
+    private final String dnmaPathToRedirect;
+
     /**
      * List of authorized domains for DNMA
      */
@@ -160,6 +165,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         this.baseAPIPath = casConfigurationProperties.getCustom().getProperties().get("interrupt.structs-api-path");
         this.replaceDomainRegex = casConfigurationProperties.getCustom().getProperties().get("interrupt.replace-domain-regex");
         this.dnmaServiceId = casConfigurationProperties.getCustom().getProperties().get("dnma.service-id");
+        this.dnmaPathToRedirect = casConfigurationProperties.getCustom().getProperties().get("dnma.path-to-redirect");
         this.dnmaStatusUrl = casConfigurationProperties.getCustom().getProperties().get("dnma.status-url");
         this.dnmaDefaultDomain = casConfigurationProperties.getCustom().getProperties().get("dnma.default-domain");
         if(casConfigurationProperties.getCustom().getProperties().get("dnma.authorized-domains") == null){
@@ -362,7 +368,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                     }
                     final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
                     final String requestURL = nativeRequest.getRequestURL().toString();
-                    final String dnmaURL = casUrl + "?service=" + uri.getScheme() + "://" + host + dnmaServiceId + "?originalUrl=" + requestURL + "?service=" + service.getOriginalUrl();
+                    final String dnmaURL = casUrl + "?service=" + uri.getScheme() + "://" + host + dnmaPathToRedirect + "?originalUrl=" + requestURL + "?service=" + service.getOriginalUrl();
                     LOGGER.debug("User has no DNMA session, redirecting to {}", dnmaURL);
                     context.getExternalContext().requestExternalRedirect(dnmaURL);
                     return result("error");
