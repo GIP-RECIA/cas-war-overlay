@@ -8,7 +8,7 @@ const assert = require("assert");
     try {
         const page = await cas.getPage(browser);
         const casHost = "https://localhost:8443";
-        const service = "http://localhost:8070/test"
+        const service = "http://localhost:8076/test"
 
         // Login to cas
         await cas.loginWith(page, casHost, service, "test17", "test")
@@ -17,7 +17,7 @@ const assert = require("assert");
         const pageContent = await page.content();
         assert(pageContent.includes('CERBERE UI'));
         const url = page.url();
-        assert(url.includes("http://localhost:8070/cerbere"))
+        assert(url.includes("http://localhost:8076/cerbere"))
 
         process.exit(0)
 
