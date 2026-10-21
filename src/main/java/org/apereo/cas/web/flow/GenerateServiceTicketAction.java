@@ -171,6 +171,12 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
      * Map used to cache the date of the charters for each domain
      */
     private Map<String, Instant> chartersDateByDomain;
+
+    /**
+     * Map used to store the mappings server->domain
+     */
+    private Map<String, String> cerbereDomainServerMapping;
+
     /**
      * Resource loader to load CSV file for cerbere
      */
@@ -206,7 +212,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 .split(","))
                 .map(String::trim)
                 .collect(Collectors.toSet());
-        }        
+        }  
         this.dnmaEnabled = Boolean.parseBoolean(casConfigurationProperties.getCustom().getProperties().get("dnma.enabled"));
         this.casUrl = casConfigurationProperties.getServer().getLoginUrl();
         this.dnmaAvailable = true;
@@ -214,6 +220,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         this.formatterLDAP = DateTimeFormatter.ofPattern("yyyyMMddHHmmssX");
         this.formatterFile = DateTimeFormatter.ofPattern("yyyyMMdd");
         this.resourceLoader = new DefaultResourceLoader();
+        this.cerbereDomainServerMapping = getMapping();
         loadChartersDateByDomain();
     }
 
@@ -372,6 +379,10 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                                 LOGGER.info("Redirecting user [{}] to cerbere for account validation", principalId);
                                 String finalRedirectUrl = cerbereDefaultUrl;
                                 if(this.cerbereAuthorizedDomains.contains(userDomain)){
+                                    // If cerbere domain is not the same as domain signed
+                                    if(this.cerbereDomainServerMapping.containsKey(userDomain)){
+                                        userDomain = this.cerbereDomainServerMapping.get(userDomain);
+                                    }
                                     finalRedirectUrl = cerbereProtocol + userDomain + cerberePath;
                                     LOGGER.info("Domain [{}] is authorized for user [{}], redirecting to : {}", userDomain, principalId, finalRedirectUrl);
                                 } else {
@@ -506,6 +517,22 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
             LOGGER.error("An error has occurred trying to retrieve the user domain for [{}] siren", siren, e);
         }
         return null;
+    }
+
+    /**
+     * Loads specific mapping for cerbere in case the signed domains are not the same as were CAS should redirect
+     */
+    public Map<String, String> getMapping() {
+        final String prefix = "cerbere.validation.mapping.";
+        return casConfigurationProperties.getCustom()
+            .getProperties()
+            .entrySet()
+            .stream()
+            .filter(entry -> entry.getKey().startsWith(prefix))
+            .collect(Collectors.toMap(
+                entry -> entry.getKey().substring(prefix.length()),
+                Map.Entry::getValue
+            ));
     }
 
     /**
