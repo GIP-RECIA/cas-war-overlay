@@ -15,7 +15,51 @@
 <span th:remove="tag" th:each="file : ${#strings.setSplit(#cas.theme('cas.standard.js.file'), ',')}">
     <script type="text/javascript" th:src="@{${file}}"></script>
 </span>
-<script src="/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js" type="module" defer></script>
+<script th:inline="javascript">
+  function loadWayf(src, timeout = 3000) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script")
+      script.src = src
+      script.type = "module"
+
+      const timer = setTimeout(() => {
+        cleanup()
+        reject(new Error(`Timeout loading ${src}`))
+      }, timeout)
+
+      function cleanup() {
+        clearTimeout(timer)
+        script.removeEventListener("load", onLoad)
+        script.removeEventListener("error", onError)
+      }
+
+      function onLoad() {
+        cleanup()
+        resolve()
+      }
+
+      function onError() {
+        cleanup()
+        reject(new Error(`Unable to load ${src}`))
+      }
+
+      script.addEventListener("load", onLoad, { once: true })
+      script.addEventListener("error", onError, { once: true })
+
+      document.head.appendChild(script)
+    })
+  }
+
+  loadWayf("/resource-server/webjars/gip-recia__ui-webcomponents/dist/r-wayf.js")
+    .catch((error) => {
+      console.warn("Unable to load remote WAYF, using local fallback:", error)
+
+      return loadWayf("/cas/js/r-wayf.js")
+    })
+    .catch((error) => {
+      console.error("Unable to load WAYF:", error)
+    })
+</script>
 <script src="/cas/js/logoutRedirect.js"></script>
 <script src="/cas/js/loginForm.js" defer></script>
 
