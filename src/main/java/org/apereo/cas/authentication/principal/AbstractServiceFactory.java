@@ -52,7 +52,6 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
 
     private int order = Ordered.LOWEST_PRECEDENCE;
 
-
     /**
      * Cleanup the url. Removes jsession ids and query strings.
      *

@@ -41,7 +41,7 @@ import tools.jackson.databind.ObjectMapper;
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class RemoteEndpointServiceAccessStrategy extends BaseRegisteredServiceAccessStrategy {
     private static final ObjectMapper MAPPER = JacksonObjectMapperFactory.builder()
-        .defaultTypingEnabled(true).build().toObjectMapper();
+        .defaultTypingEnabled(false).build().toObjectMapper();
 
     @Serial
     private static final long serialVersionUID = -1108201604115278440L;
