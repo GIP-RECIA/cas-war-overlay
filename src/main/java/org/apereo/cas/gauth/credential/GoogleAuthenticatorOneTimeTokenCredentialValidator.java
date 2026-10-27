@@ -34,6 +34,20 @@ public class GoogleAuthenticatorOneTimeTokenCredentialValidator implements
 
     private final OneTimeTokenCredentialRepository credentialRepository;
 
+    /**
+     * Remove a used scratch code from the account. The account gets a new list rather than having its own list changed,
+     * since the list an account carries is not always modifiable.
+     *
+     * @param account the account
+     * @param code    the scratch code that was used
+     */
+    private static void removeScratchCode(final OneTimeTokenAccount account, final int code) {
+        account.setScratchCodes(account.getScratchCodes()
+            .stream()
+            .filter(scratchCode -> scratchCode.intValue() != code)
+            .collect(Collectors.toList()));
+    }
+
     private static boolean isCredentialAssignedToAccount(final GoogleAuthenticatorTokenCredential credential,
                                                          final OneTimeTokenAccount account) {
         return credential.getAccountId() == null || credential.getAccountId() == account.getId();
@@ -41,7 +55,8 @@ public class GoogleAuthenticatorOneTimeTokenCredentialValidator implements
 
     @Override
     public @Nullable GoogleAuthenticatorToken validate(final Authentication authentication,
-                                                       final GoogleAuthenticatorTokenCredential tokenCredential) throws Throwable {
+                                                       final GoogleAuthenticatorTokenCredential tokenCredential)
+            throws Throwable {
 
         if (!StringUtils.isNumeric(tokenCredential.getToken())) {
             throw new PreventedException("Invalid non-numeric OTP format specified.");
@@ -69,8 +84,21 @@ public class GoogleAuthenticatorOneTimeTokenCredentialValidator implements
         val result = getAuthorizedAccountForToken(tokenCredential, accounts)
             .or(() -> getAuthorizedScratchCodeForToken(tokenCredential, authentication, accounts));
         return result
-            .map(acct -> new GoogleAuthenticatorToken(otp, uid))
+            .map(acct -> {
+                recordLastUsed(acct);
+                return new GoogleAuthenticatorToken(otp, uid);
+            })
             .orElse(null);
+    }
+
+    /**
+     * Record the time the device authorized a token, so the device list can show when it was last used.
+     *
+     * @param account the device that authorized the token
+     */
+    protected void recordLastUsed(final OneTimeTokenAccount account) {
+        account.setLastUsedDateTime(ZonedDateTime.now(ZoneOffset.UTC).toString());
+        credentialRepository.update(account);
     }
 
     @Override
@@ -90,8 +118,10 @@ public class GoogleAuthenticatorOneTimeTokenCredentialValidator implements
         val authorized = googleAuthenticatorInstance.authorize(account.getSecretKey(), token);
         if (!authorized && account.getScratchCodes().stream().map(Number::intValue).toList().contains(token)) {
             LOGGER.debug("Token [{}] is a valid scratch code for account [{}]", token, account);
-            account.getScratchCodes().removeIf(code -> code.intValue() == token);
-            credentialRepository.update(account);
+            removeScratchCode(account, token);
+            if (account.getId() > 0) {
+                credentialRepository.update(account);
+            }
             return true;
         }
         return authorized;
@@ -123,7 +153,7 @@ public class GoogleAuthenticatorOneTimeTokenCredentialValidator implements
             .map(GoogleAuthenticatorAccount.class::cast)
             .peek(acct -> {
                 LOGGER.info("Using scratch code [{}] to authenticate user [{}]. Scratch code will be removed", otp, uid);
-                acct.getScratchCodes().removeIf(token -> token.intValue() == otp);
+                removeScratchCode(acct, otp);
                 credentialRepository.update(acct);
             })
             .findFirst();
