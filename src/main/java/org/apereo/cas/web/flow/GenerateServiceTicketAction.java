@@ -123,11 +123,6 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     private Set<String> dnmaAuthorizedDomains;
 
     /**
-     * Default domain for dnma
-     */
-    private final String dnmaDefaultDomain;
-
-    /**
      * Login URL of this cas server
      */
     private final String casUrl;
@@ -167,7 +162,6 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         this.dnmaServiceId = casConfigurationProperties.getCustom().getProperties().get("dnma.service-id");
         this.dnmaPathToRedirect = casConfigurationProperties.getCustom().getProperties().get("dnma.path-to-redirect");
         this.dnmaStatusUrl = casConfigurationProperties.getCustom().getProperties().get("dnma.status-url");
-        this.dnmaDefaultDomain = casConfigurationProperties.getCustom().getProperties().get("dnma.default-domain");
         if(casConfigurationProperties.getCustom().getProperties().get("dnma.authorized-domains") == null){
             LOGGER.error("No authorized domains were provided in configuration for dnma");
             this.dnmaAuthorizedDomains = new HashSet<>();
@@ -339,39 +333,35 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
                 if(uri.getPort() != -1){
                     serviceDomain += ":" + uri.getPort();
                 }
-                for(Service tgtService : tgt.getServices().values()){
-                    LOGGER.trace("Checking if service {} is DNMA", tgtService.getId());
-                    // On regarde si on est déjà passé par le DNMA auparavant
-                    // Pour ça il faut que le service contienne l'ID du service DNMA
-                    // ET que le domaine soit le même (sinon on, devra refaire une auth DNMA si on arrive sur un autre domaine)
-                    if(tgtService.getId().contains(dnmaServiceId)){
-                        String serviceHost = uri.getScheme() + "://" + this.dnmaDefaultDomain;
-                        if(dnmaAuthorizedDomains.contains(serviceDomain)){
-                            serviceHost = uri.getScheme() + "://" + serviceDomain;
-                        }
-                        if(tgtService.getId().startsWith(serviceHost)){
-                            LOGGER.trace("DNMA service found with host {}", serviceHost);
-                            hasDNMASession = true;
-                            break;
+                // Si c'est un domaine que le DNMA ne gère pas alors on ne regarde même pas
+                if(dnmaAuthorizedDomains.contains(serviceDomain)){
+                    for(Service tgtService : tgt.getServices().values()){
+                        LOGGER.trace("Checking if service {} is DNMA", tgtService.getId());
+                        // On regarde si on est déjà passé par le DNMA auparavant
+                        // Pour ça il faut que le service contienne l'ID du service DNMA
+                        // ET que le domaine soit le même (sinon on, devra refaire une auth DNMA si on arrive sur un autre domaine)
+                        if(tgtService.getId().contains(dnmaServiceId)){
+                            final String serviceHost = uri.getScheme() + "://" + serviceDomain;
+                            if(tgtService.getId().startsWith(serviceHost)){
+                                LOGGER.trace("DNMA service found with host {}", serviceHost);
+                                hasDNMASession = true;
+                                break;
+                            }
                         }
                     }
-                }
 
-                // Il y a 2 cas de figure dans lequel on doit laisser passer :
-                // - Soit on est déjà passé par le DNMA
-                // - Soit on se connecte au service DNMA
-                // Dans tous les autres cas on redirige vers le service DNMA en gardant dans l'url l'information du service original
-                if(!hasDNMASession && !service.getOriginalUrl().contains(dnmaServiceId)){
-                    String host = this.dnmaDefaultDomain;
-                    if(dnmaAuthorizedDomains.contains(serviceDomain)){
-                        host = serviceDomain;
+                    // Il y a 2 cas de figure dans lequel on doit laisser passer :
+                    // - Soit on est déjà passé par le DNMA
+                    // - Soit on se connecte au service DNMA
+                    // Dans tous les autres cas on redirige vers le service DNMA en gardant dans l'url l'information du service original
+                    if(!hasDNMASession && !service.getOriginalUrl().contains(dnmaServiceId)){
+                        final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
+                        final String requestURL = nativeRequest.getRequestURL().toString();
+                        final String dnmaURL = casUrl + "?service=" + uri.getScheme() + "://" + serviceDomain + dnmaPathToRedirect + "?originalUrl=" + requestURL + "?service=" + service.getOriginalUrl();
+                        LOGGER.debug("User has no DNMA session, redirecting to {}", dnmaURL);
+                        context.getExternalContext().requestExternalRedirect(dnmaURL);
+                        return result("error");
                     }
-                    final HttpServletRequest nativeRequest = (HttpServletRequest) context.getExternalContext().getNativeRequest();
-                    final String requestURL = nativeRequest.getRequestURL().toString();
-                    final String dnmaURL = casUrl + "?service=" + uri.getScheme() + "://" + host + dnmaPathToRedirect + "?originalUrl=" + requestURL + "?service=" + service.getOriginalUrl();
-                    LOGGER.debug("User has no DNMA session, redirecting to {}", dnmaURL);
-                    context.getExternalContext().requestExternalRedirect(dnmaURL);
-                    return result("error");
                 }
             }
             // -- Fin modif DNMA --

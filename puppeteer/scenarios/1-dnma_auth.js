@@ -45,7 +45,7 @@ const assert = require("assert");
         pageContent = await page.content();
         assert(pageContent.includes("auth: 1"))
 
-        // Another service from another unknown domain, so same default domain is used, should not make new DNMA auth
+        // Another service from another unknown domain, should not make new DNMA auth
         await cas.loginAgain(page, casHost, service3)
         pageContent = await page.content();
         await cas.verifySTValidated(pageContent, uid, service3);
