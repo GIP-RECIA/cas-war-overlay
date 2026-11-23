@@ -2,8 +2,10 @@ package org.apereo.cas.authentication.principal;
 
 import module java.base;
 import org.apereo.cas.CasProtocolConstants;
+import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.multitenancy.TenantDefinition;
 import org.apereo.cas.multitenancy.TenantExtractor;
+import org.apereo.cas.services.UnauthorizedServiceException;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.function.FunctionUtils;
 import org.apereo.cas.util.http.HttpRequestUtils;
@@ -16,6 +18,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.hc.core5.net.URIBuilder;
@@ -72,6 +75,54 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
         return url.substring(0, jsessionPosition) + url.substring(questionMarkPosition);
     }
 
+    protected static String validateServiceUrl(final String serviceUrl) {
+        val url = serviceUrl.strip();
+        if (Strings.CI.startsWithAny(url, "http:", "https:")) {
+            val authority = extractAuthority(url);
+            if (StringUtils.containsAny(authority, '@', '\\') || StringUtils.isBlank(extractHost(authority))) {
+                throw UnauthorizedServiceException.denied("HTTP service URLs must have a host and must not contain user information");
+            }
+            val port = authority.substring(extractHost(authority).length());
+            if (!port.isEmpty() && !port.matches(":\\d*")) {
+                throw UnauthorizedServiceException.denied("Invalid HTTP service URL");
+            }
+        }
+        return serviceUrl;
+    }
+
+    /**
+     * Extract the authority of an HTTP URL: what follows the {@code //} after the scheme, up to the path, query or fragment.
+     * The URL is not parsed as a {@link URI}, which refuses characters that services do use, such as spaces in
+     * a query or an underscore in a host name.
+     *
+     * @param url the HTTP URL
+     * @return the authority, or an empty string when the scheme is not followed by {@code //}
+     */
+    private static String extractAuthority(final String url) {
+        val hierarchy = url.substring(url.indexOf(':') + 1);
+        if (!hierarchy.startsWith("//")) {
+            return StringUtils.EMPTY;
+        }
+        val authority = hierarchy.substring(2);
+        val end = StringUtils.indexOfAny(authority, '/', '?', '#');
+        return end < 0 ? authority : authority.substring(0, end);
+    }
+
+    /**
+     * Extract the host of an authority, which is the authority without its port. An IPv6 host keeps its brackets.
+     *
+     * @param authority the authority
+     * @return the host
+     */
+    private static String extractHost(final String authority) {
+        if (authority.startsWith("[")) {
+            val end = authority.indexOf(']');
+            return end < 0 ? StringUtils.EMPTY : authority.substring(0, end + 1);
+        }
+        val portStart = authority.lastIndexOf(':');
+        return portStart < 0 ? authority : authority.substring(0, portStart);
+    }
+
     protected static @Nullable String getSourceParameter(@Nullable final HttpServletRequest request, final String... paramNames) {
         if (request != null) {
             val parameterMap = request.getParameterMap();
@@ -81,6 +132,10 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
                 .orElse(null);
         }
         return null;
+    }
+
+    protected static boolean isInternalAttributeName(final String name) {
+        return Strings.CI.startsWith(name, CentralAuthenticationService.NAMESPACE);
     }
 
     protected Map<String, List> extractQueryParameters(@Nullable final Service service) {
@@ -109,6 +164,7 @@ public abstract class AbstractServiceFactory<T extends Service> implements Servi
             .entrySet()
             .stream()
             .filter(entry -> !IGNORED_ATTRIBUTES_PARAMS.contains(entry.getKey()))
+            .filter(entry -> !isInternalAttributeName(entry.getKey()))
             .map(entry -> Pair.of(entry.getKey(), CollectionUtils.toCollection(entry.getValue(), ArrayList.class)))
             .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
         attributes.putAll(extractQueryParameters(service));
