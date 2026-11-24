@@ -12,6 +12,6 @@ def run(final Object... args) {
         return ["FrEduCtRefId":['AAF12', 'ECT120', 'ECT-ENT121'], "FrEduCtId":['120'], 'FrEduCtOpaqueId': ['120']]
     }
     // Par défaut on retourne ce vecteur d'identité là
-    return ["FrEduCtRefId":['AAF5', 'AAF6', 'ECT1', 'ECT-ENT2'], "FrEduCtId":['1'], 'FrEduCtOpaqueId': ['1']]
-    
+    // AAF16 est un compte sans SIRENCourant pour vérifier qu'on gère le cas
+    return ["FrEduCtRefId":['AAF5', 'AAF6', 'AAF16', 'ECT1', 'ECT-ENT2'], "FrEduCtId":['1'], 'FrEduCtOpaqueId': ['1']]
 }
