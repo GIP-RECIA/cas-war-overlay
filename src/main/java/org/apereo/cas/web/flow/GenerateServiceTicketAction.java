@@ -403,7 +403,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
         LOGGER.trace("Finding user domain: API URL is [{}]", apiUrl);
         try {
             // Construct the HTTP request
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(apiUrl)).build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(apiUrl)).timeout(Duration.ofSeconds(2)).build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             LOGGER.trace("HTTP response to structs info request [{}] ", response.body());
 
@@ -465,7 +465,7 @@ public class GenerateServiceTicketAction extends BaseCasWebflowAction {
     @Scheduled(fixedDelayString = "PT10S")
     private void refreshDNMAStatus() {
         if(dnmaEnabled){
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(dnmaStatusUrl)).build();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(dnmaStatusUrl)).timeout(Duration.ofSeconds(2)).build();
             try {
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                 if(response.statusCode() == 200){

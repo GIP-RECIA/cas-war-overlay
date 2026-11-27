@@ -81,7 +81,7 @@ public class DelegatedClientAuthenticationCredentialSelectionAction extends Base
                     LOGGER.debug("Name not found in cache for siren [{}], URL to call is : [{}]", siren, apiUrl);
                     try {
                         // Construct the HTTP request
-                        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(apiUrl)).build();
+                        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(apiUrl)).timeout(Duration.ofSeconds(2)).build();
                         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
                         LOGGER.trace("HTTP response to structs info request [{}] ", response.body());
 

@@ -1,5 +1,6 @@
 package org.apereo.cas.services;
 
+import module java.base;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -142,7 +143,7 @@ public class ReturnExternalIDOidcAttributeReleasePolicy extends AbstractRegister
             final URI requestUri = new URIBuilder(apiUrl).addParameter("internalUserId", internalUserid)
                     .addParameter("serviceId", internalServiceId)
                     .build();
-            final HttpRequest request = HttpRequest.newBuilder().uri(requestUri).POST(HttpRequest.BodyPublishers.noBody()).build();
+            final HttpRequest request = HttpRequest.newBuilder().uri(requestUri).POST(HttpRequest.BodyPublishers.noBody()).timeout(Duration.ofSeconds(2)).build();
             LOGGER.trace("Sending a request at url [{}] to generate a new externalid", requestUri);
             if (this.httpClient == null) {
                 this.httpClient = HttpClient.newHttpClient();
