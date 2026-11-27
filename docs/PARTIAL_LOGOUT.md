@@ -4,7 +4,7 @@
 
 Lorsque les attributs LDAP d'un utilisateur change, on peut avoir envie de rafraîchir sa session CAS et ses sessions applicatives de manière transparentre. C'est notamment le cas lors du changement d'établissement.
 
-L'idée est de lancer l'ensemble des requêtes de SLO depuis le CAS mais sans invalider le TGT. On va ensuite rafrâichir les attributs LDAP de l'utilisateur et les mettre à jour dans le TGT. Comme l'utilisateur est toujours connecté au CAS, il pourra obtenir de nouvelles sessions applicatives sans avoir à se reconnecter, mais avec ses nouveaux attributs.
+L'idée est de lancer l'ensemble des requêtes de SLO depuis le CAS mais sans invalider le TGT. On va ensuite rafraichir les attributs LDAP de l'utilisateur et les mettre à jour dans le TGT. Comme l'utilisateur est toujours connecté au CAS, il pourra obtenir de nouvelles sessions applicatives sans avoir à se reconnecter, mais avec ses nouveaux attributs. Il faut également faire attention à ne pas déclencher le logout du guichet externe si on est dans le cas d'une authentification déléguée.
 
 Le rafraichissement des attributs se fait via un attribute repository dédié avec un filtre LDAP basé sur le principal id.
 

@@ -36,25 +36,33 @@ public class FinishLogoutAction extends AbstractLogoutAction {
     @Override
     protected Event doInternalExecute(final RequestContext context) {
         val logoutRedirect = WebUtils.getLogoutRedirectUrl(context, String.class);
-        if (StringUtils.isNotBlank(logoutRedirect)) {
-            // Customization : for delegated authn, let the user do the redirect with a button on the html
-            if(!context.getFlowScope().contains("delegatedAuthenticationClientName")){
-                LOGGER.debug("Redirecting to [{}] with redirectView", logoutRedirect);
+        // Customisation : partialLogout = no logout from external IDP
+        if(context.getRequestParameters().get(casProperties.getCustom().getProperties().get("partial-logout.parameter-name")) != null){
+            if(StringUtils.isNotBlank(logoutRedirect)){
+                LOGGER.debug("Partial logout : redirecting to [{}] with redirectView", logoutRedirect);
                 return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_REDIRECT);
-            } else {
-                LOGGER.debug("Redirecting to [{}] with logoutView", logoutRedirect);
-                context.getFlashScope().put("logoutRedirect", logoutRedirect);
-                return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_FINISH);
             }
-        }
-        val logoutPostUrl = WebUtils.getLogoutPostUrl(context);
-        val logoutPostData = WebUtils.getLogoutPostData(context);
-        if (StringUtils.isNotBlank(logoutPostUrl) && logoutPostData != null) {
-            val flowScope = context.getFlowScope();
-            flowScope.put("originalUrl", logoutPostUrl);
-            flowScope.put("parameters", logoutPostData);
-            LOGGER.debug("Submitting POST logout request to [{}] with parameters [{}]", logoutPostUrl, logoutPostData);
-            return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_POST);
+        } else {
+            if (StringUtils.isNotBlank(logoutRedirect)) {
+                // Customization : for delegated authn, let the user do the redirect with a button on the html
+                if(!context.getFlowScope().contains("delegatedAuthenticationClientName")){
+                    LOGGER.debug("Redirecting to [{}] with redirectView", logoutRedirect);
+                    return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_REDIRECT);
+                } else {
+                    LOGGER.debug("Redirecting to [{}] with logoutView", logoutRedirect);
+                    context.getFlashScope().put("logoutRedirect", logoutRedirect);
+                    return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_FINISH);
+                }
+            }
+            val logoutPostUrl = WebUtils.getLogoutPostUrl(context);
+            val logoutPostData = WebUtils.getLogoutPostData(context);
+            if (StringUtils.isNotBlank(logoutPostUrl) && logoutPostData != null) {
+                val flowScope = context.getFlowScope();
+                flowScope.put("originalUrl", logoutPostUrl);
+                flowScope.put("parameters", logoutPostData);
+                LOGGER.debug("Submitting POST logout request to [{}] with parameters [{}]", logoutPostUrl, logoutPostData);
+                return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_POST);
+            }
         }
         return eventFactory.event(this, CasWebflowConstants.TRANSITION_ID_FINISH);
     }
